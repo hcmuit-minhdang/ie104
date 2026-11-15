@@ -5,5 +5,8 @@
   "scripts": {
     "start": "node server.js",
     "test": "node server/tests/run.js"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

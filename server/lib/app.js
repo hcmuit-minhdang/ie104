@@ -98,7 +98,7 @@ function createApp(opts) {
     for (const [k, v] of url.searchParams) if (!(k in query)) query[k] = v;
     const ctx = {
       req, res, url, query, params: m.params, app, db, store, user, sid, status: 200, headers: {},
-      ip: req.socket.remoteAddress || 'unknown',
+      ip: (process.env.VERCEL && req.headers['x-forwarded-for'] ? String(req.headers['x-forwarded-for']).split(',')[0].trim() : req.socket.remoteAddress) || 'unknown',
       body: (limit) => readJson(req, limit || m.route.opts.limit || 256 * 1024),
       setCookie(v) { this.headers['Set-Cookie'] = v; },
       requireUser() { if (!this.user) throw new HttpError(401, 'Bạn cần đăng nhập để thực hiện thao tác này'); return this.user; }
