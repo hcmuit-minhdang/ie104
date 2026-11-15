@@ -746,8 +746,9 @@ aside {
     background-image: url(/assets/icons/camo-black.svg);
     background-color: #292929;
     container-type: size;
-    flex: 1 1 0;
-    min-height: 260px;   /* tránh bị bóp nhỏ khi bảng vinh danh cao hơn cột bên cạnh */
+    flex: none;
+    height: 44cqw;       /* tỉ lệ theo bề rộng cột phải (như thiết kế): co giãn đều khi đổi kích thước màn hình */
+    min-height: 150px;   /* không bao giờ bị bóp nhỏ */
     width: 100%;
     display: flex;
     flex-direction: column;

@@ -60,8 +60,8 @@ upBtn.addEventListener('click', () => {
   }
 
   if (popular) {
-    popular.innerHTML = skeletonCompressed(6);
-    loadRecipes(popular, { sort: "rating", limit: 6 }, "recipe-card-compressed", "recipe-image-medium", 6, function (items) {
+    popular.innerHTML = skeletonCompressed(4);
+    loadRecipes(popular, { sort: "rating", limit: 4 }, "recipe-card-compressed", "recipe-image-medium", 4, function (items) {
     });
   }
   if (community) loadRecipes(community, { sort: "new", limit: 4 }, "recipe-card", "recipe-image", 4);
