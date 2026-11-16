@@ -745,10 +745,10 @@ aside {
 .cta-sign-up {
     background-image: url(/assets/icons/camo-black.svg);
     background-color: #292929;
-    container-type: size;
+    container-type: inline-size;
     flex: none;
-    height: 44cqw;       /* tỉ lệ theo bề rộng cột phải (như thiết kế): co giãn đều khi đổi kích thước màn hình */
-    min-height: 150px;   /* không bao giờ bị bóp nhỏ */
+    height: auto;        /* cao theo nội dung -> không bao giờ bị cắt chữ ở mọi cỡ màn hình */
+    min-height: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -756,12 +756,12 @@ aside {
     justify-content: center;
     text-align: center;
     box-sizing: border-box;
-    padding: 0;
+    padding: 8cqw 0;
     overflow: hidden;
 }
 
 .cta-sign-up > * {
-    --u: max(11px, min(3cqw, 7cqh));
+    --u: max(11px, 3cqw);
 }
  
 .cta-sign-up p:not(.support-log-in-text) {
@@ -1198,7 +1198,7 @@ a.recipe-card {
     }
     .cta-sign-up {
         flex: none;
-        height: clamp(240px, 45vw, 320px);
+        height: auto;
     }
 
     /* Section headings and "view more" buttons */
@@ -1487,10 +1487,10 @@ a.recipe-card {
 
     /* Sign-up CTA */
     .cta-sign-up {
-        height: 280px;
+        height: auto;
     }
     .cta-sign-up > * {
-        --u: max(11px, min(4.4cqw, 7cqh));
+        --u: max(11px, 4.4cqw);
     }
     .cta-sign-up p:not(.support-log-in-text) {
         padding: 0 0.5em;
