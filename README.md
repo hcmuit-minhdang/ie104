@@ -64,3 +64,13 @@ Chi tiết trong [`server/API.md`](server/API.md). Lỗi: `{ "error": "thông b�
 - Mật khẩu băm `scrypt` + salt ngẫu nhiên; phiên lưu dạng băm SHA-256 của mã phiên.
 - Ảnh tải lên được giải mã từ data URL, kiểm tra loại/kích thước/chữ ký file rồi lưu vào `server/uploads/` với tên ngẫu nhiên, phục vụ tại `/uploads/<file>`. Ảnh được dọn khi công thức chứa nó bị xóa.
 - Reset: dừng server rồi xóa `server/data/db.json` (và, nếu muốn, các file trong `server/uploads/`); chạy lại sẽ nạp dữ liệu mẫu mới.
+
+## Triển khai trên Vercel (đăng nhập bền vững)
+
+Vercel chạy nhiều instance tách biệt và chỉ ghi được ở `/tmp`, nên **cần Redis** để tài khoản, phiên đăng nhập, đánh giá, công thức người dùng đăng và ảnh tải lên dùng chung giữa các instance:
+
+1. Vercel → dự án → **Storage** → tạo/kết nối **Upstash for Redis** (gói miễn phí) → *Connect to project*.
+2. Vercel tự thêm biến môi trường `KV_REST_API_URL` + `KV_REST_API_TOKEN` (hoặc `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`).
+3. **Redeploy** dự án. `api/index.js` tự dùng Redis khi thấy các biến này; không có thì chạy bằng `/tmp` (dữ liệu có thể mất/không đồng nhất).
+
+Chạy trên máy (`node server.js`) không cần Redis.
