@@ -6,13 +6,33 @@ const MAX_AGE = 30 * 24 * 3600; // giây
 
 const sha = (s) => crypto.createHash('sha256').update(s).digest('hex');
 
+// Chế độ phiên "không trạng thái" (dùng trên Vercel khi chưa có Redis): token tự ký bằng HMAC nên instance nào cũng
+// xác thực được, không cần lưu phiên trong CSDL. Bật bằng biến môi trường NOMNOM_STATELESS_SESSIONS=1.
+const stateless = () => process.env.NOMNOM_STATELESS_SESSIONS === '1';
+const secret = () => (process.env.NOMNOM_SESSION_SECRET || 'nomnom-stateless') + '|' + (process.env.VERCEL_DEPLOYMENT_ID || process.env.VERCEL_PROJECT_ID || 'local');
+const sign = (body) => crypto.createHmac('sha256', secret()).update(body).digest('base64url');
+
 function createSession(db, userId) {
+  if (stateless()) {
+    const body = 'v1.' + Buffer.from(userId).toString('base64url') + '.' + (Date.now() + MAX_AGE * 1000);
+    return body + '.' + sign(body);
+  }
   const sid = crypto.randomBytes(32).toString('hex');
   const now = Date.now();
   db.sessions.push({ id: sha(sid), userId, createdAt: now, expiresAt: now + MAX_AGE * 1000 });
   return sid;
 }
 function findSession(db, sid) {
+  if (typeof sid === 'string' && sid.startsWith('v1.')) {
+    if (!stateless()) return null;
+    const i = sid.lastIndexOf('.'), body = sid.slice(0, i), mac = sid.slice(i + 1);
+    const want = sign(body);
+    if (mac.length !== want.length || !crypto.timingSafeEqual(Buffer.from(mac), Buffer.from(want))) return null;
+    const parts = body.split('.');
+    const exp = Number(parts[2]);
+    if (!(exp > Date.now())) return null;
+    return { id: 'stateless', userId: Buffer.from(parts[1], 'base64url').toString(), createdAt: exp - MAX_AGE * 1000, expiresAt: exp };
+  }
   if (!sid || typeof sid !== 'string' || sid.length !== 64) return null;
   const h = sha(sid);
   const s = db.sessions.find((x) => x.id === h);

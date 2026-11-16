@@ -46,6 +46,8 @@ function createHandler(opts) {
 
   function init() {
     if (inst) return;
+    // Không có Redis trên Vercel: dùng phiên tự ký + chế độ demo (đóng đăng ký, chỉ dùng tài khoản demo).
+    if (!cfg && (env.VERCEL || opts.demoMode)) { process.env.NOMNOM_STATELESS_SESSIONS = '1'; process.env.NOMNOM_DEMO_ONLY = '1'; }
     inst = createApp({
       dbFile: path.join(tmp, 'nomnom-db.json'),
       uploadsDir,

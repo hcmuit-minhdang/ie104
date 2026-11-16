@@ -44,6 +44,7 @@ function createApp(opts) {
     writeLimit: opts.writeLimit != null ? opts.writeLimit : (Number(process.env.NOMNOM_WRITE_LIMIT) || 30),
     contactLimit: opts.contactLimit != null ? opts.contactLimit : (Number(process.env.NOMNOM_CONTACT_LIMIT) || 5),
     uploadQuota: opts.uploadQuota != null ? opts.uploadQuota : 40,
+    demoOnly: opts.demoOnly != null ? !!opts.demoOnly : process.env.NOMNOM_DEMO_ONLY === '1',
     quiet: !!opts.quiet
   };
   fs.mkdirSync(cfg.publicDir, { recursive: true });

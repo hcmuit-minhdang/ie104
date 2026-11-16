@@ -74,3 +74,7 @@ Vercel chạy nhiều instance tách biệt và chỉ ghi được ở `/tmp`, n
 3. **Redeploy** dự án. `api/index.js` tự dùng Redis khi thấy các biến này; không có thì chạy bằng `/tmp` (dữ liệu có thể mất/không đồng nhất).
 
 Chạy trên máy (`node server.js`) không cần Redis.
+
+### Chế độ demo (không Redis)
+
+Nếu chạy trên Vercel mà **chưa** nối Redis, `api/index.js` tự bật chế độ demo: phiên đăng nhập là token tự ký (HMAC) nên đăng nhập hợp lệ ở mọi instance, đăng ký tạm đóng và popup nhắc dùng tài khoản **demo / demo123**. Dữ liệu cá nhân (lưu, đánh giá...) khi đó chỉ nằm trong bộ nhớ tạm của từng instance.

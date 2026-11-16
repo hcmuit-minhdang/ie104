@@ -48,5 +48,5 @@ module.exports = function (app) {
     return { mostRecipes: top(uploads), mostReviews: top(reviews), mostSaved: bestRecipe };
   });
 
-  r.get('/api/health', (ctx) => ({ ok: true, recipes: ctx.db.recipes.length }));
+  r.get('/api/health', (ctx) => { const o = { ok: true, recipes: ctx.db.recipes.length }; if (ctx.app.cfg.demoOnly) o.demoOnly = true; return o; });
 };

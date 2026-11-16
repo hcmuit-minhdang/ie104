@@ -29,6 +29,7 @@ module.exports = function (app) {
   const r = app.router;
 
   r.post('/api/auth/register', async (ctx) => {
+    if (ctx.app.cfg.demoOnly) throw new HttpError(403, 'Bản demo trực tuyến tạm đóng đăng ký. Hãy đăng nhập bằng tài khoản demo (demo / demo123).');
     const b = await ctx.body();
     rateCheck(ctx, typeof b.username === 'string' ? b.username : '');
     const username = V.checkUsername(b.username);

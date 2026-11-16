@@ -321,4 +321,35 @@
         submitted(user) { setUser(user); afterLogin(); }
     };
     window.NomNomAuth = api;
+
+    /* Chế độ demo (Vercel chưa có CSDL chung): đóng đăng ký, nhắc dùng tài khoản demo. */
+    fetch("/api/health", { credentials: "same-origin" }).then((r) => r.json()).then((h) => {
+        if (!h || !h.demoOnly) return;
+        const login = dialogs.login, signup = dialogs.signup;
+        if (login) {
+            const title = login.querySelector(".site-auth_title"), form = login.querySelector("form");
+            const box = document.createElement("div");
+            box.className = "site-auth_demo";
+            box.innerHTML = 'Bản demo: đăng nhập bằng tài khoản <b>demo</b> / mật khẩu <b>demo123</b>.<br>';
+            const fill = document.createElement("button");
+            fill.type = "button";
+            fill.textContent = "Điền sẵn tài khoản demo";
+            fill.addEventListener("click", () => {
+                const id = form.querySelector('input[name="email"]'), pw = form.querySelector('input[type="password"]');
+                if (id) { id.value = "demo"; id.dispatchEvent(new Event("input", { bubbles: true })); }
+                if (pw) { pw.value = "demo123"; pw.dispatchEvent(new Event("input", { bubbles: true })); }
+            });
+            box.appendChild(fill);
+            if (title) title.insertAdjacentElement("afterend", box);
+        }
+        if (signup) {
+            const title = signup.querySelector(".site-auth_title"), form = signup.querySelector("form");
+            const box = document.createElement("div");
+            box.className = "site-auth_demo";
+            box.innerHTML = 'Bản demo trực tuyến tạm đóng đăng ký. Hãy <b>đăng nhập</b> bằng tài khoản <b>demo</b> / <b>demo123</b>.';
+            if (title) title.insertAdjacentElement("afterend", box);
+            const btn = form && form.querySelector('button[type="submit"]');
+            if (btn) { btn.disabled = true; btn.title = "Đăng ký tạm đóng ở bản demo"; }
+        }
+    }).catch(() => {});
 })();
