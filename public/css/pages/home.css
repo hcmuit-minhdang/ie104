@@ -400,6 +400,7 @@ button {
     grid-template-columns: minmax(0, 2fr) auto minmax(0, 1fr);   /* left | divider | right */
     padding: 0px 12vw;
     align-items: stretch;
+    container-type: inline-size;   /* để nút 'XEM THÊM' co giãn theo bề rộng khối */
 }
 
 .popular-recipes-section {
@@ -536,7 +537,7 @@ button {
     grid-row: 2;
     padding: 0.45em 1.6em;
     border: 0.12em solid #292929;
-    font-size: clamp(1.2rem, 2.6em, 3.4rem);
+    font-size: clamp(0.9rem, 1.9cqw, 2.4rem);
     font-weight: 700;
     margin-top: 1.2em;
     justify-self: start;
