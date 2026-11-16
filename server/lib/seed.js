@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const { norm, slugify, hash32 } = require('./text');
 const { catalog, canonId, SEED_DIR } = require('./catalog');
 const { hashPasswordSync } = require('./hash');
+const { generate } = require('./synth');
 let IMAGE_MAP = {};
 try { IMAGE_MAP = JSON.parse(fs.readFileSync(path.join(SEED_DIR, 'image-map.json'), 'utf8')); } catch (e) { /* chưa có */ }
 const localImg = (u) => (IMAGE_MAP[u] && fs.existsSync(path.join(__dirname, '..', '..', 'public', IMAGE_MAP[u])) ? IMAGE_MAP[u] : u);
@@ -206,17 +207,20 @@ function fromCard(id, c, used, idx) {
   const time = parseTime(c.time);
   const price = parsePrice(c.price);
   const tags = c.tags || [];
-  const main = padMain(mainFromCard(c.name, tags), c.name);
+  const gen = generate(c.name, tags, time, slug);
+  const main = gen.main;
   const prep = Math.max(5, Math.round(time * 0.3));
   const d = synthDetails(c.name, c.image, time, main, slug);
+  d.quickSteps = gen.quickSteps;
+  d.steps = gen.steps.map((st) => ({ text: st.text, images: [c.image] }));
   return Object.assign({
     id: slug, legacyId: c.id, name: c.name, title: c.name, category: deriveCategory(c.name, tags),
     categoryGroup: 'Công thức cộng đồng', subcategory: tags[0] || '', image: c.image, gallery: [c.image, c.image, c.image, c.image],
     price, time, authorId: null, createdAt: new Date(Date.UTC(2026, 0, 1 + idx)).toISOString(), tags, main,
-    description: c.name + ' là món ăn quen thuộc, dễ nấu tại nhà với nguyên liệu dễ tìm: ' + main.map((m) => (catalog.byId.get(m) || { name: m }).name.toLowerCase()).join(', ') + '. Chi phí khoảng ' + price.toLocaleString('vi-VN') + 'đ mỗi phần.',
-    summary: 'Hướng dẫn nấu ' + c.name + ' trong khoảng ' + time + ' phút, phù hợp bữa cơm gia đình.',
+    description: gen.description + (price ? ' Chi phí khoảng ' + price.toLocaleString('vi-VN') + 'đ mỗi phần.' : ''),
+    summary: gen.summary,
     prepTime: prep, cookTime: Math.max(5, time - prep), baseServings: 2, costTotal: price * 2,
-    ingredients: synthIngredients(main, slug), similar: []
+    ingredients: gen.ingredients, similar: []
   }, d, rateFor(slug));
 }
 
@@ -233,11 +237,16 @@ function fromThanh(t, used, idx) {
     const id = names.get(need.split(':')[1]) || canonId(need);
     if (!main.includes(id)) main.push(id);
   }
-  rec.main = padMain(main, t.name);
+  const real = main.filter((m) => !/:khac$/.test(m));
+  // đảm bảo nguyên liệu chính của Thanh có trong danh sách thật
+  for (const id of real) if (!rec.ingredients.some((i) => i.ingredientId === id)) {
+    const q = qtyFor(id, hash32(rec.id));
+    rec.ingredients.splice(Math.min(1, rec.ingredients.length), 0, { ingredientId: id, qty: q.qty, unit: q.unit });
+    if (rec.ingredients.length > 10) rec.ingredients.pop();
+  }
+  rec.main = main.length >= 2 ? main : real.concat(rec.main.filter((m) => !real.includes(m))).slice(0, Math.max(2, real.length));
   rec.tags = t.needs.slice();
   rec.category = deriveCategory(t.name, rec.main.includes('thit-bo') ? ['Thịt bò'] : []);
-  const real = main.filter((m) => !/:khac$/.test(m));
-  rec.ingredients = synthIngredients(real.length ? real : ['thit-bo'], rec.id);
   return rec;
 }
 

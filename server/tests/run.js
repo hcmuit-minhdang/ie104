@@ -301,7 +301,7 @@ test('upload anh + dang cong thuc + xoa (cascade, quyen so huu)', async () => {
   assert.equal((await a.post('/api/recipes', { name: 'Món sai', prepTime: 'x', ingredients: [{ name: 'Muối' }], steps: [{ text: 'a' }] })).status, 400);
   await a.del('/api/recipes/' + r2.json.id); await a.del('/api/recipes/' + r3.json.id);
   // ingredient catalog co nguyen lieu tu chon
-  const ing = (await a.get('/api/ingredients')).json; assert.ok(!ing.items.some((x) => x.name === 'Bột gạo')); assert.equal(ing.units['chén'], undefined);
+  const ing = (await a.get('/api/ingredients')).json; assert.equal(ing.items.length, require('../lib/catalog').catalog.items.length); assert.equal(ing.units['chén'], undefined);
   // b luu, danh gia, xem
   await b.put('/api/recipes/' + id + '/save'); await b.post('/api/recipes/' + id + '/reviews', { rating: 5, text: 'ngon' }); await b.get('/api/recipes/' + id);
   assert.equal((await b.get('/api/me/saved')).json.total, 1);

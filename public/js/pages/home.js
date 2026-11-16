@@ -96,16 +96,23 @@ upBtn.addEventListener('click', () => {
     if (!catBox) return;
     NomNom.api.get("/categories").then(function (d) {
       var items = (d.items || []).slice(0, 7);
-      var html = items.map(function (c) {
-        return '<a href="/pages/category.html?category=' + encodeURIComponent(c.id) + '" class="category-card">' +
-          '<img src="/assets/images/food.png" alt="' + NomNom.esc(c.name) + '" class="category-image" />' +
-          '<span class="category-name">' + NomNom.esc(c.name) + '</span></a>';
-      }).join("");
-      html += '<a href="/pages/category.html" class="category-card category-more">' +
-        '<img src="/assets/icons/right-arrow-black.svg" alt="Xem Thêm" class="category-image-more" />' +
-        '<span class="category-name">Xem Thêm</span></a>';
-      catBox.innerHTML = html;
-    }, function () { errorBlock(catBox, loadCategories); });
+      // Mỗi danh mục lấy ảnh của món được đánh giá cao nhất trong danh mục đó.
+      return Promise.all(items.map(function (c) {
+        return NomNom.api.get("/recipes", { category: c.id, limit: 1, sort: "rating" }).then(function (r) {
+          return r.items && r.items[0] ? r.items[0].image : null;
+        }, function () { return null; });
+      })).then(function (imgs) {
+        var html = items.map(function (c, i) {
+          return '<a href="/pages/category.html?category=' + encodeURIComponent(c.id) + '" class="category-card">' +
+            '<img src="' + NomNom.esc(imgs[i] || "/assets/images/food.png") + '" alt="' + NomNom.esc(c.name) + '" class="category-image" loading="lazy" />' +
+            '<span class="category-name">' + NomNom.esc(c.name) + '</span></a>';
+        }).join("");
+        html += '<a href="/pages/category.html" class="category-card category-more">' +
+          '<img src="/assets/icons/right-arrow-black.svg" alt="Xem Thêm" class="category-image-more" />' +
+          '<span class="category-name">Xem Thêm</span></a>';
+        catBox.innerHTML = html;
+      });
+    }).catch(function () { errorBlock(catBox, loadCategories); });
   }
   loadCategories();
 })();
