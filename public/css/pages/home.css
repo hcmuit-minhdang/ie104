@@ -578,7 +578,8 @@ aside {
 
 .leaderboard-section {
     width: 100%;
-    font-size: clamp(0.6rem, 3cqw, 1.5rem);
+    font-size: 3cqw;
+    --px: 0.2278cqw;   /* 1 "px thiết kế" = bề rộng cột / 439 -> toàn bộ bảng co giãn theo cột */
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -589,7 +590,7 @@ aside {
 }
 
 .leaderboard-card {
-    --avatar: 100px;
+    --avatar: calc(100 * var(--px));
     display: block;
     position: relative;
     margin-left: calc(var(--avatar) / 3.4);
@@ -597,9 +598,9 @@ aside {
 
 .image-container, .star-icon, .heart-icon {
     position: relative;
-    flex: 0 0 50px;
-    width: 80px;
-    height: 55px;
+    flex: 0 0 calc(50 * var(--px));
+    width: calc(80 * var(--px));
+    height: calc(55 * var(--px));
 }
 
 .word-container {
@@ -612,7 +613,7 @@ aside {
     border: 3px solid black;
     transform: scale(0.8);
     text-decoration: none;
-    padding: 15px 15px 15px calc(var(--avatar) / 2.8 + 50px);
+    padding: calc(15 * var(--px)) calc(15 * var(--px)) calc(15 * var(--px)) calc(var(--avatar) / 2.8 + calc(50 * var(--px)));
     margin: 0;
     box-shadow: 0.5em 0.5em 0 #292929;
 }
@@ -649,17 +650,17 @@ aside {
     border-bottom: 2px solid black;
     width: fit-content;
     text-align: left;
-    margin: 8px;
+    margin: calc(8 * var(--px));
 }
 
 .most-recipes-description, .most-reviews-description, .most-liked-recipe-description {
     background-color: white;
     box-sizing: border-box;
-    padding: 10px 10px 10px 15px;
+    padding: calc(10 * var(--px)) calc(10 * var(--px)) calc(10 * var(--px)) calc(15 * var(--px));
     font-size: 1.15em;
     font-weight: 500;
     line-height: 1.5;
-    margin: 3px 5px;
+    margin: 3px calc(5 * var(--px));
     overflow-wrap: break-word;
     flex: 1 1 0;
 }
@@ -667,7 +668,7 @@ aside {
 .lower-card {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: calc(10 * var(--px));
 }
 
 .image-container img {
@@ -731,8 +732,8 @@ aside {
 
 .star-icon, .heart-icon {
     left: 1%;
-    width: 90px;
-    height: 60px;
+    width: calc(90 * var(--px));
+    height: calc(60 * var(--px));
 }
 
 .heart-icon {
@@ -1549,3 +1550,16 @@ a.recipe-card {
 .is-skeleton .skeleton-line { display: block; height: 14px; margin-top: 6px; }
 .is-skeleton .skeleton-line.short { width: 55%; }
 @keyframes nn-shimmer { to { background-position: -200% 0; } }
+
+/* Hai cột (công thức thịnh hành | bảng vinh danh) luôn cao bằng nhau ở mọi cỡ màn hình:
+   lưới công thức giãn để lấp đúng chiều cao cột phải, ảnh dùng object-fit: cover nên không méo. */
+@media (min-width: 1001px) {
+    .popular-recipes-container {
+        flex: 1 1 auto;
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+    }
+    .recipe-card-compressed {
+        aspect-ratio: auto;
+        min-height: calc((100cqw - 45px) / 2 * 0.8);   /* không thấp hơn tỉ lệ 4:3.2 gốc */
+    }
+}
