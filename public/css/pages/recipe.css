@@ -34,7 +34,7 @@ body {
     background-color: #fbc41b;
     color: #000000;
 }
-/* Nền hoa văn vàng: lớp riêng sau nội dung, to hơn trang 20% (co giãn theo bề rộng), lặp dọc, cuộn cùng trang, độ mờ 0.5 */
+/* Nền hoa văn vàng: lớp riêng sau nội dung, to gấp 2,4 lần bề rộng trang (co giãn theo bề rộng), lặp dọc, cuộn cùng trang, độ mờ 0.5 */
 body::before {
     content: "";
     position: absolute;
@@ -44,7 +44,7 @@ body::before {
     left: 0;
     z-index: -1;
     background-image: url(/assets/images/backgrounds/pattern-yellow.webp);
-    background-size: 120% auto;
+    background-size: 240% auto;
     background-position: top center;
     background-repeat: repeat-y;
     opacity: 0.5;

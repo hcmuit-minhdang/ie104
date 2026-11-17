@@ -2,7 +2,7 @@
 :root{--yellow:#fbc41b;--ink:#292929}
 /* Nền hoa văn trắng rộng bằng trang, lặp dọc và cuộn cùng trang */
 body{position:relative;min-height:100vh;margin:0;background:#fff}
-/* Nền hoa văn trắng: lớp riêng sau nội dung, to hơn trang 20% (co giãn theo bề rộng), lặp dọc, cuộn cùng trang, độ mờ 0.5 */
+/* Nền hoa văn trắng: lớp riêng sau nội dung, to gấp 2,4 lần bề rộng trang (co giãn theo bề rộng), lặp dọc, cuộn cùng trang, độ mờ 0.5 */
 body::before {
     content: "";
     position: absolute;
@@ -12,7 +12,7 @@ body::before {
     left: 0;
     z-index: -1;
     background-image: url(/assets/images/backgrounds/pattern-white.webp);
-    background-size: 120% auto;
+    background-size: 240% auto;
     background-position: top center;
     background-repeat: repeat-y;
     opacity: 0.5;

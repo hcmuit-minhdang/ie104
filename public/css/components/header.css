@@ -481,7 +481,8 @@
     }
 
     .site-header_navigation summary,
-    .site-header_nav-item#site-header_categories a {
+    .site-header_nav-item#site-header_categories a,
+    .site-header_nav-item#site-header_upload a {
         justify-content: space-between;
         width: 100%;
         height: auto;
