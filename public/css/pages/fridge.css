@@ -7,15 +7,30 @@
   box-sizing: border-box;
 }
 
-/* Nền hoa văn trắng: rộng bằng trang (co giãn theo bề rộng), lặp dọc và cuộn cùng trang */
+/* Nền trang trắng, hoa văn nằm ở lớp body::before bên dưới */
 body {
+  position: relative;
+  min-height: 100vh;
   margin: 0;
   background-color: #ffffff;
-  background-image: url("/assets/images/backgrounds/pattern-white.webp");
-  background-size: 100% auto;
-  background-position: top center;
-  background-repeat: repeat-y;
 }
+/* Nền hoa văn trắng: lớp riêng sau nội dung, to hơn trang 20% (co giãn theo bề rộng), lặp dọc, cuộn cùng trang, độ mờ 0.5 */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    background-image: url(/assets/images/backgrounds/pattern-white.webp);
+    background-size: 120% auto;
+    background-position: top center;
+    background-repeat: repeat-y;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 
 .fridge-page {
   font-family: "Inter", sans-serif;

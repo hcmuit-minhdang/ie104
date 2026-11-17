@@ -1,7 +1,24 @@
 *,*::before,*::after{box-sizing:border-box}
 :root{--yellow:#fbc41b;--ink:#292929}
 /* Nền hoa văn trắng rộng bằng trang, lặp dọc và cuộn cùng trang */
-body{margin:0;background:#fff url(/assets/images/backgrounds/pattern-white.webp) top center/100% auto repeat-y}
+body{position:relative;min-height:100vh;margin:0;background:#fff}
+/* Nền hoa văn trắng: lớp riêng sau nội dung, to hơn trang 20% (co giãn theo bề rộng), lặp dọc, cuộn cùng trang, độ mờ 0.5 */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    background-image: url(/assets/images/backgrounds/pattern-white.webp);
+    background-size: 120% auto;
+    background-position: top center;
+    background-repeat: repeat-y;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 /* Reset và kiểu chữ chỉ áp dụng cho phần nội dung trang, không đụng tới header/footer dùng chung (Thinh) */
 :where(main,main *,.cta,.cta *){margin:0;padding:0}
 :where(main,.cta){font-family:'Inter',sans-serif;font-size:23px;line-height:33px;color:var(--ink)}

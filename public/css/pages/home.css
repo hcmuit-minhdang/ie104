@@ -24,14 +24,14 @@ main::before {
     top: 0;
     bottom: 0;
     z-index: -1;
-    /* Nền hoa văn trắng: rộng bằng trang (co giãn theo bề rộng), lặp theo chiều dọc nên không bị cắt mép */
+    /* Nền hoa văn trắng: to hơn trang 20% (co giãn theo bề rộng), lặp theo chiều dọc, độ mờ 0.5 */
     background-image: url(/assets/images/backgrounds/pattern-white.webp);
-    background-size: 100% auto;
+    background-size: 120% auto;
     background-position: top center;
     background-repeat: repeat-y;
     display: block;
     height: 100%;
-    
+    opacity: 0.5;
 }
 
 body {
