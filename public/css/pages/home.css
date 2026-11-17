@@ -354,12 +354,13 @@ button {
     color: #292929;
 }
 
+/* Ảnh danh mục luôn vuông: cover lấp kín khung 1:1 và cắt phần thừa. */
 .category-card img {
     display: block;
     box-sizing: border-box;
     width: 90%;
     aspect-ratio: 1;
-    object-fit: contain;
+    object-fit: cover;
     border-radius: 8px;
     transition: transform 0.4s ease;
 }
@@ -369,6 +370,7 @@ button {
 }
 
 .category-more img {
+    object-fit: contain; /* icon mũi tên: giữ nguyên, không cắt */
     background-color: #FBC41B;
     padding: 22%;
     border: 5px solid #292929;
@@ -758,7 +760,9 @@ aside {
     justify-content: center;
     text-align: center;
     box-sizing: border-box;
-    padding: 8cqw 0;
+    /* Đệm dưới nhỏ hơn đệm trên 1.5cqw: dòng "Đã có tài khoản?" cao dòng lớn nên đã tự có khoảng trắng phía dưới,
+       cộng lại thì chữ nằm giữa khối khi không còn dòng "Đăng tải công thức của bạn". */
+    padding: 8cqw 0 6.5cqw;
     overflow: hidden;
 }
 
@@ -771,7 +775,7 @@ aside {
     line-height: calc(var(--u) * 2.6);
     color: white;
     font-weight: 800;
-    margin: 0.6em 1em 0 1em;
+    margin: 0 1em;
     padding: 0 2.4em;
 }
  
@@ -1496,7 +1500,7 @@ a.recipe-card {
     }
     .cta-sign-up p:not(.support-log-in-text) {
         padding: 0 0.5em;
-        margin: 0.6em 0.75em 0;
+        margin: 0 0.75em;
     }
 
     /* Price comparison */
