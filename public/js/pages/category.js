@@ -118,7 +118,9 @@
       if (d.pages && s.page > d.pages) { s.page = d.pages; go(s, true); return; }
       count.textContent = d.total ? "Có " + d.total + " món ăn" : "Không có món ăn";
       markEnough(d.items || [], s);
-      grid.innerHTML = (d.items || []).map(function (r) { return NomNom.cardHtml(r, null, null, true); }).join("");
+      // Chưa chọn nguyên liệu nào (chưa lọc) thì không hiện nhãn; lọc rồi mới hiện "Đủ / Chưa đủ nguyên liệu"
+      var filtered = INGREDIENT_GROUPS.some(function (g) { return s[g].length > 0; });
+      grid.innerHTML = (d.items || []).map(function (r) { return NomNom.cardHtml(r, null, null, filtered); }).join("");
       if (!d.items || !d.items.length) showMessage("Không tìm thấy món ăn phù hợp. Hãy thử bỏ bớt bộ lọc.");
       pager.innerHTML = NomNom.pagerHtml(d.page || s.page, d.pages || 1, function (p) {
         return urlFor(Object.assign({}, s, { page: p }));
