@@ -10,24 +10,31 @@
   var sortSel = document.getElementById("sortSelect");
   var searchForm = document.getElementById("sidebarSearchForm");
   var searchInput = document.getElementById("sidebarSearchInput");
-  var catBox = document.getElementById("categoryFilter");
+  // 7 nhóm bộ lọc (khớp thiết kế của Phát); mỗi nhóm là một tham số trên URL, ví dụ ?dam=Thịt bò,Thịt gà
+  var GROUPS = ["dam", "tinh-bot", "rau-cu", "trai-cay", "che-do-an", "vung-mien", "ngan-sach"];
   var categories = [];
   var reqId = 0;
 
   function readState() {
     var p = new URLSearchParams(location.search);
-    return {
+    var s = {
       category: p.get("category") || "",
       q: p.get("q") || "",
       sort: p.get("sort") || "rating",
-      maxTime: p.get("maxTime") || "",
-      maxPrice: p.get("maxPrice") || "",
       page: Math.max(1, parseInt(p.get("page"), 10) || 1)
     };
+    GROUPS.forEach(function (g) {
+      s[g] = (p.get(g) || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean);
+    });
+    return s;
   }
   function urlFor(s) {
     var out = [];
-    ["category", "q", "maxTime", "maxPrice"].forEach(function (k) { if (s[k]) out.push(k + "=" + encodeURIComponent(s[k])); });
+    ["category", "q"].forEach(function (k) { if (s[k]) out.push(k + "=" + encodeURIComponent(s[k])); });
+    // Nhóm lọc: giữ dấu phẩy và khoảng trắng dễ đọc trên URL
+    GROUPS.forEach(function (g) {
+      if (s[g] && s[g].length) out.push(g + "=" + s[g].map(encodeURIComponent).join(","));
+    });
     if (s.sort && s.sort !== "rating") out.push("sort=" + encodeURIComponent(s.sort));
     if (s.page > 1) out.push("page=" + s.page);
     return "/pages/category.html" + (out.length ? "?" + out.join("&") : "");
@@ -38,29 +45,31 @@
     render();
   }
 
-  function setChecked(name, value) {
-    var radios = document.querySelectorAll('input[name="' + name + '"]');
-    var hit = false;
-    radios.forEach(function (r) { if (r.value === value) { r.checked = true; hit = true; } });
-    if (!hit && radios.length) radios[0].checked = true;
+  // Tick đúng các ô theo URL (mở sẵn nhóm nào có ô được chọn).
+  function syncChecks(s) {
+    GROUPS.forEach(function (g) {
+      var acc = document.querySelector('.filter-accordion[data-group="' + g + '"]');
+      if (!acc) return;
+      var any = false;
+      acc.querySelectorAll('input[type="checkbox"]').forEach(function (box) {
+        box.checked = s[g].indexOf(box.value) !== -1;
+        if (box.checked) any = true;
+      });
+      if (any) setOpen(acc, true);
+    });
   }
 
-  function renderCategories() {
-    var html = '<label><input type="radio" name="category" value=""><span>Tất cả</span></label>';
-    categories.forEach(function (c) {
-      html += '<label><input type="radio" name="category" value="' + NomNom.esc(c.id) + '"><span>' + NomNom.esc(c.name) +
-        '</span><small>' + NomNom.esc(c.count) + '</small></label>';
-    });
-    catBox.innerHTML = html;
+  function setOpen(acc, open) {
+    acc.classList.toggle("is-open", open);
+    var btn = acc.querySelector(".filter-trigger-btn");
+    if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
   function syncControls(s) {
     sortSel.value = s.sort;
     if (sortSel.value !== s.sort) sortSel.value = "rating";
     searchInput.value = s.q;
-    setChecked("category", s.category);
-    setChecked("maxTime", s.maxTime);
-    setChecked("maxPrice", s.maxPrice);
+    syncChecks(s);
     var cat = categories.filter(function (c) { return c.id === s.category; })[0];
     title.textContent = (cat ? cat.name : s.q ? 'Kết quả cho "' + s.q + '"' : "Tất cả món ăn").toUpperCase();
     document.title = "NomNom - " + (cat ? cat.name : "Danh mục món ăn");
@@ -87,9 +96,9 @@
     grid.innerHTML = NomNom.skeletonHtml(6);
     pager.innerHTML = "";
     count.textContent = "Đang tải...";
-    NomNom.api.get("/recipes", {
-      category: s.category, q: s.q, sort: s.sort, maxTime: s.maxTime, maxPrice: s.maxPrice, page: s.page, limit: LIMIT
-    }).then(function (d) {
+    var params = { category: s.category, q: s.q, sort: s.sort, page: s.page, limit: LIMIT };
+    GROUPS.forEach(function (g) { if (s[g].length) params[g] = s[g].join(","); });
+    NomNom.api.get("/recipes", params).then(function (d) {
       if (id !== reqId) return;
       grid.setAttribute("aria-busy", "false");
       if (d.pages && s.page > d.pages) { s.page = d.pages; go(s, true); return; }
@@ -114,17 +123,25 @@
   }
 
   document.querySelectorAll(".filter-trigger-btn").forEach(function (b) {
-    b.addEventListener("click", function () { b.parentElement.classList.toggle("is-open"); });
+    b.addEventListener("click", function () { setOpen(b.parentElement, !b.parentElement.classList.contains("is-open")); });
   });
+  // Tick/bỏ tick một ô: gom lại các ô đang tick của nhóm đó rồi lọc lại từ trang 1.
   document.querySelector(".filter-sidebar").addEventListener("change", function (e) {
     var t = e.target;
-    if (t.type === "radio") { var p = {}; p[t.name] = t.value; update(p); }
+    if (t.type !== "checkbox" || GROUPS.indexOf(t.name) === -1) return;
+    var picked = [];
+    document.querySelectorAll('input[type="checkbox"][name="' + t.name + '"]:checked').forEach(function (b) { picked.push(b.value); });
+    var p = {};
+    p[t.name] = picked;
+    update(p);
   });
   sortSel.addEventListener("change", function () { update({ sort: sortSel.value }); });
   searchForm.addEventListener("submit", function (e) { e.preventDefault(); update({ q: searchInput.value.trim() }); });
   document.getElementById("filterReset").addEventListener("click", function (e) {
     e.preventDefault();
-    go({ category: "", q: "", sort: "rating", maxTime: "", maxPrice: "", page: 1 });
+    var cleared = { category: "", q: "", sort: "rating", page: 1 };
+    GROUPS.forEach(function (g) { cleared[g] = []; });
+    go(cleared);
   });
   pager.addEventListener("click", function (e) {
     var a = e.target.closest("a[data-page]");
@@ -136,5 +153,5 @@
   window.addEventListener("popstate", render);
 
   NomNom.api.get("/categories").then(function (d) { categories = d.items || []; }, function () { categories = []; })
-    .then(function () { renderCategories(); render(); });
+    .then(render);
 })();

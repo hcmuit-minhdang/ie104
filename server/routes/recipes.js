@@ -9,6 +9,8 @@ const { norm, slugify } = require('../lib/text');
 const { findByName, catalog } = require('../lib/catalog');
 
 const SORTS = new Set(['rating', 'time', 'price', 'new']);
+// Tên 7 nhóm bộ lọc của trang Danh mục; mỗi nhóm là một tham số trên URL, giá trị là các nhãn cách nhau bằng dấu phẩy.
+const TAG_GROUPS = ['dam', 'tinh-bot', 'rau-cu', 'trai-cay', 'che-do-an', 'vung-mien', 'ngan-sach'];
 const IMG_RE = /^(\/(uploads|assets)\/[\w\-./%]{1,300}|https?:\/\/[^\s"'<>]{1,500})$/;
 const FORBIDDEN_KEYS = new Set(['id', 'authorId', 'author', 'rating', 'ratingCount', 'ratingScore', 'reviewCount', 'seedRating', 'seedCount', 'main', 'legacyId', 'createdAt', 'saved', '__proto__', 'constructor', 'prototype']);
 
@@ -127,8 +129,16 @@ module.exports = function (app) {
     if (sort && !SORTS.has(sort)) throw new HttpError(400, 'Giá trị sort không hợp lệ (rating|time|price|new)', 'sort');
     const terms = norm(q.q || '').split(' ').filter(Boolean).slice(0, 8);
     const cat = q.category ? norm(q.category) : '';
+    // Bộ lọc theo nhóm (Đạm, Tinh bột, ...): trong một nhóm chỉ cần khớp MỘT nhãn, giữa các nhóm phải khớp TẤT CẢ.
+    const groups = TAG_GROUPS
+      .map((g) => String(q[g] || '').split(',').map((t) => norm(t)).filter(Boolean).slice(0, 12))
+      .filter((g) => g.length);
     let list = ctx.db.recipes.filter((rec) => {
       if (cat && norm(rec.category) !== cat && slugify(rec.category) !== cat) return false;
+      if (groups.length) {
+        const have = new Set((rec.tags || []).map((t) => norm(t)));
+        for (const g of groups) if (!g.some((t) => have.has(t))) return false;
+      }
       if (maxTime !== null && rec.time > maxTime) return false;
       if (maxPrice !== null && rec.price > maxPrice) return false;
       if (terms.length) { const s = M.searchText(rec); for (const t of terms) if (!s.includes(t)) return false; }

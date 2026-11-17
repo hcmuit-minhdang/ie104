@@ -107,6 +107,23 @@ test('401 voi cac endpoint can dang nhap', async () => {
   for (const [m, u, b] of calls) { const r = await a.req(m, u, b); assert.equal(r.status, 401, m + ' ' + u); assert.ok(r.json.error); }
 });
 
+test('recipes: loc theo 7 nhom (OR trong nhom, AND giua cac nhom)', async () => {
+  const a = client();
+  const total = (qs) => a.get('/api/recipes?limit=1&' + qs).then((r) => r.json.total);
+  const bo = await total('dam=' + encodeURIComponent('Thịt bò'));
+  const ga = await total('dam=' + encodeURIComponent('Thịt gà'));
+  assert.ok(bo > 0 && ga > 0);
+  // Trong cung mot nhom: chi can khop mot nhan (bo HOAC ga)
+  assert.equal(await total('dam=' + encodeURIComponent('Thịt bò,Thịt gà')), bo + ga);
+  // Giua cac nhom: phai khop tat ca
+  const boNam = await total('dam=' + encodeURIComponent('Thịt bò') + '&vung-mien=' + encodeURIComponent('Miền Nam'));
+  assert.ok(boNam > 0 && boNam < bo);
+  assert.equal(await total('dam=' + encodeURIComponent('Thịt bò') + '&che-do-an=' + encodeURIComponent('Ăn chay')), 0);
+  // Ket qua tra ve dung nhan da chon va khong lam hong cac tham so cu
+  const r = await a.get('/api/recipes?limit=50&dam=' + encodeURIComponent('Thịt bò') + '&maxTime=60');
+  assert.equal(r.status, 200); assert.ok(r.json.items.every((x) => x.time <= 60));
+});
+
 test('recipes: danh sach, loc, sap xep, phan trang, tim khong dau', async () => {
   const a = client();
   let r = await a.get('/api/recipes');

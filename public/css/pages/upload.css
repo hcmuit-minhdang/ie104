@@ -286,7 +286,9 @@ input[type="file"] {
     cursor: pointer;
 }
 
-#add-step-btn {
+/* Nút THÊM BƯỚC: dùng chung kiểu cho Hướng dẫn ngắn gọn (#add-step-btn) và Hướng dẫn cụ thể (#add-detailed-btn) */
+#add-step-btn,
+#add-detailed-btn {
     background-color: white;
     padding: 10px 20px;
     font-size: 1.2em;
@@ -295,13 +297,15 @@ input[type="file"] {
     transition: all 0.3s ease;
 }
 
-#add-step-btn:hover {
+#add-step-btn:hover,
+#add-detailed-btn:hover {
     background-color: #FBC41B;
     transform: translate(-3px, -3px);
     box-shadow: 3px 3px 0 black;
 }
 
-#add-step-btn:active {
+#add-step-btn:active,
+#add-detailed-btn:active {
     transform: scale(0.98);
 }
 

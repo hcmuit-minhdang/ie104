@@ -194,31 +194,30 @@
     list-style:none;
     background-color: #fbc41c;
 }
-.site-header_navigation details > ul >li {
-padding: 5px 5px;
-cursor: pointer;
-
+/* Mục menu con: li không đệm; chiều cao do nút bên trong quyết định (xem bên dưới). */
+.site-header_navigation details > ul > li {
+    padding: 0;
+    cursor: pointer;
 }
-.site-header_navigation details > ul >li:hover {
-background-color: #E2B119;
+.site-header_navigation details > ul > li:hover {
+    background-color: #E2B119;
 }
 /* Link và nút phủ cả dòng menu, giữ cách trình bày hiện tại. */
 [data-nomnom-header] [hidden] {
     display: none !important;
-}
-.site-header_navigation details > ul > li {
-    padding: 0;
 }
 .site-header_navigation details > ul > li > a,
 .site-header_navigation details > ul > li > button {
     display: block;
     width: 100%;
     box-sizing: border-box;
-    padding: 5px;
+    /* Không đệm trên/dưới: các mục cách đều nhau nhờ line-height 40px */
+    padding: 0 8px;
     border: 0;
     background: transparent;
     color: inherit;
     font: inherit;
+    line-height: 40px;
     text-align: left;
     cursor: pointer;
 }
@@ -507,7 +506,8 @@ background-color: #E2B119;
     .site-header_navigation details > ul > li > a,
     .site-header_navigation details > ul > li > button {
         min-height: 44px;
-        padding: 10px 16px;
+        padding: 0 16px;
+        line-height: 44px;
     }
 
     .site-header_actions {

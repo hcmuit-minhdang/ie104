@@ -147,29 +147,63 @@
 
                 <h2 class="filter-title">BỘ LỌC</h2>
 
-                <div class="filter-group-list">
-                    <div class="filter-accordion is-open">
-                        <button type="button" class="filter-trigger-btn">DANH MỤC</button>
-                        <div class="filter-panel" id="categoryFilter"><span class="filter-loading">Đang tải...</span></div>
-                    </div>
-
-                    <div class="filter-accordion is-open">
-                        <button type="button" class="filter-trigger-btn">THỜI GIAN NẤU</button>
-                        <div class="filter-panel" id="timeFilter">
-                            <label><input type="radio" name="maxTime" value="" checked><span>Tất cả</span></label>
-                            <label><input type="radio" name="maxTime" value="30"><span>Dưới 30 phút</span></label>
-                            <label><input type="radio" name="maxTime" value="60"><span>Dưới 60 phút</span></label>
-                            <label><input type="radio" name="maxTime" value="120"><span>Dưới 2 giờ</span></label>
+                <!-- 7 nhóm lọc như thiết kế của Phát: bấm tên nhóm để mở; ô chọn là checkbox vuông -->
+                <div class="filter-group-list" id="filterGroups">
+                    <div class="filter-accordion" data-group="dam">
+                        <button type="button" class="filter-trigger-btn" aria-expanded="false">ĐẠM</button>
+                        <div class="filter-panel">
+                            <label><input type="checkbox" name="dam" value="Thịt bò"><span>Thịt bò</span></label>
+                            <label><input type="checkbox" name="dam" value="Thịt gà"><span>Thịt gà</span></label>
+                            <label><input type="checkbox" name="dam" value="Thịt heo"><span>Thịt heo</span></label>
+                            <label><input type="checkbox" name="dam" value="Hải sản"><span>Hải sản</span></label>
                         </div>
                     </div>
-
-                    <div class="filter-accordion is-open">
-                        <button type="button" class="filter-trigger-btn">NGÂN SÁCH</button>
-                        <div class="filter-panel" id="priceFilter">
-                            <label><input type="radio" name="maxPrice" value="" checked><span>Tất cả</span></label>
-                            <label><input type="radio" name="maxPrice" value="30000"><span>Dưới 30.000đ</span></label>
-                            <label><input type="radio" name="maxPrice" value="50000"><span>Dưới 50.000đ</span></label>
-                            <label><input type="radio" name="maxPrice" value="100000"><span>Dưới 100.000đ</span></label>
+                    <div class="filter-accordion" data-group="tinh-bot">
+                        <button type="button" class="filter-trigger-btn" aria-expanded="false">TINH BỘT</button>
+                        <div class="filter-panel">
+                            <label><input type="checkbox" name="tinh-bot" value="Cơm"><span>Cơm</span></label>
+                            <label><input type="checkbox" name="tinh-bot" value="Bún / Phở"><span>Bún / Phở</span></label>
+                            <label><input type="checkbox" name="tinh-bot" value="Bánh mì"><span>Bánh mì</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-accordion" data-group="rau-cu">
+                        <button type="button" class="filter-trigger-btn" aria-expanded="false">RAU CỦ &amp; NẤM</button>
+                        <div class="filter-panel">
+                            <label><input type="checkbox" name="rau-cu" value="Rau xanh"><span>Rau xanh</span></label>
+                            <label><input type="checkbox" name="rau-cu" value="Củ quả"><span>Củ quả</span></label>
+                            <label><input type="checkbox" name="rau-cu" value="Nấm"><span>Các loại nấm</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-accordion" data-group="trai-cay">
+                        <button type="button" class="filter-trigger-btn" aria-expanded="false">TRÁI CÂY</button>
+                        <div class="filter-panel">
+                            <label><input type="checkbox" name="trai-cay" value="Trái cây nhiệt đới"><span>Trái cây nhiệt đới</span></label>
+                            <label><input type="checkbox" name="trai-cay" value="Tráng miệng"><span>Tráng miệng</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-accordion" data-group="che-do-an">
+                        <button type="button" class="filter-trigger-btn" aria-expanded="false">CHẾ ĐỘ ĂN</button>
+                        <div class="filter-panel">
+                            <label><input type="checkbox" name="che-do-an" value="Thanh đạm"><span>Thanh đạm</span></label>
+                            <label><input type="checkbox" name="che-do-an" value="Eat Clean"><span>Eat Clean</span></label>
+                            <label><input type="checkbox" name="che-do-an" value="Ăn chay"><span>Ăn chay</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-accordion" data-group="vung-mien">
+                        <button type="button" class="filter-trigger-btn" aria-expanded="false">VÙNG MIỀN</button>
+                        <div class="filter-panel">
+                            <label><input type="checkbox" name="vung-mien" value="Miền Bắc"><span>Miền Bắc</span></label>
+                            <label><input type="checkbox" name="vung-mien" value="Miền Trung"><span>Miền Trung</span></label>
+                            <label><input type="checkbox" name="vung-mien" value="Miền Nam"><span>Miền Nam</span></label>
+                            <label><input type="checkbox" name="vung-mien" value="Món Á"><span>Món Á / Nhật</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-accordion" data-group="ngan-sach">
+                        <button type="button" class="filter-trigger-btn" aria-expanded="false">NGÂN SÁCH</button>
+                        <div class="filter-panel">
+                            <label><input type="checkbox" name="ngan-sach" value="Dưới 50k"><span>Dưới 50.000đ</span></label>
+                            <label><input type="checkbox" name="ngan-sach" value="50k - 100k"><span>50.000đ - 100.000đ</span></label>
+                            <label><input type="checkbox" name="ngan-sach" value="Trên 100k"><span>Trên 100.000đ</span></label>
                         </div>
                     </div>
                 </div>
