@@ -1,4 +1,4 @@
-/* NomNom — So sánh giá nguyên liệu.
+/* NomNom – So sánh giá nguyên liệu.
    GET /api/ingredients -> danh sách nguyên liệu; GET /api/ingredients/compare?names=a,b -> giá theo cửa hàng.
    Trạng thái nằm trên URL: /pages/ingredients.html?names=thit-heo,ca-chua */
 (function () {
@@ -47,30 +47,59 @@
     history.replaceState(null, "", u);
   }
 
+  // Số nguyên liệu hiện sẵn khi chưa bấm "Xem thêm"; nguyên liệu đã chọn luôn hiện
+  var CHIP_LIMIT = 14;
+  var chipsExpanded = false;
+
+  // Cập nhật số nguyên liệu đã chọn trên nút gửi (chưa gửi request nào)
+  function syncSubmit() {
+    var btn = document.getElementById("picker-submit");
+    if (!btn) return;
+    btn.textContent = selected.length ? "SO SÁNH GIÁ (" + selected.length + ")" : "SO SÁNH GIÁ";
+    btn.disabled = !selected.length;
+  }
+
   function renderChips() {
     var q = norm(input.value);
     chipsBox.textContent = "";
-    var shown = all.filter(function (i) {
+    var matched = all.filter(function (i) {
       if (selected.indexOf(i.id) !== -1) return true;
       if (!q) return true;
       return norm(i.name).indexOf(q) !== -1 || (i.aliases || []).some(function (a) { return norm(a).indexOf(q) !== -1; });
     });
-    if (!shown.length) {
+    syncSubmit();
+    if (!matched.length) {
       chipsBox.appendChild(el("span", "ing-loading", "Không tìm thấy nguyên liệu phù hợp."));
       return;
     }
+    // Đang tìm kiếm hoặc đã bấm "Xem thêm" thì hiện hết; ngược lại chỉ hiện một phần đầu danh sách
+    var collapsed = !q && !chipsExpanded && matched.length > CHIP_LIMIT;
+    var shown = collapsed
+      ? matched.filter(function (i, idx) { return idx < CHIP_LIMIT || selected.indexOf(i.id) !== -1; })
+      : matched;
     shown.forEach(function (i) {
       var b = el("button", "ing-chip" + (selected.indexOf(i.id) !== -1 ? " is-selected" : ""), i.name);
       b.type = "button";
       b.setAttribute("aria-pressed", selected.indexOf(i.id) !== -1 ? "true" : "false");
+      // Chỉ đánh dấu chọn; việc gửi request nằm ở nút "SO SÁNH GIÁ" để tránh gọi API nhiều lần
       b.addEventListener("click", function () {
         var k = selected.indexOf(i.id);
         if (k === -1) selected.push(i.id); else selected.splice(k, 1);
         renderChips();
-        compare();
       });
       chipsBox.appendChild(b);
     });
+    // Nút bật/tắt danh sách đầy đủ (chỉ khi không đang tìm kiếm)
+    if (!q && matched.length > CHIP_LIMIT) {
+      var more = el("button", "ing-more", chipsExpanded ? "Thu gọn ▲" : "Xem thêm " + (matched.length - shown.length) + " nguyên liệu ▼");
+      more.type = "button";
+      more.setAttribute("aria-expanded", chipsExpanded ? "true" : "false");
+      more.addEventListener("click", function () {
+        chipsExpanded = !chipsExpanded;
+        renderChips();
+      });
+      chipsBox.appendChild(more);
+    }
   }
 
   function storeCard(s, unitFallback) {
@@ -87,11 +116,18 @@
 
     var card = el("div", "store-card");
     card.appendChild(el("p", "store-name " + storeClass(storeName), String(storeName).toUpperCase()));
-    var im = el("img", "ingredient-image");
-    im.src = img;
-    im.alt = title || storeName;
-    im.loading = "lazy";
-    im.onerror = function () { im.onerror = null; im.src = "/assets/images/food.png"; };
+    // Có ảnh sản phẩm thì hiện ảnh; chưa có thì hiện ô trống "Chưa có ảnh" (không dùng ảnh món ăn thay thế)
+    var rawImg = pick(s, ["image", "img", "imageUrl"]);
+    var im;
+    if (rawImg && (safeUrl(rawImg) || String(rawImg).charAt(0) === "/")) {
+      im = el("img", "ingredient-image");
+      im.src = rawImg;
+      im.alt = title || storeName;
+      im.loading = "lazy";
+      im.onerror = function () { var ph = el("div", "ingredient-image ingredient-image--empty", "Chưa có ảnh"); im.replaceWith(ph); };
+    } else {
+      im = el("div", "ingredient-image ingredient-image--empty", "Chưa có ảnh");
+    }
     card.appendChild(im);
     var info = el("div", "ingredient-info");
     if (title) info.appendChild(el("span", "ingredient-name", title));
@@ -167,7 +203,16 @@
     renderChips();
     if (!q) return;
     var first = all.filter(function (i) { return norm(i.name).indexOf(q) !== -1 || (i.aliases || []).some(function (a) { return norm(a).indexOf(q) !== -1; }); })[0];
-    if (first && selected.indexOf(first.id) === -1) { selected.push(first.id); renderChips(); compare(); }
+    // Enter ở ô tìm chỉ chọn nguyên liệu khớp đầu tiên; gửi so sánh bằng nút "SO SÁNH GIÁ"
+    if (first && selected.indexOf(first.id) === -1) { selected.push(first.id); renderChips(); }
+  });
+
+  // Nút gửi: gọi API so sánh đúng một lần cho các nguyên liệu đã chọn
+  document.getElementById("picker-submit").addEventListener("click", compare);
+  // Nút bỏ chọn: xóa lựa chọn, chưa gọi API
+  document.getElementById("picker-reset").addEventListener("click", function () {
+    selected = [];
+    renderChips();
   });
 
   NomNom.api.get("/ingredients").then(function (d) {

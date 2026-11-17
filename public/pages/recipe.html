@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="/css/components/login.css">
         <link rel="stylesheet" href="/css/components/signup.css">
         <script src="/js/components/header.js" defer></script>
+    <script src="/js/components/fit-names.js" defer></script>
         <script src="/js/components/auth.js" defer></script>
         <script src="/js/components/login.js" defer></script>
         <script src="/js/components/signup.js" defer></script>
@@ -48,8 +49,6 @@
                                 <li><a href="/pages/fridge.html" data-header-route="ingredients">Danh mục nguyên liệu</a>
                                 </li>
                                 <li><button type="button" data-header-action="random">Gợi ý bất ngờ</button></li>
-                                <li><button type="button" data-header-action="collections">Tuyển tập công thức</button>
-                                </li>
                             </ul>
                         </details>
                     </div>
@@ -71,6 +70,8 @@
                     </div>
                     <div class="site-header_nav-item" id="site-header_categories"><a href="/pages/search.html"
                             data-header-route="categories">Danh mục</a></div>
+                    <div class="site-header_nav-item" id="site-header_upload"><a href="/pages/upload.html"
+                            data-header-route="upload">Đăng tải công thức</a></div>
                     <div class="site-header_nav-item" data-header-member hidden>
                         <details>
                             <summary>Góc của tôi<img class="site-header_arrow"
@@ -382,7 +383,6 @@
                 <nav class="site-footer_links">
                     <a href="/pages/search.html">Tất cả công thức</a>
                     <a href="/pages/category.html">Danh mục</a>
-                    <a href="/pages/ingredients.html">So sánh nguyên liệu</a>
                     <a href="/pages/ingredients.html">So sánh giá</a>
                     <a href="/pages/account/reviewed.html">Đánh giá của tôi</a>
                 </nav>

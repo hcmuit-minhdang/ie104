@@ -1,6 +1,7 @@
 *,*::before,*::after{box-sizing:border-box}
 :root{--yellow:#fbc41b;--ink:#292929}
-body{margin:0;background:#fff}
+/* Nền hoa văn trắng rộng bằng trang, lặp dọc và cuộn cùng trang */
+body{margin:0;background:#fff url(/assets/images/backgrounds/pattern-white.webp) top center/100% auto repeat-y}
 /* Reset và kiểu chữ chỉ áp dụng cho phần nội dung trang, không đụng tới header/footer dùng chung (Thinh) */
 :where(main,main *,.cta,.cta *){margin:0;padding:0}
 :where(main,.cta){font-family:'Inter',sans-serif;font-size:23px;line-height:33px;color:var(--ink)}
@@ -15,7 +16,7 @@ body{margin:0;background:#fff}
 
 .btn{display:flex;align-items:center;justify-content:center;padding:20px;border:2px solid #000;font-weight:600;text-align:center;transition:transform .12s,box-shadow .12s}
 .btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 #000}
-.btn-yellow{background:var(--yellow);color:#000;width:336px}
+.btn-yellow{background:var(--yellow);color:#000;width:336px;font-size:28px;font-weight:800}
 .btn-dark{background:var(--ink);color:#fff;width:410px;flex:none}
 .btn-dark:hover{box-shadow:4px 4px 0 #fff}
 

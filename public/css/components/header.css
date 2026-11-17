@@ -4,9 +4,8 @@
 }
 
 .site-header {
-    --site-header-height: 106px;
+    --site-header-height: 76px;
     background-color: white;
-    box-shadow: 0 4px 4px 0 hsl(0, 0%, 50%);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -23,15 +22,6 @@
     top: 0;
     z-index: 100;
     box-sizing: border-box;
-    transform: translateY(0);
-    transition: transform 0.25s ease;
-}
-/* JavaScript chỉ đổi class; CSS đảm nhận chuyển động. */
-.site-header.site-header_hidden {
-    transform: translateY(calc(-100% - 8px));
-}
-.site-header.site-header_hidden .site-header_status {
-    visibility: hidden;
 }
 .site-header *,
 .site-header *::before,
@@ -61,12 +51,12 @@
     display: flex;
     align-items: center;
     height: var(--site-header-height);
-    width: 239px; 
+    width: 180px; 
     
 }
 .site-header_logo {
     display: block;
-    height: 59.47px;
+    height: 42px;
     width: fit-content;
     transform: rotate(-3.48deg);
 }
@@ -93,9 +83,9 @@
     justify-content: flex-start;
 }
 .site-header_auth button {
-    min-height: 44px;
+    min-height: 38px;
     width: 108px;
-    padding: 8px;
+    padding: 4px 8px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
@@ -145,14 +135,18 @@
     justify-content: center;
     width: fit-content;
     height: var(--site-header-height);
-    padding: 10px 0;
+    padding: 0;
     gap: 10px;
     box-sizing: border-box;
     flex-shrink: 0;
     border-right: 2.31px solid transparent;
 }
-.site-header_nav-item#site-header_categories a{
-    width: 135px;
+/* Mục "Danh mục" và "Đăng tải công thức": liên kết đơn, không có mũi tên */
+.site-header_nav-item#site-header_categories a,
+.site-header_nav-item#site-header_upload a{
+    width: auto;
+    padding: 0 20px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -187,7 +181,7 @@
     border: 2.31px solid black;
     border-top: none;
     border-left: none;
-    width: 260px;
+    width: 300px;
     box-sizing: border-box;
     margin: 0;
     padding: 0 0;
@@ -211,13 +205,13 @@
     display: block;
     width: 100%;
     box-sizing: border-box;
-    /* Không đệm trên/dưới: các mục cách đều nhau nhờ line-height 40px */
-    padding: 0 8px;
+    /* Không đệm trên/dưới: các mục cách đều nhau nhờ line-height 44px; lề trái 24px cho chữ khỏi sát mép */
+    padding: 0 24px;
     border: 0;
     background: transparent;
     color: inherit;
     font: inherit;
-    line-height: 40px;
+    line-height: 44px;
     text-align: left;
     cursor: pointer;
 }
@@ -331,7 +325,7 @@
     padding: 0 19px 0 16px;
     border: 3px solid #373636;
     background-color: white;
-    box-shadow: 6px 4px 4px 0 #fbc41c;
+    box-shadow: 6px 4px 0 0 #fbc41c;
 }
 .site-header_search-close-icon {
     height: 32px;
@@ -386,7 +380,7 @@
     }
 
     .site-header_logo {
-        height: 45px;
+        height: 36px;
     }
 }
 
@@ -571,7 +565,6 @@
 
 /* Tôn trọng thiết lập giảm chuyển động của hệ điều hành. */
 @media (prefers-reduced-motion: reduce) {
-    .site-header,
     .site-header[data-initialized="true"] .site-header_controls,
     .site-header .site-header_menu-icon > span {
         transition: none;

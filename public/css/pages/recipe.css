@@ -28,7 +28,12 @@ html {
 body {
     margin: 0;
     font-family: "Inter", sans-serif;
-    background-image: url(/assets/images/bg-pattern-yellow.png);
+    /* Nền hoa văn vàng: rộng bằng trang (co giãn theo bề rộng), lặp dọc và cuộn cùng trang */
+    background-color: #fbc41b;
+    background-image: url(/assets/images/backgrounds/pattern-yellow.webp);
+    background-size: 100% auto;
+    background-position: top center;
+    background-repeat: repeat-y;
     color: #000000;
 }
 
@@ -208,8 +213,7 @@ a {
     background-color: #ffffff;
     color: #292929;
     font-size: 0.9rem;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 
@@ -301,7 +305,7 @@ a {
     color: #000000;
     font-size: 0.8rem;
     font-weight: 800;
-    text-decoration: underline;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 
@@ -517,7 +521,7 @@ a {
     text-align: center;
     font-size: 0.95rem;
     font-weight: 600;
-    text-decoration: underline;
+    text-decoration: none;
     -moz-appearance: textfield;
     appearance: textfield;
 }
@@ -874,13 +878,12 @@ a {
 .similar-card .recipe-name {
     font-size: 1.05rem;
     font-weight: 800;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    text-decoration: none;
 }
 
 .similar-card .recipe-price {
     font-size: 0.7rem;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .similar-card .recipe-time {
@@ -1641,10 +1644,33 @@ a {
     /* Hàng nút đã ẩn nên chừa khoảng trước mục Nguyên liệu. */
     .card-time-row { margin-bottom: 28px !important; }
 
-    .card-section { break-inside: avoid; }
+    /* Cho phép khối dài (Nguyên liệu, Hướng dẫn) ngắt qua trang để không để trống nửa trang;
+       chỉ giữ nguyên từng dòng nguyên liệu, từng bước và tiêu đề không bị tách khỏi nội dung. */
+    .card-section { break-inside: auto; margin-bottom: 28px !important; }
+    .card-section .title { break-inside: avoid; break-after: avoid; }
+    .card-section > ul, .card-section > ol { orphans: 3; widows: 3; }
+    .ingredient-list li,
+    .ingredient-list label,
+    .quick-step-list li,
+    .nutrition-container { break-inside: avoid; }
 }
 
 /* Điện thoại: ẩn mục lục để tiêu đề và ảnh món hiện ngay đầu trang */
 @media (max-width: 768px) {
   .recipe-sidebar { display: none; }
+}
+
+/* Tên công thức nằm trên một dòng; tên dài được fit-names.js thu nhỏ chữ cho vừa */
+.recipe-name,
+.food-name {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Tên món ở đầu trang và trong khung công thức: một dòng, tên dài được fit-names.js thu nhỏ để không đè lên nội dung bên dưới */
+#recipe-title,
+.card-title-tag:not(.similar-title-tag) {
+    white-space: nowrap;
+    overflow: hidden;
 }

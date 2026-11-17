@@ -47,8 +47,6 @@
                                 <li><a href="/pages/fridge.html" data-header-route="ingredients">Danh mục nguyên liệu</a>
                                 </li>
                                 <li><button type="button" data-header-action="random">Gợi ý bất ngờ</button></li>
-                                <li><button type="button" data-header-action="collections">Tuyển tập công thức</button>
-                                </li>
                             </ul>
                         </details>
                     </div>
@@ -70,6 +68,8 @@
                     </div>
                     <div class="site-header_nav-item" id="site-header_categories"><a href="/pages/search.html"
                             data-header-route="categories">Danh mục</a></div>
+                    <div class="site-header_nav-item" id="site-header_upload"><a href="/pages/upload.html"
+                            data-header-route="upload">Đăng tải công thức</a></div>
                     <div class="site-header_nav-item" data-header-member hidden>
                         <details>
                             <summary>Góc của tôi<img class="site-header_arrow"
@@ -136,6 +136,11 @@
                 <div class="picker-chips" id="picker-chips" role="group" aria-label="Danh sách nguyên liệu">
                     <span class="ing-loading">Đang tải nguyên liệu...</span>
                 </div>
+                <!-- Nút gửi: chọn xong mới gửi một lần, tránh gọi API sau mỗi lần bấm -->
+                <div class="picker-actions">
+                    <button type="button" class="ing-submit" id="picker-submit" disabled>SO SÁNH GIÁ</button>
+                    <button type="button" class="ing-reset" id="picker-reset">Bỏ chọn tất cả</button>
+                </div>
             </section>
             <div id="comparison-results" aria-live="polite"></div>
         </main>
@@ -165,7 +170,6 @@
                 <nav class="site-footer_links">
                     <a href="/pages/search.html">Tất cả công thức</a>
                     <a href="/pages/category.html">Danh mục</a>
-                    <a href="/pages/ingredients.html">So sánh nguyên liệu</a>
                     <a href="/pages/ingredients.html">So sánh giá</a>
                     <a href="/pages/account/reviewed.html">Đánh giá của tôi</a>
                 </nav>

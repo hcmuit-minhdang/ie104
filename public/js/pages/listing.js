@@ -10,15 +10,16 @@
   };
 
   /* Nhãn trạng thái nguyên liệu trên thẻ món ở Danh mục / Tìm kiếm (theo Figma).
-     Dữ liệu có thể có enoughIngredients: false để hiện "Thiếu nguyên liệu"; mặc định là đủ. */
+     Dữ liệu có thể có enoughIngredients: false để hiện "Chưa đủ nguyên liệu"; mặc định là đủ. */
   NomNom.statusTagHtml = function (r) {
     return r.enoughIngredients === false
-      ? '<span class="recipe-status is-missing">Thiếu nguyên liệu</span>'
+      ? '<span class="recipe-status is-missing">Chưa đủ nguyên liệu</span>'
       : '<span class="recipe-status">Đủ nguyên liệu</span>';
   };
 
   /* Thẻ món ăn (RecipeCard) -> HTML. cls: 'similar-card' (category/search) | 'recipe-card' | 'recipe-card-compressed' */
-  NomNom.cardHtml = function (r, cls, imgCls) {
+  /* showStatus = true: hiện nhãn "Đủ / Chưa đủ nguyên liệu" (chỉ trang Danh mục dùng); mặc định ẩn. */
+  NomNom.cardHtml = function (r, cls, imgCls, showStatus) {
     cls = cls || "similar-card";
     imgCls = imgCls || "similar-image";
     var plain = cls === "similar-card";
@@ -28,7 +29,7 @@
       (plain ? "" : '<div class="recipe-info">') +
       '<span class="recipe-name">' + esc(r.name) + '</span>' +
       '<span class="recipe-price">' + esc(NomNom.money(r.price)) + ' / phần</span>' +
-      (plain ? NomNom.statusTagHtml(r) : "") +
+      (plain && showStatus ? NomNom.statusTagHtml(r) : "") +
       '<span class="recipe-time">Thời gian: ' + esc(NomNom.minutes(r.time)) + '</span>' +
       (plain ? "" : '</div>') +
       '</a>';

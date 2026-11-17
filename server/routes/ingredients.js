@@ -5,10 +5,16 @@ const V = require('../lib/validate');
 const { catalog, canonId, nameOf, findByName } = require('../lib/catalog');
 const { norm, hash32 } = require('../lib/text');
 
+// url: trang chủ của cửa hàng, dùng cho nút "MUA NGAY" (dữ liệu giá là số tham khảo, chưa lấy trực tiếp từ cửa hàng)
 const STORES = [
-  { store: 'BÁCH HÓA XANH', k: 0.97 }, { store: 'COOP FOOD', k: 1.06 }, { store: 'WINMART', k: 1.0 },
-  { store: 'SUNMART', k: 1.12 }, { store: 'GS25', k: 1.22 }, { store: 'CIRCLE K', k: 1.28 }
+  { store: 'BÁCH HÓA XANH', k: 0.97, url: 'https://www.bachhoaxanh.com/' }, { store: 'COOP FOOD', k: 1.06, url: 'https://cooponline.vn/' },
+  { store: 'WINMART', k: 1.0, url: 'https://winmart.vn/' }, { store: 'SUNMART', k: 1.12, url: 'https://sunmart.vn/' },
+  { store: 'GS25', k: 1.22, url: 'https://gs25.com.vn/' }, { store: 'CIRCLE K', k: 1.28, url: 'https://www.circlek.com.vn/' }
 ];
+// Quy cách đóng gói gợi ý theo loại đơn vị, để mỗi cửa hàng có tên sản phẩm riêng
+const PACKS = { mass: ['200g', '300g', '500g', '1kg'], volume: ['330ml', '500ml', '750ml', '1 lít'], count: ['vỉ 6', 'vỉ 10', '1 quả', 'túi 500g'] };
+// Tên sản phẩm cụ thể đã biết (khớp với giá tham khảo bên dưới)
+const KNOWN = { 'thit-heo': { 'BÁCH HÓA XANH': 'Thịt heo xay C.P 200g', 'COOP FOOD': 'Thịt heo xay kg-AHT990' } };
 // Giá tham khảo (VND) theo đơn vị so sánh: 100g / 100ml / 1 đơn vị đếm
 const BASE = {
   'thit-heo': 11069, 'thit-bo': 29000, 'thit-ga': 9500, 'tom-tuoi': 19000, 'ca-phi-le': 14000, 'trung-vit': 4500, 'gao-tam': 1800,
@@ -28,7 +34,9 @@ function compareOne(name) {
     if (it.id === 'thit-heo' && i === 0) price = 11069;
     if (it.id === 'thit-heo' && i === 1) price = 12700;
     const disc = [0, 10, 15, 20][h % 4];
-    const o = { store: s.store, price, unit };
+    const pack = PACKS[it.dimension] || PACKS.mass;
+    const product = (KNOWN[it.id] && KNOWN[it.id][s.store]) || (it.name + ' ' + pack[h % pack.length]);
+    const o = { store: s.store, product, price, unit, url: s.url };
     if (disc) { o.oldPrice = Math.round(price / (1 - disc / 100) / 100) * 100; o.discount = disc; }
     return o;
   }).sort((a, b) => a.price - b.price);

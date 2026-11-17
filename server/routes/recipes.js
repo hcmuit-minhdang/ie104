@@ -160,7 +160,7 @@ module.exports = function (app) {
       return byRating(a, b) || tie(a, b);
     });
     const p = V.paginate(list, q);
-    return { items: p.slice.map((rec) => M.cardOf(c, rec)), total: p.total, page: p.page, pages: p.pages };
+    return { items: p.slice.map((rec) => Object.assign(M.cardOf(c, rec), { tags: rec.tags || [] })), total: p.total, page: p.page, pages: p.pages };
   });
 
   r.get('/api/categories', (ctx) => ({ items: M.categoriesOf(ctx.db) }));

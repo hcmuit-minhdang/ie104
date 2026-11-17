@@ -10,6 +10,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="/css/components/filter.css">
+    <link rel="stylesheet" href="/css/components/pager.css">
     <link rel="stylesheet" href="/css/pages/fridge.css">
     <link rel="stylesheet" href="/css/components/header.css">
     <link rel="stylesheet" href="/css/components/footer.css">
@@ -18,6 +20,8 @@
     <script src="/js/api.js"></script>
     <script src="/js/pages/listing.js"></script>
     <script src="/js/components/header.js" defer></script>
+    <script src="/js/components/fit-names.js" defer></script>
+    <script src="/js/components/filter.js" defer></script>
     <script src="/js/components/auth.js" defer></script>
     <script src="/js/components/login.js" defer></script>
     <script src="/js/components/signup.js" defer></script>
@@ -49,8 +53,6 @@
                                 <li><a href="/pages/fridge.html" data-header-route="ingredients">Danh mục nguyên liệu</a>
                                 </li>
                                 <li><button type="button" data-header-action="random">Gợi ý bất ngờ</button></li>
-                                <li><button type="button" data-header-action="collections">Tuyển tập công thức</button>
-                                </li>
                             </ul>
                         </details>
                     </div>
@@ -72,6 +74,8 @@
                     </div>
                     <div class="site-header_nav-item" id="site-header_categories"><a href="/pages/search.html"
                             data-header-route="categories">Danh mục</a></div>
+                    <div class="site-header_nav-item" id="site-header_upload"><a href="/pages/upload.html"
+                            data-header-route="upload">Đăng tải công thức</a></div>
                     <div class="site-header_nav-item" data-header-member hidden>
                         <details>
                             <summary>Góc của tôi<img class="site-header_arrow"
@@ -124,119 +128,113 @@
     </header>
     <main class="fridge-page">
 
-      <section class="intro">
-        <div class="intro-box">
-          <h1>CÔNG THỨC THEO NGUYÊN LIỆU TỦ LẠNH</h1>
-        </div>
-        <p class="intro-text">
-          Chọn các nguyên liệu bạn đang có sẵn để khám phá món ăn có thể nấu ngay
-        </p>
+      <section class="category-hero-pattern">
+        <h1 class="hero-stroke-title">CÔNG THỨC THEO NGUYÊN LIỆU TỦ LẠNH</h1>
+        <p class="hero-subtitle">Chọn các nguyên liệu bạn đang có sẵn để khám phá món ăn có thể nấu ngay</p>
       </section>
 
       <div class="fridge-content">
         <!-- ===== BỘ LỌC ===== -->
         <section class="filter-sidebar">
           <form action="/pages/fridge-results.html" method="get">
-            <div class="search-box">
-              <input type="text" name="keyword" placeholder="Tìm kiếm" />
-              <button type="submit">
-                <img src="/assets/icons/kinh-lup.png" alt="Tìm kiếm" />
-              </button>
-            </div>
-
-            <h2 class="filter-heading">BỘ LỌC</h2>
+            <h2 class="filter-title">BỘ LỌC</h2>
             <p class="filter-hint">Chọn nguyên liệu bạn có, rồi bấm nút bên dưới.</p>
-
-            <ul class="filter-list">
-              <li>
-                <details class="filter-item">
-                  <summary>ĐẠM <span>▼</span></summary>
-                  <div class="filter-options">
-                    <label><input type="checkbox" name="dam" value="thit-bo" /> Thịt bò</label>
-                    <label><input type="checkbox" name="dam" value="thit-heo" /> Thịt heo</label>
-                    <label><input type="checkbox" name="dam" value="thit-ga" /> Thịt gà</label>
-                    <label><input type="checkbox" name="dam" value="trung" /> Trứng</label>
-                    <label><input type="checkbox" name="dam" value="dau-hu" /> Đậu hũ</label>
-                    <label><input type="checkbox" name="dam" value="khac" /> Khác</label>
+            <div class="filter-group-list">
+              <div class="filter-accordion" data-group="dam">
+                <button type="button" class="filter-trigger-btn" aria-expanded="false">ĐẠM</button>
+                <div class="filter-panel">
+                  <label><input type="checkbox" name="dam" value="thit-bo"><span>Thịt bò</span></label>
+                  <label><input type="checkbox" name="dam" value="thit-heo"><span>Thịt heo</span></label>
+                  <label><input type="checkbox" name="dam" value="thit-ga"><span>Thịt gà</span></label>
+                  <label><input type="checkbox" name="dam" value="trung"><span>Trứng</span></label>
+                  <label><input type="checkbox" name="dam" value="dau-hu"><span>Đậu hũ</span></label>
+                  <label><input type="checkbox" name="dam" value="khac"><span>Khác</span></label>
+                  <!-- Ô nhập nguyên liệu khác: chỉ hiện khi tick "Khác"; gợi ý gọn lấy từ danh mục nguyên liệu -->
+                  <div class="filter-other" data-other-group="dam" hidden>
+                    <input type="text" class="filter-other-input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
+                    <ul class="filter-other-list"></ul>
                   </div>
-                </details>
-              </li>
-              <li>
-                <details class="filter-item">
-                  <summary>TINH BỘT <span>▼</span></summary>
-                  <div class="filter-options">
-                    <label><input type="checkbox" name="tinh-bot" value="gao" /> Gạo</label>
-                    <label><input type="checkbox" name="tinh-bot" value="bun" /> Bún</label>
-                    <label><input type="checkbox" name="tinh-bot" value="pho" /> Phở</label>
-                    <label><input type="checkbox" name="tinh-bot" value="banh-mi" /> Bánh mì</label>
-                    <label><input type="checkbox" name="tinh-bot" value="mi" /> Mì</label>
-                    <label><input type="checkbox" name="tinh-bot" value="khac" /> Khác</label>
+                </div>
+              </div>
+              <div class="filter-accordion" data-group="tinh-bot">
+                <button type="button" class="filter-trigger-btn" aria-expanded="false">TINH BỘT</button>
+                <div class="filter-panel">
+                  <label><input type="checkbox" name="tinh-bot" value="gao"><span>Gạo</span></label>
+                  <label><input type="checkbox" name="tinh-bot" value="bun"><span>Bún</span></label>
+                  <label><input type="checkbox" name="tinh-bot" value="pho"><span>Phở</span></label>
+                  <label><input type="checkbox" name="tinh-bot" value="banh-mi"><span>Bánh mì</span></label>
+                  <label><input type="checkbox" name="tinh-bot" value="mi"><span>Mì</span></label>
+                  <label><input type="checkbox" name="tinh-bot" value="khac"><span>Khác</span></label>
+                  <!-- Ô nhập nguyên liệu khác: chỉ hiện khi tick "Khác"; gợi ý gọn lấy từ danh mục nguyên liệu -->
+                  <div class="filter-other" data-other-group="tinh-bot" hidden>
+                    <input type="text" class="filter-other-input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
+                    <ul class="filter-other-list"></ul>
                   </div>
-                </details>
-              </li>
-              <li>
-                <details class="filter-item">
-                  <summary>RAU CỦ &amp; NẤM <span>▼</span></summary>
-                  <div class="filter-options">
-                    <label><input type="checkbox" name="rau-cu" value="bi-do" /> Bí đỏ</label>
-                    <label><input type="checkbox" name="rau-cu" value="du-du" /> Đu đủ</label>
-                    <label><input type="checkbox" name="rau-cu" value="cai-thia" /> Cải thìa</label>
-                    <label><input type="checkbox" name="rau-cu" value="bi-dao" /> Bí đao</label>
-                    <label><input type="checkbox" name="rau-cu" value="rau-muong" /> Rau muống</label>
-                    <label><input type="checkbox" name="rau-cu" value="khac" /> Khác</label>
+                </div>
+              </div>
+              <div class="filter-accordion" data-group="rau-cu">
+                <button type="button" class="filter-trigger-btn" aria-expanded="false">RAU CỦ &amp; NẤM</button>
+                <div class="filter-panel">
+                  <label><input type="checkbox" name="rau-cu" value="bi-do"><span>Bí đỏ</span></label>
+                  <label><input type="checkbox" name="rau-cu" value="du-du"><span>Đu đủ</span></label>
+                  <label><input type="checkbox" name="rau-cu" value="cai-thia"><span>Cải thìa</span></label>
+                  <label><input type="checkbox" name="rau-cu" value="bi-dao"><span>Bí đao</span></label>
+                  <label><input type="checkbox" name="rau-cu" value="rau-muong"><span>Rau muống</span></label>
+                  <label><input type="checkbox" name="rau-cu" value="khac"><span>Khác</span></label>
+                  <!-- Ô nhập nguyên liệu khác: chỉ hiện khi tick "Khác"; gợi ý gọn lấy từ danh mục nguyên liệu -->
+                  <div class="filter-other" data-other-group="rau-cu" hidden>
+                    <input type="text" class="filter-other-input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
+                    <ul class="filter-other-list"></ul>
                   </div>
-                </details>
-              </li>
-              <li>
-                <details class="filter-item">
-                  <summary>TRÁI CÂY <span>▼</span></summary>
-                  <div class="filter-options">
-                    <label><input type="checkbox" name="trai-cay" value="xoai-xanh" /> Xoài xanh</label>
-                    <label><input type="checkbox" name="trai-cay" value="khe" /> Khế</label>
-                    <label><input type="checkbox" name="trai-cay" value="chuoi" /> Chuối</label>
-                    <label><input type="checkbox" name="trai-cay" value="le" /> Lê</label>
-                    <label><input type="checkbox" name="trai-cay" value="tao" /> Táo</label>
-                    <label><input type="checkbox" name="trai-cay" value="khac" /> Khác</label>
+                </div>
+              </div>
+              <div class="filter-accordion" data-group="trai-cay">
+                <button type="button" class="filter-trigger-btn" aria-expanded="false">TRÁI CÂY</button>
+                <div class="filter-panel">
+                  <label><input type="checkbox" name="trai-cay" value="xoai-xanh"><span>Xoài xanh</span></label>
+                  <label><input type="checkbox" name="trai-cay" value="khe"><span>Khế</span></label>
+                  <label><input type="checkbox" name="trai-cay" value="chuoi"><span>Chuối</span></label>
+                  <label><input type="checkbox" name="trai-cay" value="le"><span>Lê</span></label>
+                  <label><input type="checkbox" name="trai-cay" value="tao"><span>Táo</span></label>
+                  <label><input type="checkbox" name="trai-cay" value="khac"><span>Khác</span></label>
+                  <!-- Ô nhập nguyên liệu khác: chỉ hiện khi tick "Khác"; gợi ý gọn lấy từ danh mục nguyên liệu -->
+                  <div class="filter-other" data-other-group="trai-cay" hidden>
+                    <input type="text" class="filter-other-input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
+                    <ul class="filter-other-list"></ul>
                   </div>
-                </details>
-              </li>
-              <li>
-                <details class="filter-item">
-                  <summary>CHẾ ĐỘ ĂN <span>▼</span></summary>
-                  <div class="filter-options">
-                    <label><input type="checkbox" name="che-do-an" value="an-chay" /> Ăn chay</label>
-                    <label><input type="checkbox" name="che-do-an" value="eat-clean" /> Eat clean</label>
-                    <label><input type="checkbox" name="che-do-an" value="com-gia-dinh" /> Cơm gia đình</label>
-                    <label><input type="checkbox" name="che-do-an" value="it-tinh-bot" /> Ít tinh bột</label>
-                  </div>
-                </details>
-              </li>
-              <li>
-                <details class="filter-item">
-                  <summary>VÙNG MIỀN <span>▼</span></summary>
-                  <div class="filter-options">
-                    <label><input type="checkbox" name="vung-mien" value="mien-trung" /> Miền Trung</label>
-                    <label><input type="checkbox" name="vung-mien" value="mien-nam" /> Miền Nam</label>
-                    <label><input type="checkbox" name="vung-mien" value="mien-tay" /> Miền Tây</label>
-                    <label><input type="checkbox" name="vung-mien" value="tay-nguyen" /> Tây Nguyên</label>
-                    <label><input type="checkbox" name="vung-mien" value="khac" /> Khác</label>
-                  </div>
-                </details>
-              </li>
-              <li>
-                <details class="filter-item">
-                  <summary>NGÂN SÁCH <span>▼</span></summary>
-                  <div class="filter-options">
-                    <label><input type="checkbox" name="ngan-sach" value="duoi-50k" /> Dưới 50k</label>
-                    <label><input type="checkbox" name="ngan-sach" value="duoi-100k" /> Dưới 100k</label>
-                    <label><input type="checkbox" name="ngan-sach" value="duoi-200k" /> Dưới 200k</label>
-                    <label><input type="checkbox" name="ngan-sach" value="duoi-500k" /> Dưới 500k</label>
-                    <label><input type="checkbox" name="ngan-sach" value="tren-500k" /> Trên 500k</label>
-                    <label><input type="checkbox" name="ngan-sach" value="khac" /> Khác</label>
-                  </div>
-                </details>
-              </li>
-            </ul>
+                </div>
+              </div>
+              <div class="filter-accordion" data-group="che-do-an">
+                <button type="button" class="filter-trigger-btn" aria-expanded="false">CHẾ ĐỘ ĂN</button>
+                <div class="filter-panel">
+                  <label><input type="checkbox" name="che-do-an" value="an-chay"><span>Ăn chay</span></label>
+                  <label><input type="checkbox" name="che-do-an" value="eat-clean"><span>Eat clean</span></label>
+                  <label><input type="checkbox" name="che-do-an" value="com-gia-dinh"><span>Cơm gia đình</span></label>
+                  <label><input type="checkbox" name="che-do-an" value="it-tinh-bot"><span>Ít tinh bột</span></label>
+                </div>
+              </div>
+              <div class="filter-accordion" data-group="vung-mien">
+                <button type="button" class="filter-trigger-btn" aria-expanded="false">VÙNG MIỀN</button>
+                <div class="filter-panel">
+                  <label><input type="checkbox" name="vung-mien" value="mien-trung"><span>Miền Trung</span></label>
+                  <label><input type="checkbox" name="vung-mien" value="mien-nam"><span>Miền Nam</span></label>
+                  <label><input type="checkbox" name="vung-mien" value="mien-tay"><span>Miền Tây</span></label>
+                  <label><input type="checkbox" name="vung-mien" value="tay-nguyen"><span>Tây Nguyên</span></label>
+                  <label><input type="checkbox" name="vung-mien" value="khac"><span>Khác</span></label>
+                </div>
+              </div>
+              <div class="filter-accordion" data-group="ngan-sach">
+                <button type="button" class="filter-trigger-btn" aria-expanded="false">NGÂN SÁCH</button>
+                <div class="filter-panel">
+                  <label><input type="checkbox" name="ngan-sach" value="duoi-50k"><span>Dưới 50k</span></label>
+                  <label><input type="checkbox" name="ngan-sach" value="duoi-100k"><span>Dưới 100k</span></label>
+                  <label><input type="checkbox" name="ngan-sach" value="duoi-200k"><span>Dưới 200k</span></label>
+                  <label><input type="checkbox" name="ngan-sach" value="duoi-500k"><span>Dưới 500k</span></label>
+                  <label><input type="checkbox" name="ngan-sach" value="tren-500k"><span>Trên 500k</span></label>
+                  <label><input type="checkbox" name="ngan-sach" value="khac"><span>Khác</span></label>
+                </div>
+              </div>
+            </div>
             <button type="submit" class="filter-submit">TÌM CÔNG THỨC PHÙ HỢP</button>
             <button type="reset" class="filter-reset">Bỏ chọn tất cả</button>
           </form>
@@ -251,6 +249,8 @@
 
           <p class="result-summary" id="result-summary" role="status"></p>
           <div class="food-list" id="result-list"></div>
+          <!-- Phân trang: 9 công thức mỗi trang -->
+          <nav class="pagination-nav" id="pagination" aria-label="Phân trang"></nav>
         </section>
       </div>
 
@@ -281,7 +281,6 @@
                 <nav class="site-footer_links">
                     <a href="/pages/search.html">Tất cả công thức</a>
                     <a href="/pages/category.html">Danh mục</a>
-                    <a href="/pages/ingredients.html">So sánh nguyên liệu</a>
                     <a href="/pages/ingredients.html">So sánh giá</a>
                     <a href="/pages/account/reviewed.html">Đánh giá của tôi</a>
                 </nav>

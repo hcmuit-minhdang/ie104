@@ -18,6 +18,7 @@
         history: "/pages/account/history.html",
         reviewed: "/pages/account/reviewed.html",
         ingredients: "/pages/fridge.html",
+        upload: "/pages/upload.html",
         account: "/pages/account/overview.html#thong-tin-tai-khoan",
         ...window.NomNomHeaderConfig?.routes
     };
@@ -31,9 +32,6 @@
     const controls = header.querySelector(".site-header_controls");
     // Giữ mốc này giống @media (max-width: 1000px) trong style.css.
     const mobileScreen = window.matchMedia("(max-width: 1000px)");
-    const IDLE_DELAY = 4000; // Mili giây: 4000 ms = 4 giây.
-    const REVEAL_EDGE = 24; // Rê chuột vào 24px trên cùng để gọi header lại.
-    let idleTimer;
 
     header.querySelectorAll("[data-header-route]").forEach(link => {
         link.href = routes[link.dataset.headerRoute];
@@ -50,27 +48,6 @@
         return header.classList.contains("site-header_menu-open");
     }
 
-    function isUsingHeader() {
-        const focused = document.activeElement;
-        const usingKeyboard = header.contains(focused) && focused.matches(":focus-visible");
-        const editing = header.contains(focused) && focused.matches("input, textarea, select, [contenteditable]");
-        return isMobileMenuOpen() || panels.some(panel => panel.open) || usingKeyboard || editing;
-    }
-
-    function restartIdleTimer() {
-        // Hủy lịch cũ để không có nhiều bộ đếm chạy cùng lúc.
-        window.clearTimeout(idleTimer);
-        if (document.hidden || isUsingHeader()) return;
-        idleTimer = window.setTimeout(() => {
-            if (!isUsingHeader()) header.classList.add("site-header_hidden");
-        }, IDLE_DELAY);
-    }
-
-    function showHeader() {
-        header.classList.remove("site-header_hidden");
-        restartIdleTimer();
-    }
-
     function setMobileMenu(open, restoreFocus = false) {
         if (!menuButton) return;
         const expanded = mobileScreen.matches && open;
@@ -82,7 +59,6 @@
         controls.inert = mobileScreen.matches && !expanded;
         if (!expanded) closePanels();
         if (restoreFocus) menuButton.focus({ preventScroll: true });
-        showHeader();
     }
 
     function initResponsiveMenu() {
@@ -100,38 +76,6 @@
             }
         });
         setMobileMenu(false);
-    }
-
-    function initHeaderAutoHide() {
-        // Chỉ tương tác với header mới tính lại thời gian, không theo mọi click trên trang.
-        header.addEventListener("pointermove", showHeader);
-        header.addEventListener("pointerdown", showHeader);
-        header.addEventListener("click", showHeader);
-        header.addEventListener("input", showHeader);
-        header.addEventListener("focusin", showHeader);
-        header.addEventListener("focusout", () => {
-            // Đợi focus chuyển xong rồi mới kiểm tra người dùng còn ở header không.
-            window.setTimeout(restartIdleTimer, 0);
-        });
-
-        document.addEventListener("pointermove", event => {
-            if (event.pointerType === "mouse" && event.clientY <= REVEAL_EDGE) showHeader();
-        }, { passive: true });
-        document.addEventListener("keydown", event => {
-            if (event.key === "Tab") showHeader();
-        });
-
-        let lastScrollY = Math.max(0, window.scrollY);
-        window.addEventListener("scroll", () => {
-            const currentScrollY = Math.max(0, window.scrollY);
-            if (currentScrollY < lastScrollY) showHeader();
-            lastScrollY = currentScrollY;
-        }, { passive: true });
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden) window.clearTimeout(idleTimer);
-            else showHeader();
-        });
-        restartIdleTimer();
     }
 
     function showStatus(message) {
@@ -152,7 +96,6 @@
             syncPanel(panel);
             panel.addEventListener("toggle", () => {
                 syncPanel(panel);
-                showHeader();
                 if (!panel.open) return;
                 closePanels(panel);
                 status.hidden = true;
@@ -180,11 +123,9 @@
 
         document.addEventListener("click", event => {
             if (header.contains(event.target)) return;
-            const wasOpen = isMobileMenuOpen() || panels.some(panel => panel.open);
             closePanels();
             if (isMobileMenuOpen()) setMobileMenu(false);
             status.hidden = true;
-            if (wasOpen) restartIdleTimer();
         });
 
         document.addEventListener("keydown", event => {
@@ -233,14 +174,12 @@
                 : header.querySelector('[data-auth-action="login"]');
             target.focus();
         }
-        showHeader();
     }
 
     // Gắn xử lý đóng menu trước listener chuyển giao cho phần tài khoản.
     initResponsiveMenu();
     initHeaderDropdowns();
     initHeaderSearch();
-    initHeaderAutoHide();
 
     header.addEventListener("click", event => {
         const control = event.target.closest("[data-auth-action], [data-header-action]");
@@ -267,7 +206,6 @@
 
     /* ---- Điều hướng cho các nút còn lại của menu + liên kết chân trang (chạy trên mọi trang) ---- */
     const navTargets = {
-        collections: "/pages/category.html",
         guide: "/pages/about.html#huong-dan",
         faq: "/pages/about.html#faq",
         contact: "/pages/about.html#lien-he"
@@ -293,7 +231,6 @@
     const footerLinks = {
         "tất cả công thức": "/pages/category.html",
         "danh mục": "/pages/category.html",
-        "so sánh nguyên liệu": "/pages/ingredients.html",
         "so sánh giá": "/pages/ingredients.html",
         "đánh giá của tôi": "/pages/account/reviewed.html",
         "về nomnom": "/pages/about.html",

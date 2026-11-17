@@ -23,8 +23,11 @@
     margin-top: 16px;
     font-weight: 700;
     font-size: 0.9rem;
-    text-decoration: underline;
+    text-decoration: none;
     color: #292929;
+}
+.filter-reset:hover {
+    text-decoration: underline;
 }
 .result-toolbar {
     display: flex;

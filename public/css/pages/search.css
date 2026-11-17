@@ -33,10 +33,14 @@ main::before {
     top: 0;
     bottom: 0;
     z-index: -1;
-    background-image: url(/assets/images/bg-pattern-transparent.png);
+    /* Nền hoa văn trắng: rộng bằng trang (co giãn theo bề rộng), lặp theo chiều dọc nên không bị cắt mép */
+    background-image: url(/assets/images/backgrounds/pattern-white.webp);
+    background-size: 100% auto;
+    background-position: top center;
+    background-repeat: repeat-y;
     display: block;
     height: 100%;
-    filter: opacity(0.35);
+    
 }
 
 body {
@@ -151,15 +155,13 @@ a {
 .similar-card .recipe-name {
     font-size: 1.1rem;
     font-weight: 800;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-thickness: 2px;
+    text-decoration: none;
 }
 
 .similar-card .recipe-price {
     font-size: 0.78rem;
     color: #333333;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .similar-card .recipe-time {
@@ -276,3 +278,11 @@ a {
     cursor: pointer;
 }
 .search-results-main { gap: 24px; }
+
+/* Tên công thức nằm trên một dòng; tên dài được fit-names.js thu nhỏ chữ cho vừa */
+.recipe-name,
+.food-name {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}

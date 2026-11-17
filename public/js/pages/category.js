@@ -1,4 +1,4 @@
-/* NomNom — trang Danh mục: lọc / sắp xếp / phân trang qua /api/recipes, trạng thái nằm trên URL. */
+/* NomNom – trang Danh mục: lọc / sắp xếp / phân trang qua /api/recipes, trạng thái nằm trên URL. */
 (function () {
   "use strict";
   var LIMIT = 12;
@@ -8,10 +8,11 @@
   var pager = document.getElementById("pagination");
   var title = document.getElementById("categoryTitle");
   var sortSel = document.getElementById("sortSelect");
-  var searchForm = document.getElementById("sidebarSearchForm");
-  var searchInput = document.getElementById("sidebarSearchInput");
+  var filterForm = document.getElementById("filterForm");
   // 7 nhóm bộ lọc (khớp thiết kế của Phát); mỗi nhóm là một tham số trên URL, ví dụ ?dam=Thịt bò,Thịt gà
   var GROUPS = ["dam", "tinh-bot", "rau-cu", "trai-cay", "che-do-an", "vung-mien", "ngan-sach"];
+  // 4 nhóm đầu là nguyên liệu; một món "đủ nguyên liệu" khi mọi nguyên liệu của món nằm trong các ô đã chọn
+  var INGREDIENT_GROUPS = ["dam", "tinh-bot", "rau-cu", "trai-cay"];
   var categories = [];
   var reqId = 0;
 
@@ -68,7 +69,6 @@
   function syncControls(s) {
     sortSel.value = s.sort;
     if (sortSel.value !== s.sort) sortSel.value = "rating";
-    searchInput.value = s.q;
     syncChecks(s);
     var cat = categories.filter(function (c) { return c.id === s.category; })[0];
     title.textContent = (cat ? cat.name : s.q ? 'Kết quả cho "' + s.q + '"' : "Tất cả món ăn").toUpperCase();
@@ -87,6 +87,20 @@
     }
   }
 
+  // Gắn enoughIngredients cho từng món theo các ô nguyên liệu đang chọn (chưa chọn gì thì chưa đủ)
+  function markEnough(items, s) {
+    var chosen = {};
+    var known = {};
+    INGREDIENT_GROUPS.forEach(function (g) {
+      s[g].forEach(function (v) { chosen[v] = true; });
+      document.querySelectorAll('input[type="checkbox"][name="' + g + '"]').forEach(function (b) { known[b.value] = true; });
+    });
+    items.forEach(function (r) {
+      var need = (r.tags || []).filter(function (t) { return known[t]; });
+      r.enoughIngredients = need.length > 0 && need.every(function (t) { return chosen[t]; });
+    });
+  }
+
   function render() {
     var s = readState();
     syncControls(s);
@@ -103,7 +117,8 @@
       grid.setAttribute("aria-busy", "false");
       if (d.pages && s.page > d.pages) { s.page = d.pages; go(s, true); return; }
       count.textContent = d.total ? "Có " + d.total + " món ăn" : "Không có món ăn";
-      grid.innerHTML = (d.items || []).map(function (r) { return NomNom.cardHtml(r); }).join("");
+      markEnough(d.items || [], s);
+      grid.innerHTML = (d.items || []).map(function (r) { return NomNom.cardHtml(r, null, null, true); }).join("");
       if (!d.items || !d.items.length) showMessage("Không tìm thấy món ăn phù hợp. Hãy thử bỏ bớt bộ lọc.");
       pager.innerHTML = NomNom.pagerHtml(d.page || s.page, d.pages || 1, function (p) {
         return urlFor(Object.assign({}, s, { page: p }));
@@ -122,21 +137,17 @@
     go(s);
   }
 
-  document.querySelectorAll(".filter-trigger-btn").forEach(function (b) {
-    b.addEventListener("click", function () { setOpen(b.parentElement, !b.parentElement.classList.contains("is-open")); });
-  });
-  // Tick/bỏ tick một ô: gom lại các ô đang tick của nhóm đó rồi lọc lại từ trang 1.
-  document.querySelector(".filter-sidebar").addEventListener("change", function (e) {
-    var t = e.target;
-    if (t.type !== "checkbox" || GROUPS.indexOf(t.name) === -1) return;
-    var picked = [];
-    document.querySelectorAll('input[type="checkbox"][name="' + t.name + '"]:checked').forEach(function (b) { picked.push(b.value); });
+  // Gửi bộ lọc một lần khi bấm "TÌM CÔNG THỨC PHÙ HỢP": gom các ô đã tick của mọi nhóm rồi lọc từ trang 1
+  filterForm.addEventListener("submit", function (e) {
+    e.preventDefault();
     var p = {};
-    p[t.name] = picked;
+    GROUPS.forEach(function (g) {
+      p[g] = [];
+      document.querySelectorAll('input[type="checkbox"][name="' + g + '"]:checked').forEach(function (b) { p[g].push(b.value); });
+    });
     update(p);
   });
   sortSel.addEventListener("change", function () { update({ sort: sortSel.value }); });
-  searchForm.addEventListener("submit", function (e) { e.preventDefault(); update({ q: searchInput.value.trim() }); });
   document.getElementById("filterReset").addEventListener("click", function (e) {
     e.preventDefault();
     var cleared = { category: "", q: "", sort: "rating", page: 1 };
