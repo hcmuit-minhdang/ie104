@@ -69,6 +69,8 @@
 .skeleton-line.short { width: 55%; }
 @keyframes nn-shimmer { to { background-position: -200% 0; } }
 .pagination-nav { flex-wrap: wrap; }
+/* Nút trước/sau ở trang đầu/cuối: vẫn hiện như Figma nhưng mờ, không bấm được. */
+.page-link.is-disabled { opacity: 0.4; pointer-events: none; }
 @media (max-width: 480px) {
     .result-toolbar { flex-direction: column; align-items: flex-start; }
 }

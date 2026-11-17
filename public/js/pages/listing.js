@@ -41,7 +41,11 @@
       return '<a href="' + esc(hrefFor(p)) + '" class="page-link' + (active ? " is-active" : "") + '" data-page="' + p + '" aria-label="' + aria + '"' +
         (active ? ' aria-current="page"' : "") + '>' + label + '</a>';
     }
-    if (page > 1) out.push(link(page - 1, "◀ Trang trước", false, "Trang trước"));
+    /* Nút trước/sau luôn hiện như Figma; ở trang đầu/cuối thì mờ và không bấm được. */
+    function disabled(label) {
+      return '<span class="page-link is-disabled" aria-disabled="true">' + label + '</span>';
+    }
+    out.push(page > 1 ? link(page - 1, "◀ Trang trước", false, "Trang trước") : disabled("◀ Trang trước"));
     var show = {};
     [1, 2, page - 1, page, page + 1, pages - 1, pages].forEach(function (p) { if (p >= 1 && p <= pages) show[p] = true; });
     var last = 0;
@@ -50,7 +54,7 @@
       out.push(link(p, p, p === page, "Trang " + p));
       last = p;
     });
-    if (page < pages) out.push(link(page + 1, "Trang sau ▶", false, "Trang sau"));
+    out.push(page < pages ? link(page + 1, "Trang sau ▶", false, "Trang sau") : disabled("Trang sau ▶"));
     return out.join("");
   };
 
