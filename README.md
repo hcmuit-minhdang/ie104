@@ -58,7 +58,7 @@ Nhóm: **_(số nhóm)_**
 |---|---|
 | Ngôn ngữ | **HTML5, CSS3, JavaScript thuần (ES6+)** |
 | Bố cục | Flexbox, CSS Grid, container query, media query |
-| Dữ liệu | `fetch` đọc file JSON tĩnh (`public/data/db.json`), xử lý trong `public/js/store.js` |
+| Dữ liệu | **Fetch API** tải file JSON tĩnh (`public/data/db.json`), xử lý trong `public/js/store.js` |
 | Lưu trên trình duyệt | `localStorage` (tài khoản, phiên đăng nhập, công thức đã lưu/đăng, đánh giá, lịch sử, bản nháp form đăng tải) |
 | Triển khai | Bất kỳ hosting tĩnh nào (Vercel, Netlify, ...) |
 
@@ -68,7 +68,7 @@ Nhóm: **_(số nhóm)_**
 
 Các trang lấy dữ liệu qua lớp [`public/js/data.js`](public/js/data.js) (`NomNom.data.get('/recipes', {...})`), lớp này gọi tiếp vào [`public/js/store.js`](public/js/store.js). Toàn bộ chạy trong trình duyệt, không có lời gọi mạng nào tới máy chủ:
 
-- Dữ liệu gốc (khoảng 130 công thức, nguyên liệu, tài khoản demo) đọc một lần từ `public/data/db.json` bằng `fetch`.
+- Dữ liệu gốc (khoảng 130 công thức, nguyên liệu, tài khoản demo) tải một lần từ `public/data/db.json` bằng **Fetch API** (`fetch('/data/db.json')` trong `store.js`). Đây là file tĩnh nằm cùng website, không phải lời gọi tới máy chủ.
 - Lọc, tìm kiếm, phân trang, đánh giá, gợi ý theo nguyên liệu... đều do JavaScript trong `store.js` tính.
 - Phần người dùng thay đổi (đăng ký, đăng nhập, lưu, đánh giá, đăng công thức, lịch sử) lưu trong `localStorage` của **chính trình duyệt đó**, nên mỗi máy có dữ liệu riêng.
 - Mật khẩu được băm bằng PBKDF2-SHA256 (Web Crypto) kèm salt ngẫu nhiên, không lưu mật khẩu thô.

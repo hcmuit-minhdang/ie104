@@ -1,5 +1,5 @@
-/* NomNom — "máy chủ" chạy ngay trong trình duyệt.
-   Cung cấp NomNomStore.run(method, path, body): trả lời bằng dữ liệu tĩnh /data/db.json (công thức, nguyên liệu, tài khoản demo)
+/* NomNom — kho dữ liệu chạy ngay trong trình duyệt (không có máy chủ).
+   Cung cấp NomNomStore.run(method, path, body): trả lời bằng dữ liệu tĩnh /data/db.json, tải một lần bằng fetch (công thức, nguyên liệu, tài khoản demo)
    cộng phần người dùng thay đổi (tài khoản, phiên, công thức đã lưu/đăng, đánh giá, lịch sử) lưu ở localStorage.
    Nhờ đó site chạy được trên mọi hosting tĩnh, không cần Node.js hay máy chủ nào.
    Nạp file này TRƯỚC /js/data.js. Dữ liệu của mỗi trình duyệt tách biệt; xóa dữ liệu trang web để đặt lại.
@@ -1165,7 +1165,7 @@ module.exports = { MAX_AGE, createSession, findSession, destroySession, purgeExp
 
 });
 
-/* ===== Chạy: nạp dữ liệu, chặn fetch /api ===== */
+/* ===== Chạy: dùng fetch đọc /data/db.json một lần, rồi xử lý mọi yêu cầu ngay trong trình duyệt (không gọi mạng nào khác) ===== */
 var HttpError = load('lib/http').HttpError, Router = load('lib/router').Router, S = load('lib/session');
 var NOLIMIT = { hit: function () { return 0; } };
 var router = new Router(), db = null, baseIds = null, baseRecipes = null, ready = null;
