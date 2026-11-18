@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="/css/components/footer.css">
   <link rel="stylesheet" href="/css/components/login.css">
   <link rel="stylesheet" href="/css/components/signup.css">
-  <script src="/js/local-api.js"></script>
-  <script src="/js/api.js"></script>
+  <script src="/js/store.js"></script>
+  <script src="/js/data.js"></script>
   <script src="/js/components/header.js" defer></script>
   <script src="/js/components/auth.js" defer></script>
   <script src="/js/components/login.js" defer></script>
@@ -432,7 +432,7 @@
     if (!d.name || !d.email || !d.message) return say("Bạn hãy điền đủ họ tên, email và nội dung.", false);
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) return say("Bạn hãy nhập địa chỉ email hợp lệ.", false);
     btn.disabled = true;
-    NomNom.api.post("/contact", d).then(function () {
+    NomNom.data.post("/contact", d).then(function () {
       f.reset(); say("Cảm ơn bạn! NomNom đã nhận được liên hệ.", true);
     }).catch(function (err) { say(err.message, false); }).then(function () { btn.disabled = false; });
   });

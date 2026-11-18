@@ -1,5 +1,5 @@
 /* NomNom - Góc của tôi: dữ liệu thật từ API cho 5 trang user.
-   Cần: /js/api.js (NomNom.api, NomNom.esc, NomNom.recipeUrl) và NomNomAuth (auth.js). */
+   Cần: /js/data.js (NomNom.data, NomNom.esc, NomNom.recipeUrl) và NomNomAuth (auth.js). */
 (function () {
   "use strict";
 

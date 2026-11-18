@@ -24,8 +24,8 @@ final/
    │  ├─ components/         # header, footer, login, signup
    │  └─ pages/              # mỗi trang một file CSS
    ├─ js/
-   │  ├─ local-api.js        # trả lời các lời gọi /api/... ngay trong trình duyệt (localStorage)
-   │  ├─ api.js              # lớp gọi API dùng chung (fetch + xử lý lỗi) và tiện ích hiển thị
+   │  ├─ store.js            # kho dữ liệu chạy trong trình duyệt (đọc data/db.json + localStorage)
+   │  ├─ data.js             # lớp truy cập dữ liệu dùng chung (NomNom.data) và tiện ích hiển thị
    │  ├─ components/         # header, auth, login, signup, ...
    │  └─ pages/              # mỗi trang một file JS
    ├─ data/db.json           # dữ liệu gốc: công thức, nguyên liệu, tài khoản demo

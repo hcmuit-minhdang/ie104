@@ -214,25 +214,15 @@
     let pending = [];
 
     function http(method, path, body) {
-        const opts = { method, credentials: "same-origin", headers: { Accept: "application/json" } };
-        if (body !== undefined) {
-            opts.headers["Content-Type"] = "application/json";
-            opts.body = JSON.stringify(body);
-        }
-        return fetch("/api" + path, opts).then(res => res.text().then(text => {
-            let data = null;
-            try { data = text ? JSON.parse(text) : null; } catch (e) { /* không phải JSON */ }
-            if (!res.ok) {
+        return window.NomNomStore.run(method, path, body).then(res => {
+            const data = res.data;
+            if (res.status >= 400) {
                 const err = new Error((data && data.error) || "Có lỗi xảy ra (" + res.status + ")");
                 err.status = res.status;
                 err.field = data && data.field || null;
                 throw err;
             }
             return data;
-        }), () => {
-            const err = new Error("Không kết nối được máy chủ. Hãy thử lại sau.");
-            err.status = 0;
-            throw err;
         });
     }
 

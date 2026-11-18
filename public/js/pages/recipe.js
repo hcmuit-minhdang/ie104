@@ -379,10 +379,10 @@ async function renderSimilar(recipe) {
     let items = [];
     try {
         const categoryParam = recipe.categoryId || recipe.category;
-        const data = await NomNom.api.get("/recipes", { category: categoryParam || undefined, limit: 5 });
+        const data = await NomNom.data.get("/recipes", { category: categoryParam || undefined, limit: 5 });
         items = (data.items || []).filter(r => r.id !== recipe.id);
         if (!items.length) {
-            const any = await NomNom.api.get("/recipes", { limit: 5, sort: "rating" });
+            const any = await NomNom.data.get("/recipes", { limit: 5, sort: "rating" });
             items = (any.items || []).filter(r => r.id !== recipe.id);
         }
     } catch (e) {
@@ -571,8 +571,8 @@ function initSave(recipe) {
         paint();
         try {
             const res = saved
-                ? await NomNom.api.put(`/recipes/${encodeURIComponent(recipe.id)}/save`)
-                : await NomNom.api.del(`/recipes/${encodeURIComponent(recipe.id)}/save`);
+                ? await NomNom.data.put(`/recipes/${encodeURIComponent(recipe.id)}/save`)
+                : await NomNom.data.del(`/recipes/${encodeURIComponent(recipe.id)}/save`);
             if (res && typeof res.saved === "boolean") saved = res.saved;
             paint();
             toast(saved ? "Đã lưu công thức vào Góc của tôi." : "Đã bỏ lưu công thức.");
@@ -591,7 +591,7 @@ function initSave(recipe) {
     // Đăng nhập/đăng xuất ở nơi khác -> lấy lại trạng thái "saved" của tài khoản hiện tại.
     document.addEventListener("nomnom:auth-change", async () => {
         try {
-            const fresh = await NomNom.api.get(`/recipes/${encodeURIComponent(recipe.id)}`);
+            const fresh = await NomNom.data.get(`/recipes/${encodeURIComponent(recipe.id)}`);
             saved = !!fresh.saved;
         } catch (e) {
             saved = false;
@@ -742,7 +742,7 @@ function initReviews(recipe) {
 
     async function load() {
         try {
-            const data = await NomNom.api.get(base);
+            const data = await NomNom.data.get(base);
             reviews = data.items || [];
             updateRatingDisplay(recipe, Number(data.average) || 0, Number(data.count ?? reviews.length) || 0);
         } catch (error) {
@@ -771,7 +771,7 @@ function initReviews(recipe) {
 
         submit.disabled = true;
         try {
-            await NomNom.api.post(base, { rating, text });
+            await NomNom.data.post(base, { rating, text });
             textarea.dataset.touched = "";
             await load();
             showMessage("Cảm ơn bạn! Đánh giá đã được lưu.");
@@ -801,7 +801,7 @@ function initReviews(recipe) {
             review.likes = (Number(review.likes) || 0) + (review.liked ? 1 : -1);
             render();
             try {
-                const res = await NomNom.api.post(`/reviews/${encodeURIComponent(id)}/like`);
+                const res = await NomNom.data.post(`/reviews/${encodeURIComponent(id)}/like`);
                 if (res) { review.liked = !!res.liked; review.likes = Number(res.likes) || 0; }
             } catch (error) {
                 review.liked = before.liked;
@@ -812,7 +812,7 @@ function initReviews(recipe) {
         } else if (btn.dataset.action === "delete") {
             if (!window.confirm("Xóa đánh giá của bạn?")) return;
             try {
-                await NomNom.api.del(`/reviews/${encodeURIComponent(id)}`);
+                await NomNom.data.del(`/reviews/${encodeURIComponent(id)}`);
                 rating = 0;
                 textarea.value = "";
                 textarea.dataset.touched = "";
@@ -856,7 +856,7 @@ async function init() {
 
     let raw;
     try {
-        raw = await NomNom.api.get(`/recipes/${encodeURIComponent(recipeId)}`);
+        raw = await NomNom.data.get(`/recipes/${encodeURIComponent(recipeId)}`);
     } catch (error) {
         if (error.status === 404) {
             document.title = "Không tìm thấy công thức | NomNom";
@@ -870,7 +870,7 @@ async function init() {
     let catalog = [];
     let units = {};
     try {
-        const data = await NomNom.api.get("/ingredients");
+        const data = await NomNom.data.get("/ingredients");
         catalog = data.items || [];
         units = normalizeUnits(data.units);
     } catch (e) {
@@ -880,7 +880,7 @@ async function init() {
     const recipe = normalizeRecipe(raw, recipeId);
     try {
         // category có thể là id (danh mục chọn khi upload) -> hiện tên, giữ id để lọc công thức tương tự
-        const cats = await NomNom.api.get("/categories");
+        const cats = await NomNom.data.get("/categories");
         const hit = (cats.items || []).find(c => c.id === recipe.category || c.name === recipe.category);
         if (hit) { recipe.categoryId = hit.id; recipe.category = hit.name; }
     } catch (e) { /* giữ nguyên */ }

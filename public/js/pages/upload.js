@@ -6,7 +6,7 @@ const MAX_IMAGE_SIDE = 1600;
 const MAX_UPLOAD_BYTES = 2.8 * 1024 * 1024; // giới hạn server 3MB (tính trên dữ liệu gốc)
 const MAX_GALLERY = 5;
 const DRAFT_KEY = "nomnom:upload-draft:v1";
-const api = window.NomNom.api;
+const api = window.NomNom.data;
 const esc = window.NomNom.esc;
 
 /* ------------------------------------------------------------------ */

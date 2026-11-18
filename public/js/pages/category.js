@@ -112,7 +112,7 @@
     count.textContent = "Đang tải...";
     var params = { category: s.category, q: s.q, sort: s.sort, page: s.page, limit: LIMIT };
     GROUPS.forEach(function (g) { if (s[g].length) params[g] = s[g].join(","); });
-    NomNom.api.get("/recipes", params).then(function (d) {
+    NomNom.data.get("/recipes", params).then(function (d) {
       if (id !== reqId) return;
       grid.setAttribute("aria-busy", "false");
       if (d.pages && s.page > d.pages) { s.page = d.pages; go(s, true); return; }
@@ -165,6 +165,6 @@
   });
   window.addEventListener("popstate", render);
 
-  NomNom.api.get("/categories").then(function (d) { categories = d.items || []; }, function () { categories = []; })
+  NomNom.data.get("/categories").then(function (d) { categories = d.items || []; }, function () { categories = []; })
     .then(render);
 })();

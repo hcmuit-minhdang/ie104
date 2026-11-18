@@ -58,7 +58,7 @@ Nhóm: **_(số nhóm)_**
 |---|---|
 | Ngôn ngữ | **HTML5, CSS3, JavaScript thuần (ES6+)** |
 | Bố cục | Flexbox, CSS Grid, container query, media query |
-| Dữ liệu | `fetch` API đọc dữ liệu JSON tĩnh (`public/data/db.json`) |
+| Dữ liệu | `fetch` đọc file JSON tĩnh (`public/data/db.json`), xử lý trong `public/js/store.js` |
 | Lưu trên trình duyệt | `localStorage` (tài khoản, phiên đăng nhập, công thức đã lưu/đăng, đánh giá, lịch sử, bản nháp form đăng tải) |
 | Triển khai | Bất kỳ hosting tĩnh nào (Vercel, Netlify, ...) |
 
@@ -66,9 +66,10 @@ Nhóm: **_(số nhóm)_**
 
 ### Dữ liệu hoạt động thế nào
 
-Các trang gọi `fetch("/api/...")` như khi làm việc với một API thật. File [`public/js/local-api.js`](public/js/local-api.js) chặn các lời gọi đó và trả lời ngay trong trình duyệt:
+Các trang lấy dữ liệu qua lớp [`public/js/data.js`](public/js/data.js) (`NomNom.data.get('/recipes', {...})`), lớp này gọi tiếp vào [`public/js/store.js`](public/js/store.js). Toàn bộ chạy trong trình duyệt, không có lời gọi mạng nào tới máy chủ:
 
-- Dữ liệu gốc (khoảng 130 công thức, nguyên liệu, tài khoản demo) đọc từ `public/data/db.json`.
+- Dữ liệu gốc (khoảng 130 công thức, nguyên liệu, tài khoản demo) đọc một lần từ `public/data/db.json` bằng `fetch`.
+- Lọc, tìm kiếm, phân trang, đánh giá, gợi ý theo nguyên liệu... đều do JavaScript trong `store.js` tính.
 - Phần người dùng thay đổi (đăng ký, đăng nhập, lưu, đánh giá, đăng công thức, lịch sử) lưu trong `localStorage` của **chính trình duyệt đó**, nên mỗi máy có dữ liệu riêng.
 - Mật khẩu được băm bằng PBKDF2-SHA256 (Web Crypto) kèm salt ngẫu nhiên, không lưu mật khẩu thô.
 - Muốn đặt lại dữ liệu: xóa dữ liệu trang web trong trình duyệt, hoặc gõ `NomNomLocal.reset()` trong Console.
@@ -120,7 +121,7 @@ final/
    ├─ pages/                 # category, search, recipe, upload, ingredients, fridge,
    │                         # fridge-results, about, policy, account/*
    ├─ css/                   # base.css, components/ (header, footer, login, signup), pages/
-   ├─ js/                    # api.js, local-api.js, components/ (header, auth, ...), pages/
+   ├─ js/                    # data.js, store.js, components/ (header, auth, ...), pages/
    ├─ data/db.json           # dữ liệu gốc (công thức, nguyên liệu, tài khoản demo)
    └─ assets/                # images, icons, fonts
 ```

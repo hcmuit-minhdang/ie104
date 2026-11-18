@@ -17,11 +17,11 @@ function normalize(text) {
   .trim();
 }
 
-// Lấy nguyên liệu + đơn vị từ API: GET /api/ingredients -> { items, units }
+// Lấy nguyên liệu + đơn vị từ kho dữ liệu: GET /ingredients -> { items, units }
 async function loadCatalog() {
-  const response = await fetch("/api/ingredients", { credentials: "same-origin", headers: { Accept: "application/json" } });
-  if (!response.ok) throw new Error(`${response.status} ${response.statusText}: /api/ingredients`);
-  const data = await response.json();
+  const response = await window.NomNomStore.run("GET", "/ingredients");
+  if (response.status >= 400) throw new Error(`Không tải được nguyên liệu (${response.status})`);
+  const data = response.data;
   let units = data.units || {};
   if (Array.isArray(units)) {
     const map = {};

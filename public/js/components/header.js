@@ -217,9 +217,9 @@
             location.href = navTargets[target];
         } else if (target === "random") {
             event.preventDefault();
-            fetch("/api/recipes?limit=50", { credentials: "same-origin" })
-                .then(r => r.json())
-                .then(d => {
+            window.NomNomStore.run("GET", "/recipes?limit=50")
+                .then(res => {
+                    const d = res.data;
                     const items = (d && d.items) || [];
                     if (!items.length) throw new Error("empty");
                     const pick = items[Math.floor(Math.random() * items.length)];

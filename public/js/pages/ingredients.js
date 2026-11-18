@@ -178,7 +178,7 @@
     }
     results.appendChild(el("p", "ing-empty", "Đang tải giá..."));
     var names = selected.map(function (sid) { var i = byId(sid); return i ? i.name : sid; });
-    NomNom.api.get("/ingredients/compare", { names: names }).then(function (d) {
+    NomNom.data.get("/ingredients/compare", { names: names }).then(function (d) {
       if (id !== reqId) return;
       results.textContent = "";
       var items = d.items || [];
@@ -215,7 +215,7 @@
     renderChips();
   });
 
-  NomNom.api.get("/ingredients").then(function (d) {
+  NomNom.data.get("/ingredients").then(function (d) {
     all = d.items || [];
     var want = (new URLSearchParams(location.search).get("names") || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
     selected = want.map(function (w) {

@@ -1,7 +1,7 @@
-/* NomNom — lớp gọi API dùng chung. Nạp bằng <script src="/js/api.js"></script> (TRƯỚC script của trang).
-   Dùng: const data = await NomNom.api.get('/recipes', { q: 'bò', page: 2 });
-         await NomNom.api.post('/auth/login', { identifier, password });
-   Lỗi: ném NomNom.ApiError { status, message, field } (message là tiếng Việt từ server).
+/* NomNom — lớp truy cập dữ liệu dùng chung. Nạp bằng <script src="/js/data.js"></script> (sau /js/store.js) (TRƯỚC script của trang).
+   Dùng: const data = await NomNom.data.get('/recipes', { q: 'bò', page: 2 });
+         await NomNom.data.post('/auth/login', { identifier, password });
+   Lỗi: ném NomNom.ApiError { status, message, field } (message tiếng Việt).
    Cũng có tiện ích hiển thị: NomNom.esc, NomNom.money, NomNom.minutes, NomNom.stars, NomNom.qs. */
 (function () {
   "use strict";
@@ -27,27 +27,16 @@
   }
   NomNom.qs = qs;
 
+  /* Gọi vào "kho dữ liệu" (store.js) — không có mạng/máy chủ. Lỗi (status >= 400) ném ApiError. */
   function request(method, path, body, params) {
-    var opts = { method: method, credentials: "same-origin", headers: { Accept: "application/json" } };
-    if (body !== undefined) {
-      opts.headers["Content-Type"] = "application/json";
-      opts.body = JSON.stringify(body);
-    }
-    return fetch("/api" + path + qs(params), opts).then(function (res) {
-      return res.text().then(function (text) {
-        var data = null;
-        try { data = text ? JSON.parse(text) : null; } catch (e) { /* không phải JSON */ }
-        if (!res.ok) {
-          throw new ApiError(res.status, (data && data.error) || "Có lỗi xảy ra (" + res.status + ")", data && data.field);
-        }
-        return data;
-      });
-    }, function () {
-      throw new ApiError(0, "Không tải được dữ liệu. Hãy mở trang qua một web server (không mở trực tiếp bằng file://).");
+    return window.NomNomStore.run(method, path + qs(params), body).then(function (res) {
+      var data = res.data;
+      if (res.status >= 400) throw new ApiError(res.status, (data && data.error) || "Có lỗi xảy ra (" + res.status + ")", data && data.field);
+      return data;
     });
   }
 
-  NomNom.api = {
+  NomNom.data = {
     get: function (path, params) { return request("GET", path, undefined, params); },
     post: function (path, body) { return request("POST", path, body === undefined ? {} : body); },
     put: function (path, body) { return request("PUT", path, body === undefined ? {} : body); },

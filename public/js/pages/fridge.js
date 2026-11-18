@@ -61,8 +61,8 @@
   }
 
   // Nạp danh mục nguyên liệu để làm gợi ý
-  if (window.NomNom && NomNom.api) {
-    NomNom.api.get("/ingredients").then(function (d) {
+  if (window.NomNom && NomNom.data) {
+    NomNom.data.get("/ingredients").then(function (d) {
       (d.items || []).forEach(function (i) {
         knownNames[i.name.toLowerCase()] = i.name;
         catalogNames.push({ name: i.name, key: plain(i.name) });
@@ -226,7 +226,7 @@
     var list = document.getElementById("latest-list");
     if (!list) return;
     list.textContent = "Đang tải...";
-    NomNom.api.get("/recipes", { sort: "new", limit: 6 }).then(function (d) {
+    NomNom.data.get("/recipes", { sort: "new", limit: 6 }).then(function (d) {
       list.textContent = "";
       (d.items || []).forEach(function (r) { list.appendChild(foodCard(r)); });
       if (!(d.items || []).length) list.textContent = "Chưa có công thức nào.";
@@ -280,7 +280,7 @@
     }
     summary.textContent = "Đang tìm công thức phù hợp...";
     // Lấy tối đa 100 kết quả một lần rồi chia trang ở trình duyệt, nên đổi trang không gọi lại API
-    NomNom.api.get("/fridge", { ingredients: tokens.join(","), q: keyword, limit: 100 }).then(function (d) {
+    NomNom.data.get("/fridge", { ingredients: tokens.join(","), q: keyword, limit: 100 }).then(function (d) {
       allItems = d.items || [];
       summary.textContent = "";
       if (!allItems.length) {

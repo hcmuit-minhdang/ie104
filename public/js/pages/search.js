@@ -73,7 +73,7 @@
     grid.innerHTML = NomNom.skeletonHtml(6);
     pager.innerHTML = "";
     count.textContent = "Đang tìm...";
-    NomNom.api.get("/recipes", { q: s.q, sort: s.sort, maxTime: s.maxTime, maxPrice: s.maxPrice, page: s.page, limit: LIMIT })
+    NomNom.data.get("/recipes", { q: s.q, sort: s.sort, maxTime: s.maxTime, maxPrice: s.maxPrice, page: s.page, limit: LIMIT })
       .then(function (d) {
         if (id !== reqId) return;
         grid.setAttribute("aria-busy", "false");

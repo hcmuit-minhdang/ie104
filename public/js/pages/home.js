@@ -37,7 +37,7 @@ upBtn.addEventListener('click', () => {
   var popular = document.querySelector(".popular-recipes-container");
   var community = document.querySelector(".new-community-recipe-container");
   var catBox = document.querySelector(".category-container");
-  if (!window.NomNom || !NomNom.api) return;
+  if (!window.NomNom || !NomNom.data) return;
 
   function errorBlock(box, retry) {
     box.innerHTML = '<p class="home-error">Không tải được dữ liệu. <button type="button">Thử lại</button></p>';
@@ -46,7 +46,7 @@ upBtn.addEventListener('click', () => {
 
   function loadRecipes(box, params, cls, imgCls, n, after) {
     box.innerHTML = NomNom.skeletonHtml(n, cls);
-    NomNom.api.get("/recipes", params).then(function (d) {
+    NomNom.data.get("/recipes", params).then(function (d) {
       var items = d.items || [];
       box.innerHTML = items.length
         ? items.map(function (r) { return NomNom.cardHtml(r, cls, imgCls); }).join("")
@@ -70,7 +70,7 @@ upBtn.addEventListener('click', () => {
   (function loadLeaderboard() {
     var cards = document.querySelectorAll(".leaderboard-card");
     if (!cards.length) return;
-    NomNom.api.get("/leaderboard").then(function (d) {
+    NomNom.data.get("/leaderboard").then(function (d) {
       function fill(card, user, descSel, text, href) {
         if (!card || !user) return;
         var name = card.querySelector(".user-name");
@@ -94,11 +94,11 @@ upBtn.addEventListener('click', () => {
 
   function loadCategories() {
     if (!catBox) return;
-    NomNom.api.get("/categories").then(function (d) {
+    NomNom.data.get("/categories").then(function (d) {
       var items = (d.items || []).slice(0, 7);
       // Mỗi danh mục lấy ảnh của món được đánh giá cao nhất trong danh mục đó.
       return Promise.all(items.map(function (c) {
-        return NomNom.api.get("/recipes", { category: c.id, limit: 1, sort: "rating" }).then(function (r) {
+        return NomNom.data.get("/recipes", { category: c.id, limit: 1, sort: "rating" }).then(function (r) {
           return r.items && r.items[0] ? r.items[0].image : null;
         }, function () { return null; });
       })).then(function (imgs) {
