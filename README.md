@@ -17,7 +17,7 @@ Nhóm: **_(số nhóm)_**
 
 | STT | Họ tên | MSSV | Phần phụ trách | Đóng góp |
 |---|---|---|---|---|
-| 1 | Minh | _(MSSV)_ | Trang chủ, Về chúng tôi, 5 trang Góc của tôi (tổng quan, đã lưu, đã đăng, đã đánh giá, lịch sử), tích hợp, backend | _(%)_ |
+| 1 | Minh | _(MSSV)_ | Trang chủ, Về chúng tôi, 5 trang Góc của tôi (tổng quan, đã lưu, đã đăng, đã đánh giá, lịch sử), tích hợp, máy chủ dữ liệu | _(%)_ |
 | 2 | Tấn Phát | _(MSSV)_ | Trang danh mục và tìm kiếm | _(%)_ |
 | 3 | Thạch | _(MSSV)_ | Trang chi tiết công thức, so sánh giá nguyên liệu | _(%)_ |
 | 4 | Thanh | _(MSSV)_ | Trang tìm công thức theo nguyên liệu trong tủ lạnh | _(%)_ |
@@ -129,7 +129,7 @@ final/
    └─ assets/                # images, icons, fonts
 ```
 
-So với gợi ý của giảng viên (`css/ js/ images/ index.html about.html contact.html`): nhóm gom phần giao diện vào `public/` để tách khỏi backend. Phần **liên hệ** nằm ngay trong trang `about.html` (biểu mẫu gửi tới `POST /api/contact`).
+So với gợi ý của giảng viên (`css/ js/ images/ index.html about.html contact.html`): nhóm gom phần giao diện vào `public/` để tách khỏi phần máy chủ. Phần **liên hệ** nằm ngay trong trang `about.html` (biểu mẫu gửi tới `POST /api/contact`).
 
 Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt đối từ gốc site.
 
