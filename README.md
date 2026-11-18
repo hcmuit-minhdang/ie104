@@ -3,7 +3,7 @@
 > Đồ án môn **IE104 – Internet và Công nghệ Web** (GV: ThS. Võ Tấn Khoa)
 > Tìm công thức, nấu theo nguyên liệu đang có trong tủ lạnh, so sánh giá nguyên liệu, lưu món yêu thích và chia sẻ công thức của chính bạn.
 
-- 🌐 **Demo trực tuyến:** https://nomnom-taupe.vercel.app (chạy chế độ demo, xem mục [Demo trên Vercel](#-demo-trên-vercel))
+- 🌐 **Demo trực tuyến:** https://nomnom-taupe.vercel.app
 - 💻 **Mã nguồn:** https://github.com/hcmuit-minhdang/ie104
 - 🎨 **Thiết kế Figma:** https://www.figma.com/design/1XVDA0jnedoKuCL9rYodr7/IE104
 - 🗂️ **Quản lý công việc (Trello/Notion):** _(điền link)_
@@ -17,7 +17,7 @@ Nhóm: **_(số nhóm)_**
 
 | STT | Họ tên | MSSV | Phần phụ trách | Đóng góp |
 |---|---|---|---|---|
-| 1 | Minh | _(MSSV)_ | Trang chủ, Về chúng tôi, 5 trang Góc của tôi (tổng quan, đã lưu, đã đăng, đã đánh giá, lịch sử), tích hợp, máy chủ dữ liệu | _(%)_ |
+| 1 | Minh | _(MSSV)_ | Trang chủ, Về chúng tôi, 5 trang Góc của tôi (tổng quan, đã lưu, đã đăng, đã đánh giá, lịch sử), tích hợp | _(%)_ |
 | 2 | Tấn Phát | _(MSSV)_ | Trang danh mục và tìm kiếm | _(%)_ |
 | 3 | Thạch | _(MSSV)_ | Trang chi tiết công thức, so sánh giá nguyên liệu | _(%)_ |
 | 4 | Thanh | _(MSSV)_ | Trang tìm công thức theo nguyên liệu trong tủ lạnh | _(%)_ |
@@ -54,39 +54,42 @@ Nhóm: **_(số nhóm)_**
 
 ## 🧰 Công nghệ
 
-| Lớp | Công nghệ |
+| Mục | Nội dung |
 |---|---|
-| Giao diện | **HTML5, CSS3, JavaScript thuần (ES6+)** |
-| Gọi dữ liệu | `fetch` API tới JSON API của chính site |
-| Lưu trữ phía trình duyệt | `localStorage` (nháp form đăng tải) |
-| Triển khai | Vercel hoặc chạy bằng `node server.js` |
+| Ngôn ngữ | **HTML5, CSS3, JavaScript thuần (ES6+)** |
+| Bố cục | Flexbox, CSS Grid, container query, media query |
+| Dữ liệu | `fetch` API đọc dữ liệu JSON tĩnh (`public/data/db.json`) |
+| Lưu trên trình duyệt | `localStorage` (tài khoản, phiên đăng nhập, công thức đã lưu/đăng, đánh giá, lịch sử, bản nháp form đăng tải) |
+| Triển khai | Bất kỳ hosting tĩnh nào (Vercel, Netlify, ...) |
 
-**Tuân thủ yêu cầu môn học:** không Bootstrap, jQuery, Tailwind hay thư viện/framework nào khác; không dùng template có sẵn; không có dependency npm (`package.json` chỉ có script). Tài nguyên ngoài duy nhất là Google Fonts và liên kết mạng xã hội.
+**Không có máy chủ.** Toàn bộ website là file tĩnh trong `public/`. Không dùng Bootstrap, jQuery, Tailwind hay thư viện nào khác, không dùng template có sẵn, không có dependency npm. Tài nguyên ngoài duy nhất là Google Fonts và liên kết mạng xã hội.
 
-> Trọng tâm của đồ án là giao diện và xử lý tương tác trên trình duyệt (toàn bộ trong `public/`). Dữ liệu được tải bằng `fetch`. Thư mục `server/` (Node.js thuần, không thư viện) chỉ là **phần tùy chọn nâng cao** cung cấp dữ liệu và chức năng tài khoản, xem mục [Phần tùy chọn: máy chủ dữ liệu](#-phần-tùy-chọn-máy-chủ-dữ-liệu).
+### Dữ liệu hoạt động thế nào
+
+Các trang gọi `fetch("/api/...")` như khi làm việc với một API thật. File [`public/js/local-api.js`](public/js/local-api.js) chặn các lời gọi đó và trả lời ngay trong trình duyệt:
+
+- Dữ liệu gốc (khoảng 130 công thức, nguyên liệu, tài khoản demo) đọc từ `public/data/db.json`.
+- Phần người dùng thay đổi (đăng ký, đăng nhập, lưu, đánh giá, đăng công thức, lịch sử) lưu trong `localStorage` của **chính trình duyệt đó**, nên mỗi máy có dữ liệu riêng.
+- Mật khẩu được băm bằng PBKDF2-SHA256 (Web Crypto) kèm salt ngẫu nhiên, không lưu mật khẩu thô.
+- Muốn đặt lại dữ liệu: xóa dữ liệu trang web trong trình duyệt, hoặc gõ `NomNomLocal.reset()` trong Console.
 
 ---
 
-## 🚀 Cài đặt và chạy
+## 🚀 Chạy trên máy
 
-Yêu cầu: **Node.js ≥ 18** chỉ để chạy máy chủ phục vụ trang và dữ liệu mẫu (nhóm dùng v24). Không cần `npm install`.
-
-```bash
-git clone https://github.com/hcmuit-minhdang/ie104.git
-cd ie104
-node server.js            # mở http://localhost:3000
-```
-
-Các lệnh khác:
+Chỉ cần một web server tĩnh, mở thư mục `public/` bằng một trong các cách:
 
 ```bash
-npm start                                          # tương đương node server.js
-npm test                                           # chạy bộ test API tự động
-node server.js --port=3101 --db=D:/tmp/test-db.json   # đổi cổng và file dữ liệu
+# Cách 1: VS Code → cài tiện ích "Live Server" → chuột phải public/index.html → Open with Live Server
+# Cách 2: Python
+python -m http.server 3000 --directory public
+# Cách 3: Node.js
+npx serve public -l 3000
 ```
 
-- Biến môi trường: `PORT` (mặc định 3000), `NOMNOM_DB` (mặc định `server/data/db.json`), `NOMNOM_UPLOADS` (mặc định `server/uploads`), `NOMNOM_RATE_LIMIT` (số lần đăng nhập/đăng ký mỗi phút mỗi IP, mặc định 10). Cờ `--port=`, `--db=`, `--uploads=`, `--public=` được ưu tiên hơn biến môi trường.
-- **Luôn mở site qua server**, không mở bằng `file://`, vì trang dùng đường dẫn tuyệt đối `/css/...`, `/js/...`, `/api/...`.
+Rồi mở http://localhost:3000.
+
+> Phải mở qua web server (không mở trực tiếp bằng `file://`) và để `public/` làm thư mục gốc, vì trang dùng đường dẫn tuyệt đối `/css/...`, `/js/...`, `/assets/...`.
 
 ### Tài khoản dùng thử
 
@@ -95,11 +98,13 @@ node server.js --port=3101 --db=D:/tmp/test-db.json   # đổi cổng và file d
 | Tên đăng nhập | `demo` (hoặc email `demo@nomnom.vn`) |
 | Mật khẩu | `demo123` |
 
-Tài khoản này có sẵn công thức đã lưu, 2 công thức đã đăng, 4 đánh giá và lịch sử xem.
+Tài khoản này có sẵn công thức đã lưu, 2 công thức đã đăng, 4 đánh giá và lịch sử xem. Bạn cũng có thể tự đăng ký tài khoản mới.
 
-### Đặt lại dữ liệu
+---
 
-Dừng server, xóa `server/data/db.json` (và các file trong `server/uploads/` nếu muốn), chạy lại để nạp dữ liệu mẫu mới.
+## ☁️ Triển khai
+
+Đưa thư mục `public/` lên hosting tĩnh. Với Vercel: import repo, giữ nguyên `vercel.json` (`outputDirectory: public`, không cần build). Mỗi lần push lên `main` Vercel tự cập nhật.
 
 ---
 
@@ -107,91 +112,30 @@ Dừng server, xóa `server/data/db.json` (và các file trong `server/uploads/`
 
 ```text
 final/
-├─ server.js                 # điểm vào: HTTP server + file tĩnh + API
-├─ package.json              # chỉ có script start/test, không có dependency
-├─ vercel.json               # cấu hình triển khai Vercel
-├─ api/index.js              # hàm serverless cho Vercel (bọc server, đồng bộ Redis nếu có)
 ├─ README.md, STRUCTURE.md   # tài liệu
-├─ server/                   # BACKEND (JavaScript)
-│  ├─ API.md                 # đặc tả API
-│  ├─ lib/                   # app, router, static, session, hash, validate, db, model, ...
-│  ├─ routes/                # auth, recipes, me, reviews, ingredients, misc
-│  ├─ seed/                  # dữ liệu mẫu nạp lần đầu
-│  ├─ data/                  # db.json (tự sinh khi chạy)
-│  ├─ uploads/               # ảnh người dùng tải lên
-│  └─ tests/run.js           # test API tự động
-└─ public/                   # FRONTEND, thư mục duy nhất được phục vụ ở "/"
+├─ package.json              # chỉ có script start, không có dependency
+├─ vercel.json               # cấu hình triển khai tĩnh
+└─ public/                   # TOÀN BỘ WEBSITE (thư mục gốc khi triển khai)
    ├─ index.html             # Trang chủ
    ├─ pages/                 # category, search, recipe, upload, ingredients, fridge,
    │                         # fridge-results, about, policy, account/*
    ├─ css/                   # base.css, components/ (header, footer, login, signup), pages/
-   ├─ js/                    # api.js, components/ (header, auth), pages/
+   ├─ js/                    # api.js, local-api.js, components/ (header, auth, ...), pages/
+   ├─ data/db.json           # dữ liệu gốc (công thức, nguyên liệu, tài khoản demo)
    └─ assets/                # images, icons, fonts
 ```
 
-So với gợi ý của giảng viên (`css/ js/ images/ index.html about.html contact.html`): nhóm gom phần giao diện vào `public/` để tách khỏi phần máy chủ. Phần **liên hệ** nằm ngay trong trang `about.html` (biểu mẫu gửi tới `POST /api/contact`).
+So với gợi ý của giảng viên (`css/ js/ images/ index.html about.html contact.html`), nhóm đặt toàn bộ vào `public/` và chia thêm `pages/`. Phần **liên hệ** nằm trong trang `about.html`.
 
 Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt đối từ gốc site.
 
 ---
 
-## 🔌 Phần tùy chọn: máy chủ dữ liệu
-
-Giao diện gọi các endpoint dưới đây để lấy dữ liệu. Máy chủ viết bằng Node.js thuần và là phần làm thêm, không bắt buộc theo đề bài.
-
-### API tóm tắt
-
-Chi tiết xem [`server/API.md`](server/API.md). Lỗi trả về dạng `{ "error": "thông báo tiếng Việt", "field"?: "..." }`. Phiên đăng nhập bằng cookie `nomnom_sid` (HttpOnly, SameSite=Lax, 30 ngày).
-
-| Method + đường dẫn | Mô tả | Cần đăng nhập |
-|---|---|---|
-| POST `/api/auth/register`, `/login`, `/logout` | Đăng ký / đăng nhập / đăng xuất | – |
-| GET / PATCH / DELETE `/api/me` | Xem, sửa, xóa tài khoản | PATCH, DELETE |
-| GET `/api/recipes` | Tìm và lọc: `q`, `category`, `maxTime`, `maxPrice`, `sort`, `page`, `limit` | – |
-| GET `/api/categories` | Danh mục và số lượng | – |
-| GET `/api/recipes/:id` | Chi tiết (ghi lịch sử nếu đã đăng nhập) | – |
-| POST `/api/recipes`, DELETE `/api/recipes/:id` | Đăng / xóa công thức của mình | có |
-| POST `/api/uploads` | Tải ảnh PNG/JPEG/WebP ≤ 3 MB | có |
-| PUT/DELETE `/api/recipes/:id/save` | Lưu / bỏ lưu | có |
-| GET `/api/me/saved`, `/uploaded`, `/history`, `/reviews`, `/overview` | Góc của tôi | có |
-| GET/POST `/api/recipes/:id/reviews` | Xem / đăng đánh giá | POST |
-| POST `/api/reviews/:id/like`, DELETE `/api/reviews/:id` | Thích / xóa đánh giá | có |
-| GET `/api/ingredients`, `/api/ingredients/compare` | Nguyên liệu và so sánh giá | – |
-| GET `/api/fridge?ingredients=...` | Gợi ý món theo nguyên liệu | – |
-| GET `/api/leaderboard`, POST `/api/contact`, GET `/api/health` | Bảng xếp hạng, liên hệ, kiểm tra sống | – |
-
----
-
-### Bảo mật và chất lượng
-
-- Mật khẩu băm `scrypt` kèm salt ngẫu nhiên; phiên lưu dạng băm SHA-256.
-- Chống path traversal khi phục vụ file tĩnh, không lộ `server/`, `.git`.
-- Header bảo mật (CSP, `X-Frame-Options`, `nosniff`), kiểm tra Origin cho request ghi, giới hạn tần suất đăng nhập/đăng ký.
-- Ảnh tải lên được kiểm tra chữ ký file (magic bytes), loại và dung lượng.
-- Chống XSS: dữ liệu hiển thị đều được escape (`NomNom.esc`).
-- Bộ test API tự động (`npm test`): 20 kiểm thử đều đạt.
-
----
-
-## ☁️ Demo trên Vercel
-
-Vercel chạy nhiều instance tách biệt và chỉ cho ghi ở `/tmp`, nên bản trực tuyến chạy **chế độ demo** khi chưa nối Redis:
-
-- Đăng ký tạm đóng; dùng tài khoản `demo` / `demo123` (popup đăng nhập có nút điền sẵn).
-- Phiên đăng nhập là token tự ký (HMAC) nên hợp lệ ở mọi instance.
-- Dữ liệu cá nhân (lưu, đánh giá, ...) chỉ nằm trong bộ nhớ tạm của từng instance.
-
-**Muốn đăng ký và lưu dữ liệu bền vững:** Vercel → dự án → *Storage* → tạo/kết nối **Upstash for Redis** (gói miễn phí) → *Connect to project* → **Redeploy**. `api/index.js` tự dùng Redis khi thấy biến `KV_REST_API_URL` + `KV_REST_API_TOKEN` (hoặc `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`).
-
-Khi demo trước lớp, nên chạy `node server.js` trên máy để có đầy đủ chức năng.
-
----
-
 ## ⚠️ Giới hạn đã biết
 
+- Dữ liệu người dùng lưu theo từng trình duyệt (`localStorage`, khoảng 5 MB): tài khoản tạo ở máy này không đăng nhập được ở máy khác. Ảnh tải lên được thu nhỏ tối đa 900px để tiết kiệm chỗ.
 - Chi tiết (nguyên liệu, các bước) của một số công thức dạng thẻ được sinh theo tên món từ dữ liệu mẫu, không phải công thức thật.
 - Giá nguyên liệu ở các cửa hàng là dữ liệu mô phỏng.
-- CSDL là file JSON: phù hợp quy mô đồ án, không dành cho nhiều người dùng đồng thời.
 
 ---
 

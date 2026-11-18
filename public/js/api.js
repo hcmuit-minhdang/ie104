@@ -43,7 +43,7 @@
         return data;
       });
     }, function () {
-      throw new ApiError(0, "Không kết nối được máy chủ. Hãy chạy `node server.js` rồi mở http://localhost:3000.");
+      throw new ApiError(0, "Không tải được dữ liệu. Hãy mở trang qua một web server (không mở trực tiếp bằng file://).");
     });
   }
 

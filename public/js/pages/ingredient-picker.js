@@ -48,7 +48,7 @@ export async function createIngredientPicker(root, options = {}) {
   try {
     ({ ingredients, units } = await loadCatalog());
   } catch (error) {
-    root.innerHTML = `<p class="ip-error">Không tải được dữ liệu nguyên liệu. Hãy mở trang qua máy chủ NomNom (node server.js).</p>`;
+    root.innerHTML = `<p class="ip-error">Không tải được dữ liệu nguyên liệu. Hãy mở trang qua một web server (không mở trực tiếp bằng file://).</p>`;
     throw error;
   }
 
