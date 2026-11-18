@@ -983,16 +983,15 @@ aside {
 }
 
 .new-community-recipe-container {
-    display: flex;
-    flex-direction: row;
-    flex: 1 1 0;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));   /* 4 thẻ rộng bằng nhau */
+    align-items: stretch;   /* các thẻ cao bằng nhau */
     gap: 2vw;
 }
 
 .recipe-card {
-    width: 20vw;
+    width: auto;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -1005,10 +1004,14 @@ aside {
 
 .recipe-card img {
     width: 100%;
+    box-sizing: border-box;
     padding: 0 1em;
+    aspect-ratio: 4 / 3;    /* mọi ảnh cùng khung, cắt vừa khung */
+    object-fit: cover;
 }
 
 .recipe-card .recipe-info{
+    flex: 1;                /* phần chữ giãn đều để thẻ bằng nhau */
     display: flex;
     flex-direction: column;
     text-decoration: none;
@@ -1025,20 +1028,27 @@ a.recipe-card {
 }
 
 .recipe-card .recipe-name {
-    font-size: 1.8em;
+    font-size: 1.4em;
     font-weight: 700;
     text-decoration: none;
+    white-space: nowrap;    /* tên 1 dòng; fit-names.js tự thu nhỏ chữ nếu dài */
+    overflow: hidden;
 }
+
+/* Giá và thời gian luôn nằm sát đáy thẻ nên các thẻ thẳng hàng với nhau */
+.recipe-card .recipe-price { margin-top: auto; }
+.recipe-card .recipe-time { min-height: 2.6em; }
 
 .recipe-card .recipe-time, .recipe-card .recipe-price {
     font-size: 1em;
     font-weight: 400;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .recipe-card .recipe-time::before {
     content: "";
+    flex: none;             /* icon đồng hồ không bị co khi chữ xuống dòng */
     display: inline-block;
     width: 1.2em;
     height: 1.2em;
