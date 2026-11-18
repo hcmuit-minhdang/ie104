@@ -59,19 +59,17 @@ Nhóm: **_(số nhóm)_**
 | Giao diện | **HTML5, CSS3, JavaScript thuần (ES6+)** |
 | Gọi dữ liệu | `fetch` API tới JSON API của chính site |
 | Lưu trữ phía trình duyệt | `localStorage` (nháp form đăng tải) |
-| Backend (phần nâng cao, tùy chọn) | **Node.js thuần**, chỉ module có sẵn: `http`, `fs`, `crypto`, `path`, `url` |
-| Cơ sở dữ liệu | 1 file JSON, ghi nguyên tử (ghi file tạm rồi `rename`) |
-| Triển khai | Vercel (frontend tĩnh + 1 hàm serverless) hoặc chạy `node server.js` |
+| Triển khai | Vercel hoặc chạy bằng `node server.js` |
 
 **Tuân thủ yêu cầu môn học:** không Bootstrap, jQuery, Tailwind hay thư viện/framework nào khác; không dùng template có sẵn; không có dependency npm (`package.json` chỉ có script). Tài nguyên ngoài duy nhất là Google Fonts và liên kết mạng xã hội.
 
-> Đề bài cho phép không cần backend. Nhóm làm thêm backend để dữ liệu (tài khoản, đánh giá, công thức đăng tải) hoạt động thật. **Toàn bộ giao diện nằm trong `public/` và độc lập với backend về mặt công nghệ.**
+> Trọng tâm của đồ án là giao diện và xử lý tương tác trên trình duyệt (toàn bộ trong `public/`). Dữ liệu được tải bằng `fetch`. Thư mục `server/` (Node.js thuần, không thư viện) chỉ là **phần tùy chọn nâng cao** cung cấp dữ liệu và chức năng tài khoản, xem mục [Phần tùy chọn: máy chủ dữ liệu](#-phần-tùy-chọn-máy-chủ-dữ-liệu).
 
 ---
 
 ## 🚀 Cài đặt và chạy
 
-Yêu cầu: **Node.js ≥ 18** (nhóm dùng v24). Không cần `npm install`.
+Yêu cầu: **Node.js ≥ 18** chỉ để chạy máy chủ phục vụ trang và dữ liệu mẫu (nhóm dùng v24). Không cần `npm install`.
 
 ```bash
 git clone https://github.com/hcmuit-minhdang/ie104.git
@@ -137,7 +135,11 @@ Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt 
 
 ---
 
-## 🔌 API tóm tắt
+## 🔌 Phần tùy chọn: máy chủ dữ liệu
+
+Giao diện gọi các endpoint dưới đây để lấy dữ liệu. Máy chủ viết bằng Node.js thuần và là phần làm thêm, không bắt buộc theo đề bài.
+
+### API tóm tắt
 
 Chi tiết xem [`server/API.md`](server/API.md). Lỗi trả về dạng `{ "error": "thông báo tiếng Việt", "field"?: "..." }`. Phiên đăng nhập bằng cookie `nomnom_sid` (HttpOnly, SameSite=Lax, 30 ngày).
 
@@ -160,7 +162,7 @@ Chi tiết xem [`server/API.md`](server/API.md). Lỗi trả về dạng `{ "err
 
 ---
 
-## 🔒 Bảo mật và chất lượng
+### Bảo mật và chất lượng
 
 - Mật khẩu băm `scrypt` kèm salt ngẫu nhiên; phiên lưu dạng băm SHA-256.
 - Chống path traversal khi phục vụ file tĩnh, không lộ `server/`, `.git`.
