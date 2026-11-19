@@ -4,27 +4,25 @@
 > Tìm công thức, nấu theo nguyên liệu đang có trong tủ lạnh, so sánh giá nguyên liệu, lưu món yêu thích và chia sẻ công thức của chính bạn.
 
 - 🌐 **Demo trực tuyến:** https://nomnom-taupe.vercel.app
-- 💻 **Mã nguồn:** https://github.com/hcmuit-minhdang/ie104
+- 💻 **Mã nguồn:** https://github.com/hcmuit-minhdang/NomNom
 - 🎨 **Thiết kế Figma:** https://www.figma.com/design/1XVDA0jnedoKuCL9rYodr7/IE104
-- 🗂️ **Quản lý công việc (Trello/Notion):** _(điền link)_
+- 🗂️ **Quản lý công việc:** https://app.notion.com/p/IE104-NomNom-41c2218b6ea98086b85be6ce87b3a267?source=copy_link
 - 🎬 **Video báo cáo và demo (YouTube, unlisted):** _(điền link)_
 
 ---
 
 ## 👥 Thành viên nhóm
 
-Nhóm: **_(số nhóm)_**
+Nhóm: **11**
 
 | STT | Họ tên | MSSV | Phần phụ trách | Đóng góp |
 |---|---|---|---|---|
-| 1 | Minh | _(MSSV)_ | Trang chủ, Về chúng tôi, 5 trang Góc của tôi (tổng quan, đã lưu, đã đăng, đã đánh giá, lịch sử), tích hợp | _(%)_ |
-| 2 | Tấn Phát | _(MSSV)_ | Trang danh mục và tìm kiếm | _(%)_ |
-| 3 | Thạch | _(MSSV)_ | Trang chi tiết công thức, so sánh giá nguyên liệu | _(%)_ |
-| 4 | Thanh | _(MSSV)_ | Trang tìm công thức theo nguyên liệu trong tủ lạnh | _(%)_ |
-| 5 | Thịnh | _(MSSV)_ | Trang đăng tải công thức | _(%)_ |
+| 1 | Minh | 24521051 | Trang chủ, Về chúng tôi, 5 trang Góc của tôi (tổng quan, đã lưu, đã đăng, đã đánh giá, lịch sử), tích hợp | _(%)_ |
+| 2 | Tấn Phát | 24521322 | Trang danh mục và tìm kiếm | _(%)_ |
+| 3 | Thạch | 24521590 | Trang chi tiết công thức, so sánh giá nguyên liệu | _(%)_ |
+| 4 | Thư | 23521547 | Trang tìm công thức theo nguyên liệu trong tủ lạnh | _(%)_ |
+| 5 | Thịnh | 24521695 | Trang đăng tải công thức | _(%)_ |
 | | **Tổng** | | | **100%** |
-
-> Lịch sử đóng góp từng người nằm ở repo làm việc của nhóm: https://github.com/hcmuit-minhdang/NomNom (mỗi thành viên một thư mục và nhánh riêng). Repo `ie104` này là bản ghép hoàn chỉnh cuối cùng.
 
 ---
 
@@ -43,7 +41,7 @@ Nhóm: **_(số nhóm)_**
 - Đăng ký, đăng nhập, đăng xuất, sửa thông tin, đổi mật khẩu, xóa tài khoản.
 - **Lưu / bỏ lưu** công thức, **đánh giá** (1–5 sao), thích bình luận.
 - **Đăng tải công thức** cùng ảnh (tải ảnh lên, kiểm tra định dạng và dung lượng), xóa công thức của mình.
-- **Góc của tôi:** tổng quan, đã lưu, đã đăng, đã đánh giá, lịch sử xem.
+- **Góc của tôi:** tổng quan, đã lưu, đã đăng (có nút cập nhật và xóa), đã đánh giá, lịch sử xem; đổi ảnh đại diện và ảnh bìa.
 
 **Giao diện và trải nghiệm**
 - Bố cục theo thiết kế Figma, dùng Flexbox, CSS Grid và container query (`cqw`) nên co giãn đúng ở màn hình laptop 15.6", desktop 23.8", tablet và điện thoại.
@@ -58,17 +56,17 @@ Nhóm: **_(số nhóm)_**
 |---|---|
 | Ngôn ngữ | **HTML5, CSS3, JavaScript thuần (ES6+)** |
 | Bố cục | Flexbox, CSS Grid, container query, media query |
-| Dữ liệu | **Fetch API** tải file JSON tĩnh (`public/data/db.json`), xử lý trong `public/js/store.js` |
+| Dữ liệu | **Fetch API** tải file JSON tĩnh (`data/db.json`), xử lý trong `js/store.js` |
 | Lưu trên trình duyệt | `localStorage` (tài khoản, phiên đăng nhập, công thức đã lưu/đăng, đánh giá, lịch sử, bản nháp form đăng tải) |
 | Triển khai | Bất kỳ hosting tĩnh nào (Vercel, Netlify, ...) |
 
-**Không có máy chủ.** Toàn bộ website là file tĩnh trong `public/`. Không dùng Bootstrap, jQuery, Tailwind hay thư viện nào khác, không dùng template có sẵn, không có dependency npm. Tài nguyên ngoài duy nhất là Google Fonts và liên kết mạng xã hội.
+**Không có máy chủ.** Toàn bộ website là file tĩnh nằm ngay trong thư mục gốc của dự án. Không dùng Bootstrap, jQuery, Tailwind hay thư viện nào khác, không dùng template có sẵn, không có dependency npm. Tài nguyên ngoài duy nhất là Google Fonts và liên kết mạng xã hội.
 
 ### Dữ liệu hoạt động thế nào
 
-Các trang lấy dữ liệu qua lớp [`public/js/data.js`](public/js/data.js) (`NomNom.data.get('/recipes', {...})`), lớp này gọi tiếp vào [`public/js/store.js`](public/js/store.js). Toàn bộ chạy trong trình duyệt, không có lời gọi mạng nào tới máy chủ:
+Các trang lấy dữ liệu qua lớp [`js/data.js`](js/data.js) (`NomNom.data.get('/recipes', {...})`), lớp này gọi tiếp vào [`js/store.js`](js/store.js). Toàn bộ chạy trong trình duyệt, không có lời gọi mạng nào tới máy chủ:
 
-- Dữ liệu gốc (khoảng 130 công thức, nguyên liệu, tài khoản demo) tải một lần từ `public/data/db.json` bằng **Fetch API** (`fetch('/data/db.json')` trong `store.js`). Đây là file tĩnh nằm cùng website, không phải lời gọi tới máy chủ.
+- Dữ liệu gốc (khoảng 130 công thức, nguyên liệu, tài khoản demo) tải một lần từ `data/db.json` bằng **Fetch API** (`fetch('/data/db.json')` trong `store.js`). Đây là file tĩnh nằm cùng website, không phải lời gọi tới máy chủ.
 - Lọc, tìm kiếm, phân trang, đánh giá, gợi ý theo nguyên liệu... đều do JavaScript trong `store.js` tính.
 - Phần người dùng thay đổi (đăng ký, đăng nhập, lưu, đánh giá, đăng công thức, lịch sử) lưu trong `localStorage` của **chính trình duyệt đó**, nên mỗi máy có dữ liệu riêng.
 - Mật khẩu được băm bằng PBKDF2-SHA256 (Web Crypto) kèm salt ngẫu nhiên, không lưu mật khẩu thô.
@@ -78,19 +76,19 @@ Các trang lấy dữ liệu qua lớp [`public/js/data.js`](public/js/data.js) 
 
 ## 🚀 Chạy trên máy
 
-Chỉ cần một web server tĩnh, mở thư mục `public/` bằng một trong các cách:
+Chỉ cần một web server tĩnh, mở thư mục gốc của dự án (thư mục chứa `index.html`) bằng một trong các cách:
 
 ```bash
-# Cách 1: VS Code → cài tiện ích "Live Server" → chuột phải public/index.html → Open with Live Server
+# Cách 1: VS Code → cài tiện ích "Live Server" → chuột phải index.html → Open with Live Server
 # Cách 2: Python
-python -m http.server 3000 --directory public
+python -m http.server 3000
 # Cách 3: Node.js
-npx serve public -l 3000
+npx serve . -l 3000
 ```
 
 Rồi mở http://localhost:3000.
 
-> Phải mở qua web server (không mở trực tiếp bằng `file://`) và để `public/` làm thư mục gốc, vì trang dùng đường dẫn tuyệt đối `/css/...`, `/js/...`, `/assets/...`.
+> Phải mở qua web server (không mở trực tiếp bằng `file://`) và để thư mục chứa `index.html` làm thư mục gốc, vì trang dùng đường dẫn tuyệt đối `/css/...`, `/js/...`, `/images/...`.
 
 ### Tài khoản dùng thử
 
@@ -105,28 +103,30 @@ Tài khoản này có sẵn công thức đã lưu, 2 công thức đã đăng, 
 
 ## ☁️ Triển khai
 
-Đưa thư mục `public/` lên hosting tĩnh. Với Vercel: import repo, giữ nguyên `vercel.json` (`outputDirectory: public`, không cần build). Mỗi lần push lên `main` Vercel tự cập nhật.
+Đưa cả dự án lên hosting tĩnh. Với Vercel: import repo, giữ nguyên `vercel.json` (`outputDirectory: "."`, không cần build). Mỗi lần push lên `main` Vercel tự cập nhật.
 
 ---
 
 ## 📁 Cấu trúc thư mục
 
 ```text
-final/
+NomNom/
+├─ index.html                # Trang chủ
+├─ about.html                # Về chúng tôi (có biểu mẫu liên hệ)
 ├─ README.md, STRUCTURE.md   # tài liệu
 ├─ package.json              # chỉ có script start, không có dependency
 ├─ vercel.json               # cấu hình triển khai tĩnh
-└─ public/                   # TOÀN BỘ WEBSITE (thư mục gốc khi triển khai)
-   ├─ index.html             # Trang chủ
-   ├─ pages/                 # category, search, recipe, upload, ingredients, fridge,
-   │                         # fridge-results, about, policy, account/*
-   ├─ css/                   # base.css, components/ (header, footer, login, signup), pages/
-   ├─ js/                    # data.js, store.js, components/ (header, auth, ...), pages/
-   ├─ data/db.json           # dữ liệu gốc (công thức, nguyên liệu, tài khoản demo)
-   └─ assets/                # images, icons, fonts
+├─ .gitignore
+├─ pages/                    # category, search, recipe, upload, ingredients, fridge,
+│                            # fridge-results, policy, account/*
+├─ css/                      # components/ (header, footer, login, signup, filter, pager, ...), pages/ (mỗi trang một file)
+├─ js/                       # data.js, store.js, components/ (header, auth, ...), pages/
+├─ data/db.json              # dữ liệu gốc (công thức, nguyên liệu, tài khoản demo)
+├─ images/                   # hình ảnh (icons/ là các biểu tượng)
+└─ fonts/                    # font chữ
 ```
 
-So với gợi ý của giảng viên (`css/ js/ images/ index.html about.html contact.html`), nhóm đặt toàn bộ vào `public/` và chia thêm `pages/`. Phần **liên hệ** nằm trong trang `about.html`.
+Cấu trúc bám theo hướng dẫn của giảng viên (`css/ js/ images/ index.html about.html README.md .gitignore`). Nhóm chia thêm `pages/` cho các trang còn lại và `data/` cho dữ liệu JSON. Phần **liên hệ** nằm trong trang `about.html` nên không có `contact.html` riêng.
 
 Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt đối từ gốc site.
 
@@ -134,7 +134,8 @@ Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt 
 
 ## ⚠️ Giới hạn đã biết
 
-- Dữ liệu người dùng lưu theo từng trình duyệt (`localStorage`, khoảng 5 MB): tài khoản tạo ở máy này không đăng nhập được ở máy khác. Ảnh tải lên được thu nhỏ tối đa 900px để tiết kiệm chỗ.
+- Dữ liệu người dùng lưu theo từng trình duyệt (`localStorage`, khoảng 5 MB): tài khoản tạo ở máy này không đăng nhập được ở máy khác. Ảnh tải lên được thu nhỏ tối đa 800px để tiết kiệm chỗ; khi bộ nhớ đầy, website báo lỗi và không lưu công thức đó.
+- Danh sách công thức luôn lấy mới từ `data/db.json`, nhưng tài khoản, đánh giá, công thức đã lưu và lịch sử lấy từ `localStorage` của trình duyệt đó nên không cập nhật theo `db.json`. Muốn nhận dữ liệu mẫu mới thì xóa dữ liệu trang web hoặc gõ `NomNomLocal.reset()` trong Console.
 - Chi tiết (nguyên liệu, các bước) của một số công thức dạng thẻ được sinh theo tên món từ dữ liệu mẫu, không phải công thức thật.
 - Giá nguyên liệu ở các cửa hàng là dữ liệu mô phỏng.
 
