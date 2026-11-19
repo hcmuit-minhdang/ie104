@@ -197,7 +197,7 @@
     cursor: pointer;
 }
 .site-auth__link:hover {
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 3px;
 }
 .site-auth__submit {

@@ -29,7 +29,7 @@ body::before {
 /* layout */
 .container{width:min(1280px,100% - 48px);margin:0 auto;padding:36px 0 56px;display:flex;flex-direction:column;gap:56px}
 .breadcrumb{font-size:19px;line-height:28px}
-.breadcrumb a:hover{text-decoration:underline}
+.breadcrumb a:hover{text-decoration: none}
 
 .btn{display:flex;align-items:center;justify-content:center;padding:20px;border:2px solid #000;font-weight:600;text-align:center;transition:transform .12s,box-shadow .12s}
 .btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 #000}
@@ -133,7 +133,7 @@ body::before {
 .contact-list{list-style:none;display:flex;flex-direction:column;gap:12px}
 .contact-list li{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline}
 .contact-label{min-width:130px;font-weight:700}
-.contact-list a{text-decoration:underline;text-underline-offset:3px}
+.contact-list a{text-decoration: none;text-underline-offset:3px}
 .contact-social{display:flex;flex-wrap:wrap;gap:12px 24px}
 .contact-social a{display:inline-flex;align-items:center;gap:8px;font-weight:600}
 .contact-social img{flex:none}

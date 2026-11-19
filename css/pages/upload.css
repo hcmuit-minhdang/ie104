@@ -891,7 +891,7 @@ input[type="file"] {
 
 .toc-sublist a:hover {
     color: #000000;
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 3px;
 }
 
@@ -1189,7 +1189,7 @@ input[type="file"] {
     background: none;
     color: #444;
     font-size: 0.95rem;
-    text-decoration: underline;
+    text-decoration: none;
     cursor: pointer;
 }
 

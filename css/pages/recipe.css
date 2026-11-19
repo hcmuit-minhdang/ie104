@@ -272,7 +272,7 @@ a {
 
 .author-name {
     font-weight: 800;
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 3px;
 }
 
@@ -1350,7 +1350,7 @@ a {
 
 .toc-sublist a:hover {
     color: #000000;
-    text-decoration: underline;
+    text-decoration: none;
     text-underline-offset: 3px;
 }
 

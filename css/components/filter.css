@@ -172,7 +172,7 @@
     cursor: pointer;
 }
 .filter-sidebar .filter-reset:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* Nút và ô nhập trong bộ lọc dùng đúng font của trang (nút HTML mặc định không kế thừa font, gây lỗi chữ ở trang tủ lạnh) */

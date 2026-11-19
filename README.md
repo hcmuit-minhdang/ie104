@@ -167,7 +167,7 @@ Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt 
 - Dữ liệu người dùng lưu theo từng trình duyệt (`localStorage`, khoảng 5 MB): tài khoản tạo ở máy này không đăng nhập được ở máy khác, công thức đăng tải chỉ hiện trên trình duyệt của người đăng, góp ý gửi đi cũng chỉ lưu trên máy đó. Ảnh công thức được thu nhỏ tối đa 800px để tiết kiệm chỗ; khi bộ nhớ đầy, website báo lỗi và không lưu.
 - Danh sách công thức luôn lấy mới từ `data/db.json`, còn tài khoản, đánh giá, công thức đã lưu và lịch sử lấy từ `localStorage` nên không cập nhật theo `db.json`. Muốn nhận dữ liệu mẫu mới thì xóa dữ liệu trang web hoặc gõ `NomNomLocal.reset()` trong Console.
 - Phiên đăng nhập luôn giữ 30 ngày (không có tùy chọn "Ghi nhớ tôi"); "Quên mật khẩu" chỉ hiện thông báo vì tài khoản nằm trên trình duyệt, không có email khôi phục.
-- Hai tài khoản mẫu `minh_anh` và `hoa.tran` trong `db.json` dùng định dạng băm mật khẩu cũ nên không đăng nhập được; chỉ dùng để làm tác giả đánh giá mẫu. Hãy dùng tài khoản `demo`.
+- Các tài khoản mẫu khác trong `db.json` (`minh_anh`, `hoa.tran`, `thanh_nga`, `quoc_bao`, `lan_huong`, `duc_anh`, `mai_ngoc`) dùng định dạng băm mật khẩu cũ nên không đăng nhập được; chỉ dùng làm tác giả công thức, đánh giá mẫu và để Bảng vinh danh có nhiều người. Hãy dùng tài khoản `demo`.
 - Sửa công thức đã đăng chỉ đổi được tên món, mô tả, thời gian và khẩu phần; muốn đổi nguyên liệu, các bước hay ảnh thì xóa và đăng lại.
 - Gợi ý theo tủ lạnh so khớp với tối đa 8 nguyên liệu chính của mỗi món; nguyên liệu tự nhập không có trong danh mục sẽ không khớp được món nào.
 - Chi tiết (nguyên liệu, các bước) của một số công thức mẫu được sinh theo tên món, không phải công thức thật.

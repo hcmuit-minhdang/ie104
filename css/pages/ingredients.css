@@ -408,7 +408,7 @@ button {
     cursor: pointer;
 }
 .ing-reset:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 a.buy-button { display: block; text-align: center; text-decoration: none; }
 .store-card .ingredient-name { text-decoration: none; }

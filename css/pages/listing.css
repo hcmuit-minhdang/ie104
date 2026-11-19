@@ -27,7 +27,7 @@
     color: #292929;
 }
 .filter-reset:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 .result-toolbar {
     display: flex;

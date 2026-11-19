@@ -74,7 +74,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .profile-banner__name { font-size: 36px; font-weight: 600; line-height: 1.64; color: #fff; }
 .profile-banner__edit {
   display: block; font-size: 20px; font-weight: 500; line-height: 1.64;
-  color: var(--link-blue); text-decoration: underline;
+  color: var(--link-blue); text-decoration: none;
 }
 
 /* ---------- KHUNG NỘI DUNG + NỀN HOA VĂN ---------- */
@@ -179,7 +179,7 @@ body::before {
   font-size: calc(15.185 * var(--u)); font-weight: 700; letter-spacing: 0.02em;
   color: rgba(0, 0, 0, 0.81); white-space: nowrap;
 }
-.cmt__who a { text-decoration: underline; }
+.cmt__who a { text-decoration: none; }
 .cmt__who span { font-weight: 300; }
 .cmt__time {
   display: flex; align-items: center; gap: calc(10.5 * var(--u));
@@ -230,8 +230,8 @@ body::before {
 .acc-row__label { font-weight: 600; }
 .acc-row__value { display: flex; align-items: center; gap: 40px; font-weight: 200; text-decoration: none; }
 .acc-row__value img { width: 17.58px; height: 24.24px; max-width: none; margin: 0 3.3px 0 -2.1px; }
-.acc-row__value:hover span { text-decoration: underline; }
-.acc-delete { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; font-weight: 600; color: var(--danger); text-decoration: underline; text-underline-position: from-font; }
+.acc-row__value:hover span { text-decoration: none; }
+.acc-delete { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; font-weight: 600; color: var(--danger); text-decoration: none; text-underline-position: from-font; }
 
 /* ---------- RESPONSIVE (tùy chọn, dưới 1600px) ---------- */
 @media (max-width: 1280px) {
