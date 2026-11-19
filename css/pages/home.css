@@ -443,7 +443,7 @@ button {
 }
 
 #popular-recipes-label {
-    font-size: 3em;
+    font-size: 2.5em;
     font-weight: 800;
     display: inline-block;
     width: fit-content;
@@ -838,7 +838,7 @@ aside {
     float: left;
     position: absolute;
     z-index: 3;
-    font-size: 3.2em;
+    font-size: 2.5em;
     font-weight: 800;
     padding: 30px 70px;
     background-color: #FBC41B;
@@ -895,14 +895,14 @@ aside {
 }
 
 #pcb-question {
-    font-size: 3.8em;
+    font-size: 2.5em;
     font-weight: 800;
     margin: 0 0 0.4em 4vw;
 }
 
 #pcb-text {
     margin: 0 0 1.8em 4vw;
-    font-size: 2.5em;
+    font-size: 1.75em;
     font-weight: 500;
     letter-spacing: 0.05em;
     line-height: 1.3em;
@@ -929,7 +929,7 @@ aside {
 }
 
 #pcb-description-large {
-    font-size: 4em;
+    font-size: 2.8em;
     font-weight: 800;
     line-height: 1.5em;
     margin: 0;
@@ -939,7 +939,7 @@ aside {
 }
 
 #pcb-description-small {
-    font-size: 1.9em;
+    font-size: 1.3em;
     font-weight: 700;
     margin: 10px 0;
     padding: 0;
@@ -1077,7 +1077,7 @@ a.recipe-card {
 }
 
 #new-community-recipe-label {
-    font-size: 3.8em;
+    font-size: 2.5em;
     font-weight: 800;
     display: inline-block;
     width: fit-content;
@@ -1134,7 +1134,7 @@ a.recipe-card {
 
 .about-us-banner {
     display: flex;
-    background-color: black;
+    background-color: #292929;
     margin: 4em 0 0;
     padding: 3.2em 10vw;
     justify-content: space-between;
@@ -1594,4 +1594,29 @@ a.recipe-card {
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
+}
+
+/* Màn hình rộng: cỡ chữ banner About và nhãn tìm kiếm theo Figma. */
+@media (min-width: 1400px) {
+    .about-us-description { font-size: 2.39em; }
+    .about-us-button { font-size: 2.24em; padding: 14px 40px; }
+    .about-us-banner { padding: 1.2em 10vw; }
+    #search-label { font-size: 2.7rem; color: #000; }
+}
+@media (min-width: 1400px) {
+    #category-label { font-size: 33.14px; font-weight: 800; }
+    .category-card { font-size: 24.86px; font-weight: 600; }
+    #leaderboard-label { font-size: 32.16px; font-weight: 900; color: #292929; }
+    #pcb-description-large { font-size: 44.54px; }
+    .price-comparison-link { font-size: 32px; }
+    .view-more-button { font-size: 32px; }
+}
+@media (min-width: 1400px) {
+    #fridge-filter-description { font-size: 51.02px; color: #292929; }
+    .about-us-button { font-weight: 800; }
+    .view-more-button { color: #000; }
+}
+@media (min-width: 1400px) {
+    #category-label { border-width: 3px; }
+    #price-comparison-label, .price-comparison-link { border-width: 3px; }
 }

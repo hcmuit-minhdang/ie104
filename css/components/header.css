@@ -19,6 +19,7 @@
     line-height: 1.5;
     color: black;
     position: sticky;
+    box-shadow: 0 4px 4px rgba(41, 41, 41, 0.25);
     top: 0;
     z-index: 100;
     box-sizing: border-box;
@@ -278,13 +279,13 @@
 .site-header__menu-icon > span:nth-child(1) { top: 0; }
 .site-header__menu-icon > span:nth-child(2) { top: 8px; }
 .site-header__menu-icon > span:nth-child(3) { top: 16px; }
-.site-header__menu-open .site-header__menu-icon > span:nth-child(1) {
+.site-header.is-open .site-header__menu-icon > span:nth-child(1) {
     transform: translateY(8px) rotate(45deg);
 }
-.site-header__menu-open .site-header__menu-icon > span:nth-child(2) {
+.site-header.is-open .site-header__menu-icon > span:nth-child(2) {
     opacity: 0;
 }
-.site-header__menu-open .site-header__menu-icon > span:nth-child(3) {
+.site-header.is-open .site-header__menu-icon > span:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
 }
 .site-header__search > summary > .site-header__search-close-icon {
@@ -452,7 +453,7 @@
         transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
     }
 
-    .site-header[data-initialized="true"].site-header__menu-open .site-header__controls {
+    .site-header[data-initialized="true"].is-open .site-header__controls {
         visibility: visible;
         opacity: 1;
         pointer-events: auto;
@@ -579,4 +580,43 @@
     opacity: 0.8;
     pointer-events: none;
     overflow-wrap: anywhere;
+}
+
+/* Ẩn khỏi mắt nhưng giữ cho trình đọc màn hình và SEO */
+.sr-only {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* Màn hình rộng: kích thước theo Figma (header cao 106px, logo lớn, chữ 20px). */
+@media (min-width: 1400px) {
+    .site-header {
+        --site-header-height: 106px;
+    }
+    .site-header__logo {
+        height: 56px;
+    }
+    .site-header__auth button {
+        min-height: 46px;
+        width: 128px;
+        font-size: 20px;
+    }
+}
+@media (min-width: 1400px) {
+    .site-header__logo { height: 74px; }
+    .site-header__logo-box { width: 260px; }
+    .site-header__auth button { width: 108px; min-height: 37px; padding: 0 4px; font-size: 18px; white-space: nowrap; }
+}
+@media (min-width: 1400px) {
+    .site-header__auth button { border-width: 0; }
+}
+@media (min-width: 1400px) {
+    #site-header__signup { border-width: 0; }
+}
+/* Cửa sổ 1121–1399px: menu "Công thức" không bị cắt ở mép trái. */
+@media (max-width: 1399px) and (min-width: 1121px) {
+    .site-header__navigation .site-header__nav-item:first-child details > ul {
+        right: auto;
+        left: 0;
+    }
 }

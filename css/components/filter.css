@@ -70,6 +70,10 @@
     box-shadow: 0.18em 0.18em 0 #292929;
 }
 
+.filter-accordion:has(input:checked) .filter-trigger-btn {
+    background-color: #FBC41B;
+}
+
 .filter-accordion.is-open .filter-trigger-btn::after {
     transform: rotate(180deg);
 }
@@ -255,4 +259,33 @@
 .filter-other-suggest li:hover,
 .filter-other-suggest li.is-active {
     background-color: #FBC41B;
+}
+
+/* Màn hình rộng: bộ lọc to hơn như Figma (nút ~274x73, chữ 25px, viền 3px #484848). */
+@media (min-width: 1400px) {
+    .filter-title {
+        font-size: 2.39rem;
+    }
+    .filter-group-list {
+        gap: 25px;
+    }
+    .filter-trigger-btn {
+        border: 3px solid #484848;
+        font-size: 1.5625rem;
+        padding: 0.75em 1.4em;
+    }
+}
+@media (min-width: 1400px) {
+    :root { --filter-col: 274px; }
+}
+@media (min-width: 1400px) {
+    .filter-title { font-weight: 700; color: #272727; }
+    .filter-trigger-btn { font-weight: 700; }
+    .filter-panel label { font-size: 18px; }
+}
+@media (min-width: 1400px) {
+    .filter-panel label { font-weight: 700; }
+}
+@media (min-width: 1400px) {
+    .filter-panel { padding-left: 35px; }
 }

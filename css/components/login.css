@@ -8,7 +8,7 @@
 /* Kiểu chung cho cả hai popup. Khi ghép trang, nạp cả login.css và signup.css. */
 .site-auth {
     --auth-yellow: #fbc41c;
-    --auth-ink: #141414;
+    --auth-ink: #000000;
     --auth-link: #356f91;
     --auth-error: #b42318;
     box-sizing: border-box;
@@ -80,7 +80,7 @@
 }
 .site-auth__title {
     margin: 0 0 24px;
-    font-size: 32px;
+    font-size: 34px;
     font-weight: 700;
     line-height: 1.2;
     text-align: center;
@@ -163,7 +163,7 @@
     align-items: center;
     justify-content: flex-end; /* chỉ còn link "Quên mật khẩu?" (đã bỏ ô "Ghi nhớ tôi": phiên luôn giữ 30 ngày) */
     gap: 4px 12px;
-    font-size: 14px;
+    font-size: 16px;
 }
 .site-auth__check {
     display: flex;
@@ -231,7 +231,7 @@
 }
 .site-auth__switch {
     margin: 12px 0 0;
-    font-size: 14px;
+    font-size: 16px;
     text-align: center;
 }
 .site-auth :is(button, a, input[type="checkbox"]):focus-visible {

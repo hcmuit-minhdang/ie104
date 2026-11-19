@@ -269,11 +269,11 @@
     list.textContent = "";
     allItems.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE).forEach(function (it) {
       var full = it.status === "du";
-      var extra = [
-        el("p", "food-tag " + (full ? "tag-du" : "tag-thieu"), (full ? "Đủ nguyên liệu" : "Chưa đủ nguyên liệu") + " · " + Math.round((it.score || 0) * 100) + "%")
-      ];
-      if (it.matched && it.matched.length) extra.push(el("p", "food-match", "Bạn có: " + it.matched.map(labelOf).join(", ")));
-      if (it.missing && it.missing.length) extra.push(el("p", "food-match food-missing", "Còn thiếu: " + it.missing.map(labelOf).join(", ")));
+      var hasPick = !!(it.matched && it.matched.length);
+      var extra = [];
+      if (hasPick) extra.push(el("p", "food-tag " + (full ? "tag-du" : "tag-thieu"), (full ? "Đủ nguyên liệu" : "Chưa đủ nguyên liệu") + " · " + Math.round((it.score || 0) * 100) + "%"));
+      if (hasPick) extra.push(el("p", "food-match", "Bạn có: " + it.matched.map(labelOf).join(", ")));
+      if (hasPick && it.missing && it.missing.length) extra.push(el("p", "food-match food-missing", "Còn thiếu: " + it.missing.map(labelOf).join(", ")));
       list.appendChild(foodCard(it.recipe, extra));
     });
     if (pager) pager.innerHTML = NomNom.pagerHtml(p, pages, pageUrl);

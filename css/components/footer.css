@@ -135,3 +135,35 @@
         gap: 12px 20px;
     }
 }
+
+/* Cỡ chữ và màu theo Figma (Footer Full). */
+.site-footer__heading {
+    font-size: 20px;
+    line-height: 30px;
+    color: #141414;
+}
+.site-footer__tagline {
+    font-size: 21px;
+}
+.site-footer__links a {
+    font-size: 17px;
+    line-height: 1.5;
+}
+.site-footer__legal {
+    font-size: 13px;
+    color: #6b7078;
+}
+.site-footer a,
+.site-footer__tagline {
+    color: #141414;
+}
+.site-footer__description {
+    font-size: 18px;
+    color: #141414;
+}
+.site-footer__legal a {
+    color: #6b7078;
+}
+@media (min-width: 1400px) {
+    .site-footer__recipes { margin-left: 51px; }
+}

@@ -46,3 +46,6 @@
 .page-dots {
     cursor: default;
 }
+@media (min-width: 1400px) {
+    .page-link { font-size: 25px; font-weight: 700; color: #000; }
+}

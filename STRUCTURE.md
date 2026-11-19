@@ -35,19 +35,19 @@ Quy ước: đường dẫn trong HTML/CSS/JS dùng **đường dẫn tuyệt đ
 
 ## Quy tắc đặt tên và làm việc nhóm
 
-Nhóm thống nhất theo hai báo cáo tham khảo của các khóa trước (MyTicket, Game Store Website): cả hai đều dùng **BEM cho CSS**, **camelCase cho JavaScript**, CSS chung + CSS riêng từng trang, và quy trình Git theo nhánh.
+Nhóm thống nhất theo hai báo cáo tham khảo của các khóa trước (MyTicket, Game Store Website): cả hai đều đặt tên CSS theo quy ước rõ ràng, **camelCase cho JavaScript**, CSS chung + CSS riêng từng trang, và quy trình Git theo nhánh.
 
-**CSS: BEM** (`block__element--modifier`, chữ thường, từ trong một tên nối bằng `-`)
+**CSS: kebab-case, phần con của component nối bằng `__`** (chữ thường, từ trong một tên nối bằng `-`; mượn cách viết của BEM nhưng không áp dụng cho mọi trang)
 
 | Thành phần | Quy tắc | Ví dụ trong dự án |
 |---|---|---|
-| Block | tên khối độc lập, kebab-case | `site-header`, `site-footer`, `site-auth`, `profile-banner`, `member` |
-| Element | nối block bằng `__` | `site-header__nav-item`, `site-auth__field`, `member__avatar` |
-| Modifier | nối bằng `--` | `tag--team`, `u-btn--danger` |
+| Khối (component) | tên khối độc lập, kebab-case | `site-header`, `site-footer`, `site-auth`, `profile-banner`, `member` |
+| Phần con | nối tên khối bằng `__` | `site-header__nav-item`, `site-auth__field`, `member__avatar` |
+| Biến thể | nối bằng `--` | `tag--team`, `u-btn--danger` |
 | Trạng thái | tiền tố `is-` | `is-open` |
 
-- Header, footer, đăng nhập, đăng ký (`css/components/`) đã đổi hết sang BEM (`site-header__...`, `site-footer__...`, `site-auth__...`, `site-login__...`, `site-signup__...`); riêng trạng thái `site-header__menu-open` giữ tên cũ.
-- Các trang còn lại (`css/pages/`) vốn đặt tên kebab-case phẳng (`recipe-title`, `filter-panel`...). Giữ nguyên để khỏi vỡ giao diện; **thành phần mới** viết theo BEM (như `member__avatar`, `profile-banner__bg`).
+- Header, footer, đăng nhập, đăng ký (`css/components/`) dùng dạng khối + `__` phần con (`site-header__...`, `site-footer__...`, `site-auth__...`, `site-login__...`, `site-signup__...`); trạng thái mở menu dùng `is-open`.
+- Các trang còn lại (`css/pages/`) đặt tên kebab-case phẳng (`recipe-title`, `filter-panel`...), giữ nguyên để khỏi vỡ giao diện; **thành phần mới** dùng khối + `__` (như `member__avatar`, `member__role`, `profile-banner__bg`).
 - CSS dùng chung nằm trong `css/components/`; mỗi trang một file trong `css/pages/`, chỉ áp dụng cho trang đó.
 
 **JavaScript: camelCase**

@@ -76,7 +76,7 @@ body::before {
   margin: 42px auto 80px;
   padding: 0 clamp(16px, 4vw, 40px);
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-columns: var(--filter-col, 240px) minmax(0, 1fr);
   gap: clamp(28px, 4vw, 54px);
   align-items: start;
 }
@@ -253,10 +253,26 @@ body::before {
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Phân trang dưới danh sách kết quả */
 .food-section .pagination-nav {
   flex-wrap: wrap;
   margin-top: 40px;
+}
+
+/* Màn hình rộng: cỡ chữ hero và tiêu đề mục theo Figma. */
+@media (min-width: 1400px) {
+    .hero-stroke-title { font-size: 2.07rem; }
+    .hero-subtitle { font-size: 24px; font-weight: 700; color: #4b5563; }
+    .food-heading h2 { font-size: 40px; }
+    .food-name { font-size: 22.45px; }
+}
+@media (min-width: 1400px) {
+  .fridge-content { max-width: 1330px; }
+  .hero-stroke-title { font-weight: 800; }
+}
+@media (min-width: 1400px) {
+  .food-heading h2 { font-weight: 800; }
 }

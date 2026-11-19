@@ -74,7 +74,7 @@
     syncChecks(s);
     var cat = categories.filter(function (c) { return c.id === s.category; })[0];
     title.textContent = (cat ? cat.name : s.q ? 'Kết quả cho "' + s.q + '"' : s.sort === "new" ? "Công thức mới nhất" : "Tất cả món ăn").toUpperCase();
-    document.title = "NomNom - " + (cat ? cat.name : "Danh mục món ăn");
+    document.title = (cat ? cat.name : "Danh mục món ăn") + " | NomNom";
   }
 
   function showMessage(text, retry) {
@@ -110,7 +110,7 @@
   function showPicker() {
     layoutBox.hidden = true;
     pickerBox.hidden = false;
-    document.title = "NomNom - Danh mục món ăn";
+    document.title = "Danh mục món ăn | NomNom";
     if (pickerLoaded) return;
     var box = document.getElementById("catPicker");
     var items = categories.slice();

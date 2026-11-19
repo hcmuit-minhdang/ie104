@@ -31,7 +31,7 @@
     const status = header.querySelector(".site-header__status");
     const menuButton = header.querySelector("[data-header-menu-toggle]");
     const controls = header.querySelector(".site-header__controls");
-    // Giữ mốc này giống @media (max-width: 1000px) trong style.css.
+    // Giữ mốc này giống @media (max-width: 1120px) trong header.css.
     const mobileScreen = window.matchMedia("(max-width: 1120px)");
 
     header.querySelectorAll("[data-header-route]").forEach(link => {
@@ -46,14 +46,14 @@
     }
 
     function isMobileMenuOpen() {
-        return header.classList.contains("site-header__menu-open");
+        return header.classList.contains("is-open");
     }
 
     function setMobileMenu(open, restoreFocus = false) {
         if (!menuButton) return;
         const expanded = mobileScreen.matches && open;
         if (expanded) status.hidden = true;
-        header.classList.toggle("site-header__menu-open", expanded);
+        header.classList.toggle("is-open", expanded);
         menuButton.setAttribute("aria-expanded", String(expanded));
         menuButton.setAttribute("aria-label", expanded ? "Đóng menu" : "Mở menu");
         // Menu đã đóng không được nhận Tab hoặc click trong lúc đang chuyển động.

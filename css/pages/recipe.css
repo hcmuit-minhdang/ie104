@@ -1690,3 +1690,25 @@ a {
     white-space: nowrap;
     overflow: hidden;
 }
+
+/* Màn hình rộng: cỡ chữ theo Figma (Recipe). */
+@media (min-width: 1400px) {
+    #recipe-title { font-size: 48px; font-weight: 800; }
+    .ingredient-list label { font-size: 18px; font-weight: 500; color: #292929; }
+    .step p { font-size: 21.3px; font-weight: 500; }
+    .step-label { font-size: 21.3px; font-weight: 700; }
+    #share-label { font-size: 40.8px; }
+}
+@media (min-width: 1400px) {
+    .title h2, .card-title-tag, #detailed-guide-label { font-weight: 800; }
+    #detailed-guide-label, .card-title-tag:not(.similar-title-tag) { font-size: 44.36px; }
+    .recipe-article { padding-left: 72px; }
+    .quick-step-list p { font-size: 18px; font-weight: 500; color: #292929; }
+    .step p { color: #292929; }
+    .toc-sublist a { color: #050505; font-weight: 500; }
+}
+@media (min-width: 1400px) {
+    .meta-line strong { font-weight: 800; }
+    .nutrition-note { font-size: 18px; color: #292929; }
+    #toc-label { font-size: 16px; font-weight: 700; }
+}

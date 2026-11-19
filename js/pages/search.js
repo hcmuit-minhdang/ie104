@@ -64,7 +64,7 @@
     input.value = s.q;
     kw.textContent = s.q ? s.q : "tất cả công thức";
     // Không dùng dấu ngoặc kép trong tiêu đề tab (một số trình duyệt/khung xem bỏ dấu " làm hiện hai dấu cách)
-    document.title = "NomNom - " + (s.q ? "Tìm kiếm: " + s.q : "Kết quả tìm kiếm");
+    document.title = (s.q ? "Tìm kiếm: " + s.q : "Kết quả tìm kiếm") + " | NomNom";
     setSelect(sortSel, s.sort);
     setSelect(timeSel, s.maxTime);
     setSelect(priceSel, s.maxPrice);
