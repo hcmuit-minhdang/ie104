@@ -1,4 +1,4 @@
-# NomNom — cấu trúc thư mục
+# NomNom: cấu trúc thư mục
 
 ```text
 NomNom/

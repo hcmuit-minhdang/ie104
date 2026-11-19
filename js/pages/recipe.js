@@ -1,4 +1,4 @@
-/* NomNom — trang chi tiết công thức. Dữ liệu từ NomNom.data.get("/recipes/:id") */
+/* NomNom: trang chi tiết công thức. Dữ liệu từ NomNom.data.get("/recipes/:id") */
 const SCROLLSPY_OFFSET = 140;
 const FALLBACK_AVATAR = "/images/avatar.jpg";
 

@@ -1,4 +1,4 @@
-/* NomNom — kho dữ liệu chạy ngay trong trình duyệt (không có máy chủ).
+/* NomNom: kho dữ liệu chạy ngay trong trình duyệt (không có máy chủ).
    Cung cấp NomNomStore.run(method, path, body): trả lời bằng dữ liệu tĩnh /data/db.json, tải một lần bằng fetch (công thức, nguyên liệu, tài khoản demo)
    cộng phần người dùng thay đổi (tài khoản, phiên, công thức đã lưu/đăng, đánh giá, lịch sử) lưu ở localStorage.
    Nhờ đó site chạy được trên mọi hosting tĩnh, không cần Node.js hay máy chủ nào.
@@ -1121,7 +1121,7 @@ module.exports = function (app) {
     // Ô "Khác" của một nhóm (token "nhom:khac") chỉ dùng để khớp mục "<nhóm> khác" của công thức, không phải nguyên liệu
     const selGroups = new Set(selFull.filter((s) => s.group && s.id === 'khac').map((s) => s.group));
     const selIds = new Set(selFull.filter((s) => s.id !== 'khac').map((s) => s.id));
-    // Bộ lọc nhãn (Chế độ ăn, Vùng miền, Ngân sách): cùng cơ chế với trang Danh mục — trong nhóm khớp MỘT nhãn, giữa các nhóm khớp TẤT CẢ
+    // Bộ lọc nhãn (Chế độ ăn, Vùng miền, Ngân sách): cùng cơ chế với trang Danh mục, trong nhóm khớp MỘT nhãn, giữa các nhóm khớp TẤT CẢ
     const tagGroups = ['che-do-an', 'vung-mien', 'ngan-sach']
       .map((g) => String(ctx.query[g] || '').split(',').map((t) => norm(t)).filter(Boolean).slice(0, 12))
       .filter((g) => g.length);

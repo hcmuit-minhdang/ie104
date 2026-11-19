@@ -1,4 +1,4 @@
-/* NomNom — trang Kết quả tìm kiếm: /pages/search.html?q=&maxTime=&maxPrice=&sort=&page= -> NomNom.data.get("/recipes") */
+/* NomNom: trang Kết quả tìm kiếm: /pages/search.html?q=&maxTime=&maxPrice=&sort=&page= -> NomNom.data.get("/recipes") */
 (function () {
   "use strict";
   var LIMIT = 12;

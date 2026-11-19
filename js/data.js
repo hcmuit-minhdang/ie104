@@ -1,4 +1,4 @@
-/* NomNom — lớp truy cập dữ liệu dùng chung. Nạp bằng <script src="/js/data.js"></script> (sau /js/store.js) (TRƯỚC script của trang).
+/* NomNom: lớp truy cập dữ liệu dùng chung. Nạp bằng <script src="/js/data.js"></script> (sau /js/store.js) (TRƯỚC script của trang).
    Dùng: const data = await NomNom.data.get('/recipes', { q: 'bò', page: 2 });
          await NomNom.data.post('/auth/login', { identifier, password });
    Lỗi: ném NomNom.ApiError { status, message, field } (message tiếng Việt).
@@ -27,7 +27,7 @@
   }
   NomNom.qs = qs;
 
-  /* Gọi vào "kho dữ liệu" (store.js) — không có mạng/máy chủ. Lỗi (status >= 400) ném ApiError. */
+  /* Gọi vào "kho dữ liệu" (store.js), không có mạng/máy chủ. Lỗi (status >= 400) ném ApiError. */
   function request(method, path, body, params) {
     return window.NomNomStore.run(method, path + qs(params), body).then(function (res) {
       var data = res.data;

@@ -1,4 +1,4 @@
-# 🍜 NomNom — Website công thức nấu ăn
+# 🍜 NomNom: Website công thức nấu ăn
 
 > Đồ án môn **IE104 – Internet và Công nghệ Web** (GV: ThS. Võ Tấn Khoa)
 > Tìm công thức, nấu theo nguyên liệu đang có trong tủ lạnh, so sánh giá nguyên liệu, lưu món yêu thích và chia sẻ công thức của chính bạn.

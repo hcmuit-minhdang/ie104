@@ -1,4 +1,4 @@
-/* NomNom — tiện ích dùng chung cho trang danh sách (category, search, home): thẻ món ăn, phân trang, skeleton. */
+/* NomNom: tiện ích dùng chung cho trang danh sách (category, search, home): thẻ món ăn, phân trang, skeleton. */
 (function () {
   "use strict";
   var NomNom = (window.NomNom = window.NomNom || {});

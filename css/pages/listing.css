@@ -1,4 +1,4 @@
-/* NomNom — CSS dùng chung cho trang danh sách (category, search): thanh kết quả, skeleton, phân trang. */
+/* NomNom: CSS dùng chung cho trang danh sách (category, search): thanh kết quả, skeleton, phân trang. */
 .filter-panel input[type="radio"] {
     flex: 0 0 20px;
     width: 20px;

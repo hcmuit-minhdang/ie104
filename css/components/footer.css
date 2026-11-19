@@ -20,7 +20,7 @@
     gap: 32px;
     position: relative;
 }
-/* Figma: Divider / Top — 1252 x 1px, màu #DEDEDE, cách đỉnh footer 30px. */
+/* Figma: Divider / Top, 1252 x 1px, màu #DEDEDE, cách đỉnh footer 30px. */
 .site-footer__divider {
     display: block;
     position: absolute;
@@ -34,7 +34,7 @@
     pointer-events: none;
 }
 
-/* Figma: Accent / Egg yellow — 32 x 3px, cách chữ phía trên 12px. */
+/* Figma: Accent / Egg yellow, 32 x 3px, cách chữ phía trên 12px. */
 .site-footer__heading-line {
     display: block;
     width: 32px;          /* Chiều dài nét vàng */

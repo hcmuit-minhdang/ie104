@@ -1,4 +1,4 @@
-/* NomNom — đăng tải công thức: kiểm tra dữ liệu, tải ảnh (NomNom.data "/uploads"), lưu công thức ("/recipes"). */
+/* NomNom: đăng tải công thức: kiểm tra dữ liệu, tải ảnh (NomNom.data "/uploads"), lưu công thức ("/recipes"). */
 import { createIngredientPicker } from "/js/pages/ingredient-picker.js";
 
 const SCROLLSPY_OFFSET = 140;
