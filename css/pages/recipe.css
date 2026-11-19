@@ -697,7 +697,7 @@ a {
 .quick-step-list li {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
 }
 
@@ -708,7 +708,6 @@ a {
     justify-content: center;
     width: 28px;
     height: 28px;
-    margin-top: 2px;
     background-color: #FBC41B;
     border: 2px solid #292929;
     box-shadow: 3px 3px 0 #292929;
