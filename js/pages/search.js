@@ -18,7 +18,7 @@
     var p = new URLSearchParams(location.search);
     return {
       q: (p.get("q") || "").trim(),
-      sort: p.get("sort") || "rating",
+      sort: p.get("sort") || "", // trống = xếp theo độ liên quan (có từ khóa) hoặc đánh giá (không từ khóa)
       maxTime: p.get("maxTime") || "",
       maxPrice: p.get("maxPrice") || "",
       page: Math.max(1, parseInt(p.get("page"), 10) || 1)
@@ -27,7 +27,7 @@
   function urlFor(s) {
     var out = [];
     ["q", "maxTime", "maxPrice"].forEach(function (k) { if (s[k]) out.push(k + "=" + encodeURIComponent(s[k])); });
-    if (s.sort && s.sort !== "rating") out.push("sort=" + encodeURIComponent(s.sort));
+    if (s.sort) out.push("sort=" + encodeURIComponent(s.sort));
     if (s.page > 1) out.push("page=" + s.page);
     return "/pages/search.html" + (out.length ? "?" + out.join("&") : "");
   }
@@ -63,7 +63,8 @@
     var s = readState();
     input.value = s.q;
     kw.textContent = s.q ? s.q : "tất cả công thức";
-    document.title = "NomNom - " + (s.q ? 'Tìm "' + s.q + '"' : "Kết quả tìm kiếm");
+    // Không dùng dấu ngoặc kép trong tiêu đề tab (một số trình duyệt/khung xem bỏ dấu " làm hiện hai dấu cách)
+    document.title = "NomNom - " + (s.q ? "Tìm kiếm: " + s.q : "Kết quả tìm kiếm");
     setSelect(sortSel, s.sort);
     setSelect(timeSel, s.maxTime);
     setSelect(priceSel, s.maxPrice);

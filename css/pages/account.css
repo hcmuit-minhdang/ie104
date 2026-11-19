@@ -293,6 +293,7 @@ body::before {
 .acc-dialog__fields { display: flex; flex-direction: column; gap: 12px; }
 .acc-dialog__label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; font-weight: 600; }
 .acc-dialog__input { padding: 10px 12px; border: 1px solid #999; font: 400 16px inherit; font-family: inherit; }
+.acc-dialog__textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
 .acc-dialog__error { margin: 0; color: var(--danger); font-size: 14px; }
 .acc-dialog__btns { display: flex; justify-content: flex-end; gap: 10px; }
 .acc-row__value { cursor: pointer; }

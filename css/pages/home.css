@@ -476,8 +476,10 @@ button {
     position: absolute;
     bottom: 1em;
     left: 1em;
+    right: 1em; /* giới hạn bề rộng trong thẻ để fit-names.js thu nhỏ / cho tên dài xuống 2 dòng thay vì bị cắt */
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .recipe-card-compressed .recipe-info span {
@@ -584,6 +586,9 @@ aside {
     gap: 1.2em;
     height: 100%;
 }
+
+/* Bảng vinh danh đang tải: ẩn nội dung thẻ nhưng giữ chỗ (home.js bỏ class khi có dữ liệu) */
+.leaderboard-container.is-loading .leaderboard-card > * { visibility: hidden; }
 
 .leaderboard-section {
     width: 100%;

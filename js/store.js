@@ -155,11 +155,19 @@ function publicUser(u) {
 
 // Ngữ cảnh một request: các map tra cứu nhanh.
 function makeCtx(db, user) {
+  // stats: phần chênh lệch so với điểm mẫu (seedRating/seedCount).
+  // Review mẫu có sẵn trong db.json coi như đã nằm trong seedCount: chỉ cộng phần người dùng sửa sao, xóa thì trừ ra;
+  // review người dùng tạo mới thì cộng thêm cả sao lẫn lượt.
   const stats = new Map();
+  const seedRv = db.seedReviews || new Map();
+  const add = (id, sum, count) => { const s = stats.get(id) || { sum: 0, count: 0 }; s.sum += sum; s.count += count; stats.set(id, s); };
+  const present = new Set();
   for (const r of db.reviews) {
-    const s = stats.get(r.recipeId) || { sum: 0, count: 0 };
-    s.sum += r.rating; s.count++; stats.set(r.recipeId, s);
+    const seed = seedRv.get(r.id);
+    if (seed) { present.add(r.id); add(r.recipeId, r.rating - seed.rating, 0); }
+    else add(r.recipeId, r.rating, 1);
   }
+  seedRv.forEach((seed, id) => { if (!present.has(id)) add(seed.recipeId, -seed.rating, -1); });
   const users = new Map(db.users.map((u) => [u.id, u]));
   const recipes = new Map();
   for (const r of db.recipes) { recipes.set(r.id, r); }
@@ -170,9 +178,13 @@ function makeCtx(db, user) {
 }
 
 function ratingOf(c, rec) {
-  const s = c.stats.get(rec.id);
-  if (s && s.count) return { rating: Math.round((s.sum / s.count) * 10) / 10, ratingCount: s.count };
-  return { rating: rec.seedRating || 0, ratingCount: rec.seedCount || 0 };
+  // Trung bình gộp: (điểm mẫu * lượt mẫu + tổng sao review mới) / (lượt mẫu + số review mới)
+  const s = c.stats.get(rec.id) || { sum: 0, count: 0 };
+  const baseCount = rec.seedCount || 0;
+  const count = Math.max(0, baseCount + s.count);
+  if (!count) return { rating: 0, ratingCount: 0 };
+  const total = (rec.seedRating || 0) * baseCount + s.sum;
+  return { rating: Math.max(0, Math.min(5, Math.round((total / count) * 10) / 10)), ratingCount: count };
 }
 function authorOf(c, rec) {
   const u = rec.authorId && c.users.get(rec.authorId);
@@ -189,15 +201,20 @@ function cardOf(c, rec) {
 }
 
 const searchCache = new WeakMap();
-function searchText(rec) {
+// Chữ thường giữ nguyên dấu (dạng NFC) để so khớp khi người dùng gõ từ khóa có dấu
+function lowerVi(s) { return String(s == null ? '' : s).normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim(); }
+// Trả về { plain: bản bỏ dấu, accent: bản có dấu } của tên món + danh mục + nhãn + nguyên liệu
+function searchTexts(rec) {
   let s = searchCache.get(rec);
-  if (!s) {
+  if (!s || s.name !== rec.name) {
     const ing = (rec.ingredients || []).map((i) => i.name || nameOf(i.ingredientId)).join(' ');
-    s = norm([rec.name, rec.category, rec.subcategory, (rec.tags || []).join(' '), ing].join(' | '));
+    const raw = [rec.name, rec.category, rec.subcategory, (rec.tags || []).join(' '), ing].join(' | ');
+    s = { name: rec.name, plain: norm(raw), accent: lowerVi(raw) };
     searchCache.set(rec, s);
   }
   return s;
 }
+function searchText(rec) { return searchTexts(rec).plain; }
 
 function similarOf(c, rec) {
   const out = [];
@@ -244,7 +261,7 @@ function categoriesOf(db) {
   return Array.from(m.entries()).map(([name, count]) => ({ id: slugify(name), name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'vi'));
 }
 
-module.exports = { publicUser, makeCtx, ratingOf, cardOf, detailOf, reviewOf, searchText, categoriesOf, catalog };
+module.exports = { publicUser, makeCtx, ratingOf, cardOf, detailOf, reviewOf, searchText, searchTexts, lowerVi, categoriesOf, catalog };
 
 });
 
@@ -468,6 +485,11 @@ const TAG_GROUPS = ['dam', 'tinh-bot', 'rau-cu', 'trai-cay', 'che-do-an', 'vung-
 const IMG_RE = /^(\/images\/[\w\-./%]{1,300}|https?:\/\/[^\s"'<>]{1,500}|data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+)$/;
 const FORBIDDEN_KEYS = new Set(['id', 'authorId', 'author', 'rating', 'ratingCount', 'ratingScore', 'reviewCount', 'seedRating', 'seedCount', 'main', 'legacyId', 'createdAt', 'saved', '__proto__', 'constructor', 'prototype']);
 
+// Khớp nguyên từ/cụm từ: hai bên là đầu/cuối chuỗi hoặc ký tự không phải chữ/số
+function hasWord(text, word) {
+  return !!word && new RegExp('(^|[^\\p{L}\\p{N}])' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^\\p{L}\\p{N}])', 'u').test(text);
+}
+
 function cleanStr(v, max, field, required) {
   const s = typeof v === 'string' ? v.trim() : (typeof v === 'number' ? String(v) : '');
   if (!s) { if (required) throw new HttpError(400, 'Thiếu thông tin bắt buộc', field); return ''; }
@@ -581,7 +603,12 @@ module.exports = function (app) {
     const maxPrice = V.numParam(q, 'maxPrice');
     const sort = q.sort === undefined || q.sort === '' ? null : q.sort;
     if (sort && !SORTS.has(sort)) throw new HttpError(400, 'Giá trị sort không hợp lệ (rating|time|price|new)', 'sort');
-    const terms = norm(q.q || '').split(' ').filter(Boolean).slice(0, 8);
+    // Mỗi từ khóa giữ hai bản: có dấu (a) và bỏ dấu (p). Từ gõ có dấu chỉ khớp bản có dấu ("bò" không khớp "bơ", "bông"),
+    // từ gõ không dấu khớp không phân biệt dấu như cũ.
+    const fullA = M.lowerVi(q.q || '');
+    const terms = fullA.split(' ').map((a) => ({ a, p: norm(a) })).filter((t) => t.p).slice(0, 8);
+    terms.forEach((t) => { t.accent = t.a !== t.p; });
+    const fullP = terms.map((t) => t.p).join(' ');
     const cat = q.category ? norm(q.category) : '';
     // Bộ lọc theo nhóm (Đạm, Tinh bột, ...): trong một nhóm chỉ cần khớp MỘT nhãn, giữa các nhóm phải khớp TẤT CẢ.
     const groups = TAG_GROUPS
@@ -595,14 +622,27 @@ module.exports = function (app) {
       }
       if (maxTime !== null && rec.time > maxTime) return false;
       if (maxPrice !== null && rec.price > maxPrice) return false;
-      if (terms.length) { const s = M.searchText(rec); for (const t of terms) if (!s.includes(t)) return false; }
+      if (terms.length) {
+        const s = M.searchTexts(rec);
+        for (const t of terms) if (t.accent ? !s.accent.includes(t.a) : !s.plain.includes(t.p)) return false;
+      }
       return true;
     });
     const rate = new Map(list.map((rec) => [rec.id, M.ratingOf(c, rec)]));
+    // Độ liên quan (số nhỏ = liên quan hơn): khớp đúng cụm có dấu > khớp nguyên từ không dấu > chỉ chứa chuỗi; tên món xếp trước phần còn lại
     const rel = new Map();
     if (terms.length) {
-      const full = terms.join(' ');
-      for (const rec of list) { const n = norm(rec.name); rel.set(rec.id, n === full ? 0 : n.startsWith(full) ? 1 : n.includes(full) ? 2 : 3); }
+      const tier = (a, p) => {
+        if (hasWord(a, fullA)) return 0;
+        if (hasWord(p, fullP)) return 1;
+        if (terms.every((t) => hasWord(p, t.p))) return 2;
+        return terms.every((t) => p.includes(t.p)) ? 3 : 9;
+      };
+      for (const rec of list) {
+        const s = M.searchTexts(rec);
+        const nt = tier(M.lowerVi(rec.name), norm(rec.name)), tt = tier(s.accent, s.plain);
+        rel.set(rec.id, nt < 3 ? nt : tt < 3 ? 3 + tt : nt === 3 ? 6 : 7);
+      }
     }
     const byRating = (a, b) => rate.get(b.id).rating - rate.get(a.id).rating || rate.get(b.id).ratingCount - rate.get(a.id).ratingCount;
     const tie = (a, b) => (a.id < b.id ? -1 : 1);
@@ -663,10 +703,23 @@ module.exports = function (app) {
     if (b.description !== undefined) { upd.description = cleanStr(b.description, 5000, 'description'); if (rec.summary !== undefined) upd.summary = upd.description; }
     if (b.time !== undefined) {
       const t = Math.round(numField(b.time, 'time', rec.time || 30, 1, 1440));
-      const prep = Math.max(1, Math.round(t * 0.3));
-      upd.time = t; upd.prepTime = prep; upd.cookTime = Math.max(0, t - prep);
+      const old = rec.time || 0, oldPrep = Number(rec.prepTime) || 0, oldCook = Number(rec.cookTime) || 0;
+      const autoPrep = (x) => Math.min(Math.max(1, Math.round(x * 0.3)), x);
+      upd.time = t;
+      if (!oldPrep && !oldCook || (oldPrep === autoPrep(old) && oldCook === Math.max(0, old - oldPrep))) {
+        // thời gian sơ chế/nấu do hệ thống tự chia (30% / 70%): chia lại theo tổng mới
+        upd.prepTime = autoPrep(t); upd.cookTime = Math.max(0, t - upd.prepTime);
+      } else {
+        // người dùng đã nhập riêng: giữ thời gian sơ chế, phần còn lại là thời gian nấu
+        upd.prepTime = Math.min(oldPrep, t); upd.cookTime = t - upd.prepTime;
+      }
     }
-    if (b.servings !== undefined) { const sv = Math.round(numField(b.servings, 'servings', rec.baseServings || rec.servings || 2, 1, 100)); upd.servings = sv; upd.baseServings = sv; }
+    if (b.servings !== undefined) {
+      const sv = Math.round(numField(b.servings, 'servings', rec.baseServings || rec.servings || 2, 1, 100));
+      upd.servings = sv; upd.baseServings = sv;
+      // giá theo phần (price) giữ nguyên như trên thẻ món; tổng chi phí tính lại = price * khẩu phần (trang chi tiết tính như vậy)
+      upd.costTotal = Math.round((Number(rec.price) || 0) * sv);
+    }
     Object.assign(rec, upd);
     if (baseIds.has(rec.id)) { // công thức có sẵn trong db.json: nhớ phần đã sửa để còn nguyên sau khi tải lại
       db.seedEdits = db.seedEdits || {};
@@ -932,8 +985,9 @@ module.exports = function (app) {
     const rec = c.recipes.get(ctx.params.id);
     if (!rec) throw new HttpError(404, 'Không tìm thấy công thức');
     const list = ctx.db.reviews.filter((x) => x.recipeId === rec.id).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-    const sum = list.reduce((s, x) => s + x.rating, 0);
-    return { items: list.map((x) => M.reviewOf(c, x)), average: list.length ? Math.round((sum / list.length) * 10) / 10 : 0, count: list.length };
+    // average/count: điểm gộp (điểm mẫu + review mới), khớp với thẻ món và trang chi tiết
+    const rt = M.ratingOf(c, rec);
+    return { items: list.map((x) => M.reviewOf(c, x)), average: rt.rating, count: rt.ratingCount };
   });
 
   r.post('/api/recipes/:id/reviews', async (ctx) => {
@@ -1000,22 +1054,36 @@ const STORES = [
   { store: 'WINMART', k: 1.0, url: 'https://winmart.vn/' }, { store: 'SUNMART', k: 1.12, url: 'https://sunmart.vn/' },
   { store: 'GS25', k: 1.22, url: 'https://gs25.com.vn/' }, { store: 'CIRCLE K', k: 1.28, url: 'https://www.circlek.com.vn/' }
 ];
-// Quy cách đóng gói gợi ý theo loại đơn vị, để mỗi cửa hàng có tên sản phẩm riêng
-const PACKS = { mass: ['200g', '300g', '500g', '1kg'], volume: ['330ml', '500ml', '750ml', '1 lít'], count: ['vỉ 6', 'vỉ 10', '1 quả', 'túi 500g'] };
+// Quy cách đóng gói gợi ý theo nhóm nguyên liệu, để mỗi cửa hàng có tên sản phẩm riêng (số mô phỏng, chỉ cần hợp lý)
+const HERBS = new Set(['hanh-la', 'rau-thom', 'rau-ram', 'thi-la', 'la-e', 'la-lot', 'la-chanh', 'la-dua', 'rau-song', 'tieu-xanh']);
+const EGGS = new Set(['trung-vit', 'trung-cut', 'trung-muoi']);
+const SPICES = new Set(['muoi', 'tieu', 'bot-ngot', 'hat-nem', 'ngu-vi-huong', 'bot-ca-ri', 'duong-cat', 'duong-den', 'sa-te', 'me-rang', 'bot-chien-gion', 'bot-gao', 'rau-cau', 'mam-tom', 'toi-bam']);
+const COUNT_PACKS = { // theo đơn vị đếm mặc định của nguyên liệu
+  'củ': ['túi 500g', 'túi 1kg', 'khay 300g'], 'quả': ['1 quả', 'khay 3 quả', 'túi 1kg'], 'trái': ['1 trái', 'khay 3 trái', 'túi 1kg'],
+  'bó': ['1 bó', 'bó 300g', 'gói 500g'], 'nhánh': ['bó 5 cây', 'gói 100g', 'gói 200g'], 'ổ': ['1 ổ', 'túi 3 ổ', 'túi 5 ổ'], 'món': ['hũ 300g', 'hũ 500g']
+};
+function packsOf(it) {
+  if (EGGS.has(it.id)) return ['vỉ 4 quả', 'vỉ 6 quả', 'vỉ 10 quả'];
+  if (HERBS.has(it.id)) return ['bó 100g', 'gói 50g', 'bó 200g'];
+  if (it.dimension === 'count') return COUNT_PACKS[it.defaultUnit] || ['1 ' + (it.defaultUnit || 'cái')];
+  if (it.dimension === 'volume') return ['chai 250ml', 'chai 500ml', 'chai 1 lít'];
+  if (SPICES.has(it.id)) return ['gói 100g', 'gói 200g', 'hũ 500g'];
+  return ['khay 300g', 'gói 500g', 'túi 1kg'];
+}
 // Tên sản phẩm cụ thể đã biết (khớp với giá tham khảo bên dưới)
 const KNOWN = { 'thit-heo': { 'BÁCH HÓA XANH': 'Thịt heo xay C.P 200g', 'COOP FOOD': 'Thịt heo xay kg-AHT990' } };
-// Giá tham khảo (VND) theo đơn vị so sánh: 100g / 100ml / 1 đơn vị đếm
+// Giá tham khảo (VND) theo đơn vị so sánh: 100g / 100ml / 1 đơn vị đếm (củ, quả, bó, nhánh...)
 const BASE = {
   'thit-heo': 11069, 'thit-bo': 29000, 'thit-ga': 9500, 'tom-tuoi': 19000, 'ca-phi-le': 14000, 'trung-vit': 4500, 'gao-tam': 1800,
   'hanh-tim': 3000, 'hanh-la': 5000, 'toi-bam': 3500, 'ca-chua': 4000, 'ca-rot': 3500, 'khoai-tay': 2800, 'dau-hu': 3500,
   'nuoc-mam': 2500, 'nuoc-tuong': 2200, 'dau-an': 2400, 'duong-cat': 2200, 'muoi': 800, 'bun-tuoi': 2000, 'banh-mi': 3500, 'nam-huong': 12000
 };
-const UNIT_LABEL = { mass: '100g', volume: '100ml', count: 'quả' };
+const UNIT_LABEL = { mass: '100g', volume: '100ml' }; // đơn vị đếm lấy theo defaultUnit của nguyên liệu
 
 function compareOne(name) {
   const it = findByName(name);
   if (!it) return { name, id: null, unit: null, price: null, stores: [] };
-  const unit = UNIT_LABEL[it.dimension] || '100g';
+  const unit = it.dimension === 'count' ? (it.defaultUnit || 'quả') : (UNIT_LABEL[it.dimension] || '100g');
   const base = BASE[it.id] || (2000 + (hash32(it.id) % 20) * 500);
   const stores = STORES.map((s, i) => {
     const h = hash32(it.id + s.store);
@@ -1023,7 +1091,7 @@ function compareOne(name) {
     if (it.id === 'thit-heo' && i === 0) price = 11069;
     if (it.id === 'thit-heo' && i === 1) price = 12700;
     const disc = [0, 10, 15, 20][h % 4];
-    const pack = PACKS[it.dimension] || PACKS.mass;
+    const pack = packsOf(it);
     const product = (KNOWN[it.id] && KNOWN[it.id][s.store]) || (it.name + ' ' + pack[h % pack.length]);
     const o = { store: s.store, product, price, unit, url: s.url };
     if (disc) { o.oldPrice = Math.round(price / (1 - disc / 100) / 100) * 100; o.discount = disc; }
@@ -1050,12 +1118,21 @@ module.exports = function (app) {
     const limit = V.intParam(ctx.query, 'limit', 20, 1, 100);
     const kw = norm(ctx.query.q || '');
     const selFull = raw.map((t) => ({ group: t.includes(':') ? t.split(':')[0] : '', id: canonId(t) }));
-    const selIds = new Set(selFull.map((s) => s.id));
-    const selGroups = new Set(selFull.filter((s) => s.group).map((s) => s.group));
+    // Ô "Khác" của một nhóm (token "nhom:khac") chỉ dùng để khớp mục "<nhóm> khác" của công thức, không phải nguyên liệu
+    const selGroups = new Set(selFull.filter((s) => s.group && s.id === 'khac').map((s) => s.group));
+    const selIds = new Set(selFull.filter((s) => s.id !== 'khac').map((s) => s.id));
+    // Bộ lọc nhãn (Chế độ ăn, Vùng miền, Ngân sách): cùng cơ chế với trang Danh mục — trong nhóm khớp MỘT nhãn, giữa các nhóm khớp TẤT CẢ
+    const tagGroups = ['che-do-an', 'vung-mien', 'ngan-sach']
+      .map((g) => String(ctx.query[g] || '').split(',').map((t) => norm(t)).filter(Boolean).slice(0, 12))
+      .filter((g) => g.length);
     const c = M.makeCtx(ctx.db, ctx.user);
     const out = [];
     for (const rec of ctx.db.recipes) {
       if (kw && !norm(rec.name).includes(kw)) continue;
+      if (tagGroups.length) {
+        const have = new Set((rec.tags || []).map((t) => norm(t)));
+        if (tagGroups.some((g) => !g.some((t) => have.has(t)))) continue;
+      }
       const main = (rec.main && rec.main.length ? rec.main : (rec.ingredients || []).map((i) => i.ingredientId)).slice(0, 8);
       const matched = [], missing = [];
       for (const m of main) {
@@ -1064,10 +1141,11 @@ module.exports = function (app) {
         else { hit = selIds.has(m); label = nameOf(m); }
         (hit ? matched : missing).push(label);
       }
-      if (selIds.size && !matched.length) continue;
+      const anySel = selIds.size > 0 || selGroups.size > 0;
+      if (anySel && !matched.length) continue;
       const total = matched.length + missing.length;
       const score = total ? Math.round((matched.length / total) * 100) / 100 : 0;
-      out.push({ recipe: M.cardOf(c, rec), matched, missing, score, status: selIds.size && !missing.length && (matched.length >= 2 || (main.length === 1 && !rec.legacyId)) ? 'du' : 'thieu' });
+      out.push({ recipe: M.cardOf(c, rec), matched, missing, score, status: anySel && !missing.length && (matched.length >= 2 || (main.length === 1 && !rec.legacyId)) ? 'du' : 'thieu' });
     }
     out.sort((a, b) => b.score - a.score || b.matched.length - a.matched.length || b.recipe.rating - a.recipe.rating || (a.recipe.id < b.recipe.id ? -1 : 1));
     return { items: out.slice(0, limit) };
@@ -1222,6 +1300,8 @@ function loadState() {
   db = base;
   baseRecipes = base.recipes.slice();
   baseIds = new Set(baseRecipes.map(function (r) { return r.id; }));
+  /* review mẫu gốc: đã tính trong seedRating/seedCount, dùng để không cộng trùng khi tính điểm (không lưu vào localStorage) */
+  db.seedReviews = new Map((base.reviews || []).map(function (r) { return [r.id, { recipeId: r.recipeId, rating: r.rating }]; }));
   var raw = lsGet(KEY), st = null;
   /* dữ liệu lưu từ phiên bản trước còn đường dẫn /assets/..., đổi sang cấu trúc thư mục mới */
   if (raw) raw = raw.replace(/\/assets\/icons\//g, '/images/icons/').replace(/\/assets\/images\//g, '/images/').replace(/\/assets\/fonts\//g, '/fonts/');

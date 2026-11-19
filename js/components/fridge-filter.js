@@ -48,15 +48,20 @@
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    var tokens = [];
+    var tokens = [], tags = {};
     form.querySelectorAll("input[type=checkbox]:checked").forEach(function (box) {
-      tokens.push(box.name + ":" + box.value);
+      // Chế độ ăn / Vùng miền / Ngân sách là bộ lọc nhãn: gửi riêng mỗi nhóm một tham số (như fridge.js)
+      if (box.hasAttribute("data-tag-filter")) (tags[box.name] = tags[box.name] || []).push(box.value);
+      else tokens.push(box.name + ":" + box.value);
     });
-    if (tokens.length === 0) {
+    var tagNames = Object.keys(tags);
+    if (tokens.length === 0 && tagNames.length === 0) {
       error.hidden = false;
       return;
     }
-    window.location.href = "/pages/fridge-results.html?ingredients=" +
-      encodeURIComponent(tokens.join(",")).replace(/%3A/gi, ":").replace(/%2C/gi, ",");
+    var parts = [];
+    if (tokens.length) parts.push("ingredients=" + encodeURIComponent(tokens.join(",")).replace(/%3A/gi, ":").replace(/%2C/gi, ","));
+    tagNames.forEach(function (g) { parts.push(g + "=" + encodeURIComponent(tags[g].join(","))); });
+    window.location.href = "/pages/fridge-results.html?" + parts.join("&");
   });
 })();

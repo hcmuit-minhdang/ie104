@@ -43,14 +43,14 @@
 .site-auth *::after {
     box-sizing: border-box;
 }
-.site-auth_content {
+.site-auth__content {
     position: relative;
     padding: 16px 40px 24px;
 }
-.site-login .site-auth_content {
+.site-login .site-auth__content {
     min-height: 469.5px;
 }
-.site-auth_close {
+.site-auth__close {
     position: absolute;
     z-index: 1;
     top: 4px;
@@ -65,11 +65,11 @@
     color: #292929;
     cursor: pointer;
 }
-.site-auth_close svg {
+.site-auth__close svg {
     width: 24px;
     height: 24px;
 }
-.site-auth_logo {
+.site-auth__logo {
     display: block;
     width: 280px;
     max-width: 100%;
@@ -78,29 +78,29 @@
     object-fit: contain;
     transform: rotate(-3.48deg);
 }
-.site-auth_title {
+.site-auth__title {
     margin: 0 0 24px;
     font-size: 32px;
     font-weight: 700;
     line-height: 1.2;
     text-align: center;
 }
-.site-auth_form {
+.site-auth__form {
     display: grid;
     gap: 12px;
     margin: 0;
 }
-.site-auth_field {
+.site-auth__field {
     display: grid;
     gap: 4px;
     min-width: 0;
 }
-.site-auth_label {
+.site-auth__label {
     width: fit-content;
     font-weight: 700;
     line-height: 20px;
 }
-.site-auth_input {
+.site-auth__input {
     display: block;
     width: 100%;
     min-width: 0;
@@ -113,24 +113,24 @@
     font: inherit;
     font-size: 16px;
 }
-.site-auth_input:focus {
+.site-auth__input:focus {
     border-color: #806000;
     outline: 2px solid rgb(251 196 28 / 35%);
     outline-offset: 1px;
 }
-.site-auth_input[aria-invalid="true"] {
+.site-auth__input[aria-invalid="true"] {
     border-color: var(--auth-error);
 }
-.site-auth_input[aria-invalid="true"]:focus {
+.site-auth__input[aria-invalid="true"]:focus {
     outline-color: rgb(180 35 24 / 20%);
 }
-.site-auth_password {
+.site-auth__password {
     position: relative;
 }
-.site-auth_password .site-auth_input {
+.site-auth__password .site-auth__input {
     padding-right: 44px;
 }
-.site-auth_password-toggle {
+.site-auth__password-toggle {
     position: absolute;
     top: 0;
     right: 0;
@@ -144,28 +144,28 @@
     color: #666;
     cursor: pointer;
 }
-.site-auth_password-toggle svg {
+.site-auth__password-toggle svg {
     width: 22px;
     height: 22px;
 }
-.site-auth_password-toggle[aria-pressed="true"] .site-auth_eye-slash {
+.site-auth__password-toggle[aria-pressed="true"] .site-auth__eye-slash {
     display: none;
 }
-.site-auth_error {
+.site-auth__error {
     margin: 0;
     color: var(--auth-error);
     font-size: 12px;
     line-height: 1.5;
 }
-.site-auth_options {
+.site-auth__options {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end; /* chỉ còn link "Quên mật khẩu?" (đã bỏ ô "Ghi nhớ tôi": phiên luôn giữ 30 ngày) */
     gap: 4px 12px;
     font-size: 14px;
 }
-.site-auth_check {
+.site-auth__check {
     display: flex;
     align-items: flex-start;
     gap: 6px;
@@ -173,18 +173,18 @@
     padding: 2px 0;
     cursor: pointer;
 }
-.site-auth_check input {
+.site-auth__check input {
     flex-shrink: 0;
     width: 16px;
     height: 16px;
     margin: 2px 0 0;
     accent-color: #806000;
 }
-.site-auth_check input[aria-invalid="true"] {
+.site-auth__check input[aria-invalid="true"] {
     outline: 1px solid var(--auth-error);
     outline-offset: 2px;
 }
-.site-auth_link {
+.site-auth__link {
     display: inline;
     min-height: 24px;
     padding: 0;
@@ -196,11 +196,11 @@
     text-decoration: none;
     cursor: pointer;
 }
-.site-auth_link:hover {
+.site-auth__link:hover {
     text-decoration: underline;
     text-underline-offset: 3px;
 }
-.site-auth_submit {
+.site-auth__submit {
     width: 100%;
     min-height: 50px;
     padding: 8px 12px;
@@ -215,13 +215,13 @@
     cursor: pointer;
     transition: background-color 0.15s ease;
 }
-.site-auth_submit:hover {
+.site-auth__submit:hover {
     background: #eab615;
 }
-.site-auth_submit:active {
+.site-auth__submit:active {
     box-shadow: none;
 }
-.site-auth_status {
+.site-auth__status {
     margin: 0;
     padding: 10px;
     border-left: 3px solid var(--auth-yellow);
@@ -229,7 +229,7 @@
     color: #414141;
     font-size: 14px;
 }
-.site-auth_switch {
+.site-auth__switch {
     margin: 12px 0 0;
     font-size: 14px;
     text-align: center;
@@ -277,17 +277,17 @@
     to { opacity: 1; transform: translateY(0); }
 }
 @media (max-width: 480px) {
-    .site-auth_content {
+    .site-auth__content {
         padding-right: 24px;
         padding-left: 24px;
     }
-    .site-auth_title {
+    .site-auth__title {
         font-size: 28px;
     }
-    .site-auth_input {
+    .site-auth__input {
         height: 44px;
     }
-    .site-auth_options > .site-auth_link {
+    .site-auth__options > .site-auth__link {
         display: inline-flex;
         align-items: center;
         min-height: 44px;
@@ -297,12 +297,12 @@
     .site-auth[open] {
         animation: none;
     }
-    .site-auth_submit {
+    .site-auth__submit {
         transition: none;
     }
 }
 
-.site-auth_submit:disabled {
+.site-auth__submit:disabled {
     opacity: 0.6;
     cursor: wait;
 }

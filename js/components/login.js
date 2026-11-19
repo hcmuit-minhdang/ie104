@@ -1,12 +1,12 @@
 /* Form Login: kiểm tra phía client rồi đăng nhập qua NomNom.data (email hoặc tên đăng nhập). */
 (function () {
     "use strict";
-    const form = document.querySelector(".site-login_form");
+    const form = document.querySelector(".site-login__form");
     if (!form || !window.NomNomAuth || form.dataset.initialized) return;
     form.dataset.initialized = "true";
     const A = window.NomNomAuth;
     const idInput = form.elements.email;
-    const submit = form.querySelector(".site-auth_submit");
+    const submit = form.querySelector(".site-auth__submit");
 
     // Ô định danh nhận cả email lẫn tên đăng nhập.
     idInput.type = "text";

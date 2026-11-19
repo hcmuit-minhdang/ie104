@@ -25,12 +25,12 @@
     };
 
     const panels = [...header.querySelectorAll("details")];
-    const search = header.querySelector(".site-header_search");
+    const search = header.querySelector(".site-header__search");
     const form = search.querySelector("form");
     const input = form.elements.q;
-    const status = header.querySelector(".site-header_status");
+    const status = header.querySelector(".site-header__status");
     const menuButton = header.querySelector("[data-header-menu-toggle]");
-    const controls = header.querySelector(".site-header_controls");
+    const controls = header.querySelector(".site-header__controls");
     // Giữ mốc này giống @media (max-width: 1000px) trong style.css.
     const mobileScreen = window.matchMedia("(max-width: 1120px)");
 
@@ -46,14 +46,14 @@
     }
 
     function isMobileMenuOpen() {
-        return header.classList.contains("site-header_menu-open");
+        return header.classList.contains("site-header__menu-open");
     }
 
     function setMobileMenu(open, restoreFocus = false) {
         if (!menuButton) return;
         const expanded = mobileScreen.matches && open;
         if (expanded) status.hidden = true;
-        header.classList.toggle("site-header_menu-open", expanded);
+        header.classList.toggle("site-header__menu-open", expanded);
         menuButton.setAttribute("aria-expanded", String(expanded));
         menuButton.setAttribute("aria-label", expanded ? "Đóng menu" : "Mở menu");
         // Menu đã đóng không được nhận Tab hoặc click trong lúc đang chuyển động.
@@ -73,7 +73,7 @@
             const focusInControls = controls.contains(focused);
             setMobileMenu(false, mobileScreen.matches && focusInControls);
             if (!mobileScreen.matches && focused === menuButton) {
-                header.querySelector(".site-header_logo-box a").focus({ preventScroll: true });
+                header.querySelector(".site-header__logo-box a").focus({ preventScroll: true });
             }
         });
         setMobileMenu(false);
@@ -110,7 +110,7 @@
                 closePanels(summary.parentElement);
             }
             const control = event.target.closest("a, button");
-            if (control?.closest(".site-header_navigation")) {
+            if (control?.closest(".site-header__navigation")) {
                 const owner = control.closest("details");
                 if (isMobileMenuOpen()) {
                     setMobileMenu(false, true);

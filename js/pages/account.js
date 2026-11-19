@@ -51,7 +51,7 @@
         '<button type="button" class="recipe-card__act recipe-card__act--del" data-act="delete" data-id="' + esc(r.id) +
         '" aria-label="Xóa công thức ' + esc(r.name) + '" title="Xóa công thức">&#10005;</button>';
     }
-    return '<li class="recipe-card"><a href="' + esc(N.recipeUrl(r.id)) + '"><img class="recipe-card__img" data-fb src="' +
+    return '<li class="recipe-card"><a href="' + esc(N.recipeUrl(r.id)) + '"><img loading="lazy" decoding="async" class="recipe-card__img" data-fb src="' +
       esc(r.image || FALLBACK_IMG) + '" alt="" width="248" height="185" loading="lazy"><span class="recipe-card__name">' +
       esc(r.name) + "</span></a>" + btn + "</li>";
   }
@@ -62,11 +62,11 @@
       '<a class="cmt__recipe" href="' + esc(N.recipeUrl(v.recipeId)) + '">' + esc(v.recipeName) + "</a>" +
       '<div class="cmt__meta"><p class="cmt__who"><span>' + esc(v.user && v.user.username) + "</span> " +
       '<span class="cmt__stars" aria-label="' + esc(v.rating) + ' trên 5 sao">' + esc(N.stars(v.rating)) + "</span></p>" +
-      '<span class="cmt__time"><img src="/images/account/clock.png" alt=""><time datetime="' + esc(v.createdAt) + '">' +
+      '<span class="cmt__time"><img loading="lazy" decoding="async" src="/images/account/clock.png" alt=""><time datetime="' + esc(v.createdAt) + '">' +
       esc(fmtDate(v.createdAt)) + "</time></span></div>" +
       '<p class="cmt__text">' + esc(v.text) + "</p>" +
       '<div class="cmt__actions"><button class="cmt__like" type="button" data-act="like" data-id="' + esc(v.id) +
-      '" aria-pressed="' + (v.liked ? "true" : "false") + '" aria-label="Thích đánh giá"><img src="/images/account/like.png" alt="">' +
+      '" aria-pressed="' + (v.liked ? "true" : "false") + '" aria-label="Thích đánh giá"><img loading="lazy" decoding="async" src="/images/account/like.png" alt="">' +
       '<span class="cmt__like-count">' + esc(v.likes || 0) + "</span></button>" +
       (mode === "full" ? delBtn : "") + "</div></article></li>";
   }
@@ -92,8 +92,8 @@
     function arrow(dir) {
       var li = document.createElement("li"), b = document.createElement("button");
       b.type = "button"; b.className = "pager__next"; b.dataset.dir = dir;
-      var img = '<img src="/images/account/page-next.svg" alt="">';
-      b.innerHTML = dir === "next" ? "Trang sau" + img : img.replace("<img", '<img style="transform:rotate(90deg)"') + "Trang trước";
+      var img = '<img loading="lazy" decoding="async" src="/images/account/page-next.svg" alt="">';
+      b.innerHTML = dir === "next" ? "Trang sau" + img : img.replace("<img", '<img loading="lazy" decoding="async" style="transform:rotate(90deg)"') + "Trang trước";
       li.appendChild(b); return li;
     }
     var set = {};
@@ -185,7 +185,7 @@
         N.data.get("/recipes/" + encodeURIComponent(id)).then(function (r) {
           openEditor({ title: "Cập nhật công thức", fields: [
             { name: "name", label: "Tên món", value: r.name || r.title },
-            { name: "description", label: "Mô tả", value: r.description || "" },
+            { name: "description", label: "Mô tả", type: "textarea", value: r.description || "" },
             { name: "time", label: "Tổng thời gian (phút)", type: "number", value: r.time || "" },
             { name: "servings", label: "Khẩu phần (người)", type: "number", value: r.baseServings || r.servings || "" }],
             onSubmit: function (v) {
@@ -363,6 +363,9 @@
     var form = $("form", d), errEl = $(".acc-dialog__error", d), submit = $("[type=submit]", d);
     $(".acc-dialog__title", d).textContent = opts.title;
     $(".acc-dialog__fields", d).innerHTML = opts.fields.map(function (f) {
+      // type "textarea": ô nhiều dòng (vd. Mô tả công thức)
+      if (f.type === "textarea") return '<label class="acc-dialog__label">' + esc(f.label) + '<textarea class="acc-dialog__input acc-dialog__textarea" name="' +
+        esc(f.name) + '" rows="5" maxlength="5000">' + esc(f.value || "") + '</textarea></label>';
       return '<label class="acc-dialog__label">' + esc(f.label) + '<input class="acc-dialog__input" name="' + esc(f.name) +
         '" type="' + (f.type || "text") + '" value="' + esc(f.value || "") + '" autocomplete="' + (f.ac || "off") + '"></label>';
     }).join("");

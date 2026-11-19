@@ -21,7 +21,7 @@
     position: relative;
 }
 /* Figma: Divider / Top — 1252 x 1px, màu #DEDEDE, cách đỉnh footer 30px. */
-.site-footer_divider {
+.site-footer__divider {
     display: block;
     position: absolute;
     top: 30px;             /* Khoảng cách từ đỉnh footer */
@@ -35,7 +35,7 @@
 }
 
 /* Figma: Accent / Egg yellow — 32 x 3px, cách chữ phía trên 12px. */
-.site-footer_heading-line {
+.site-footer__heading-line {
     display: block;
     width: 32px;          /* Chiều dài nét vàng */
     height: 3px;          /* Độ dày nét vàng */
@@ -61,30 +61,30 @@
 .footer-container > div {
     min-width: 0;
 }
-.site-footer_brand {
+.site-footer__brand {
     width: 100%;
     max-width: 400px;
     margin-top: -20px;
 }
-.site-footer_links {
+.site-footer__links {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-.site-footer_links img{
+.site-footer__links img{
     margin-right: 5px;
 }
 /* Liên kết có biểu tượng (mạng xã hội): biểu tượng và tên cùng một hàng */
-.site-footer_links a:has(> img) {
+.site-footer__links a:has(> img) {
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
-.site-footer_links a:has(> img) img {
+.site-footer__links a:has(> img) img {
     margin-right: 0;
     flex: none;
 }
-.site-footer_logo-box {
+.site-footer__logo-box {
     display: flex;
     align-items: center;
     height: 106px;
@@ -92,12 +92,12 @@
     max-width: 100%;
 
 }
-.site-footer_logo {
+.site-footer__logo {
     height: 59.47px;
     width: fit-content;
     transform: rotate(-3.48deg);
 }
-.site-footer_legal {
+.site-footer__legal {
     /* Nằm sau nội dung, tự đẩy chiều cao footer khi các link xuống hàng. */
     position: static;
     display: flex;
@@ -111,10 +111,10 @@
     flex-wrap: wrap;
     gap: 12px 24px;
 }
-.site-footer_copyright {
+.site-footer__copyright {
     margin: 0;
 }
-.site-footer_legal a{
+.site-footer__legal a{
     font-size: inherit;
     color: inherit;
 }
@@ -131,7 +131,7 @@
         width: 100%;
     }
 
-    .site-footer_legal {
+    .site-footer__legal {
         gap: 12px 20px;
     }
 }

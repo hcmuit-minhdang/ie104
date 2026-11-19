@@ -1,14 +1,14 @@
 /* Form Signup: kiểm tra phía client rồi đăng ký qua NomNom.data. */
 (function () {
     "use strict";
-    const form = document.querySelector(".site-signup_form");
+    const form = document.querySelector(".site-signup__form");
     if (!form || !window.NomNomAuth || form.dataset.initialized) return;
     form.dataset.initialized = "true";
     const A = window.NomNomAuth;
     const password = form.elements.password;
     const confirmation = form.elements.confirmPassword;
     const username = form.elements.username;
-    const submit = form.querySelector(".site-auth_submit");
+    const submit = form.querySelector(".site-auth__submit");
 
     function checkConfirmation() {
         const mismatch = confirmation.value && confirmation.value !== password.value;

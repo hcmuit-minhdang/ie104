@@ -66,30 +66,41 @@ upBtn.addEventListener('click', () => {
   }
   if (community) loadRecipes(community, { sort: "new", limit: 4 }, "recipe-card", "recipe-image", 4);
 
-  /* Bảng vinh danh: dữ liệu từ NomNom.data.get("/leaderboard") (nếu chưa có ai thì giữ nội dung mặc định). */
+  /* Bảng vinh danh: dữ liệu từ NomNom.data.get("/leaderboard"). Trước khi tải xong các thẻ ẩn tạm (is-loading);
+     thẻ nào chưa có dữ liệu thì ẩn, không có dữ liệu nào (hoặc lỗi) thì ẩn cả khối. */
   (function loadLeaderboard() {
-    var cards = document.querySelectorAll(".leaderboard-card");
-    if (!cards.length) return;
+    var box = document.querySelector(".leaderboard-container");
+    var section = document.querySelector(".leaderboard-section");
+    if (!box) return;
+    function hideCard(card) { if (card) card.style.display = "none"; }
     NomNom.data.get("/leaderboard").then(function (d) {
       function fill(card, user, descSel, text, href) {
-        if (!card || !user) return;
+        if (!card) return false;
+        if (!user) { hideCard(card); return false; }
         var name = card.querySelector(".user-name");
         if (name) name.textContent = user.username;
         var img = card.querySelector(".user-image-leaderboard");
-        if (img && user.avatar) img.src = user.avatar;
+        if (img) { img.alt = user.username; if (user.avatar) img.src = user.avatar; }
         var link = card.querySelector(descSel + " a");
         if (link) { link.textContent = text; if (href) link.href = href; }
+        return true;
       }
-      fill(document.querySelector(".most-recipes"), d.mostRecipes, ".most-recipes-description", d.mostRecipes && d.mostRecipes.count + " công thức");
-      fill(document.querySelector(".most-reviews"), d.mostReviews, ".most-reviews-description", d.mostReviews && d.mostReviews.count + " đánh giá");
+      var shown = 0;
+      if (fill(document.querySelector(".most-recipes"), d.mostRecipes, ".most-recipes-description", d.mostRecipes && d.mostRecipes.count + " công thức")) shown++;
+      if (fill(document.querySelector(".most-reviews"), d.mostReviews, ".most-reviews-description", d.mostReviews && d.mostReviews.count + " đánh giá")) shown++;
       var mr = d.mostSaved, c3 = document.querySelector(".most-liked-recipe");
       if (mr && c3) {
         var nm = c3.querySelector(".user-name");
         if (nm) nm.textContent = mr.author ? mr.author.username : "NomNom";
+        var im3 = c3.querySelector(".user-image-leaderboard");
+        if (im3) im3.alt = nm ? nm.textContent : "";
         var l3 = c3.querySelector(".most-liked-recipe-description a");
         if (l3) { l3.textContent = mr.name; l3.href = NomNom.recipeUrl(mr.id); }
-      }
-    }, function () { /* giữ nội dung mặc định */ });
+        shown++;
+      } else hideCard(c3);
+      box.classList.remove("is-loading");
+      if (!shown && section) section.style.display = "none";
+    }, function () { if (section) section.style.display = "none"; });
   })();
 
   function loadCategories() {
@@ -104,11 +115,11 @@ upBtn.addEventListener('click', () => {
       })).then(function (imgs) {
         var html = items.map(function (c, i) {
           return '<a href="/pages/category.html?category=' + encodeURIComponent(c.id) + '" class="category-card">' +
-            '<img src="' + NomNom.esc(imgs[i] || "/images/food.png") + '" alt="' + NomNom.esc(c.name) + '" class="category-image" loading="lazy" />' +
+            '<img loading="lazy" decoding="async" src="' + NomNom.esc(imgs[i] || "/images/food.png") + '" alt="' + NomNom.esc(c.name) + '" class="category-image" loading="lazy" />' +
             '<span class="category-name">' + NomNom.esc(c.name) + '</span></a>';
         }).join("");
         html += '<a href="/pages/category.html" class="category-card category-more">' +
-          '<img src="/images/icons/right-arrow-black.svg" alt="Xem Thêm" class="category-image-more" />' +
+          '<img loading="lazy" decoding="async" src="/images/icons/right-arrow-black.svg" alt="Xem Thêm" class="category-image-more" />' +
           '<span class="category-name">Xem Thêm</span></a>';
         catBox.innerHTML = html;
       });

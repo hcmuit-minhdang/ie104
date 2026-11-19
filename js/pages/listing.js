@@ -25,7 +25,7 @@
     var plain = cls === "similar-card";
     var img = r.image || "/images/food.png";
     return '<a href="' + esc(NomNom.recipeUrl(r.id)) + '" class="' + cls + '">' +
-      '<img src="' + esc(img) + '" alt="' + esc(r.name) + '" class="' + imgCls + '" loading="lazy" onerror="NomNom.fallbackImg(this)">' +
+      '<img loading="lazy" decoding="async" src="' + esc(img) + '" alt="' + esc(r.name) + '" class="' + imgCls + '" loading="lazy" onerror="NomNom.fallbackImg(this)">' +
       (plain ? "" : '<div class="recipe-info">') +
       '<span class="recipe-name">' + esc(r.name) + '</span>' +
       '<span class="recipe-price">' + esc(NomNom.money(r.price)) + ' / phần</span>' +

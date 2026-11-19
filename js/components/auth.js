@@ -31,7 +31,7 @@
     }
 
     function showMessage(form, message) {
-        const status = form.querySelector(".site-auth_status");
+        const status = form.querySelector(".site-auth__status");
         status.textContent = message;
         status.hidden = false;
     }
@@ -54,7 +54,7 @@
     }
 
     function validateForm(form) {
-        form.querySelector(".site-auth_status").hidden = true;
+        form.querySelector(".site-auth__status").hidden = true;
         let firstInvalid = null;
         form.querySelectorAll("input[required]").forEach(input => {
             // Tên/email có thể trim; tuyệt đối không thay đổi giá trị mật khẩu.
@@ -83,7 +83,7 @@
             button.setAttribute("aria-pressed", "false");
             button.setAttribute("aria-label", button.dataset.showLabel);
         });
-        dialog.querySelector(".site-auth_status").hidden = true;
+        dialog.querySelector(".site-auth__status").hidden = true;
     }
 
     function openPopup(action, trigger = document.activeElement) {
@@ -185,7 +185,7 @@
         // Dù thiếu file xử lý form riêng khi ghép, không để trình duyệt gửi GET mặc định.
         form.addEventListener("submit", event => event.preventDefault());
         function onEdit(event) {
-            form.querySelector(".site-auth_status").hidden = true;
+            form.querySelector(".site-auth__status").hidden = true;
             const input = event.target;
             if (input.matches("input") && input.hasAttribute("aria-invalid")) {
                 setFieldError(input, getFieldError(input));
@@ -236,7 +236,7 @@
         const list = document.querySelector("[data-header-member] ul");
         if (!list) return;
         // Không hiện dòng "Xin chào" nữa: chỉ dọn dòng cũ nếu còn
-        const li = list.querySelector(".site-header_user");
+        const li = list.querySelector(".site-header__user");
         if (li) li.remove();
     }
 

@@ -118,6 +118,10 @@ function formatDate(iso) {
     return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
 }
 
+function costTextOf(total, perServing) {
+    return `${formatPrice(total)} | ${formatPrice(perServing)} / phần`;
+}
+
 function normalizeRecipe(raw, recipeId) {
     const num = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
     const title = raw.title || raw.name || "Công thức";
@@ -125,7 +129,9 @@ function normalizeRecipe(raw, recipeId) {
     let prepTime = num(raw.prepTime);
     let cookTime = num(raw.cookTime);
     if (!prepTime && !cookTime && raw.time) cookTime = num(raw.time);
-    const costTotal = num(raw.costTotal) || (num(raw.price) ? num(raw.price) * baseServings : 0);
+    // Giá theo phần (price) là số gốc, giống thẻ món; tổng chi phí = price * khẩu phần (chỉ dùng costTotal khi không có price)
+    const pricePerServing = num(raw.price) || (num(raw.costTotal) ? num(raw.costTotal) / baseServings : 0);
+    const costTotal = pricePerServing * baseServings;
 
     let gallery = asArray(raw.gallery).filter(Boolean);
     if (!gallery.length) gallery = asArray(raw.image || raw.mainImage).filter(Boolean);
@@ -168,7 +174,8 @@ function normalizeRecipe(raw, recipeId) {
         totalTime: prepTime + cookTime,
         baseServings,
         costTotal,
-        costText: costTotal ? `${formatPrice(costTotal)} | ${formatPrice(costTotal / baseServings)} / phần` : "",
+        pricePerServing,
+        costText: costTotal ? costTextOf(costTotal, pricePerServing) : "",
         gallery,
         ingredients,
         steps,
@@ -225,8 +232,7 @@ function updateRatingDisplay(recipe, average, count) {
     recipe.ratingText = `${Number(average).toFixed(1)} | ${count} Reviews`;
     document.querySelectorAll("[data-stars='ratingScore']").forEach(el => { el.innerHTML = starsHtml(average); });
     document.querySelectorAll("[data-bind='ratingText']").forEach(el => { el.textContent = recipe.ratingText; });
-    const c = document.getElementById("review-count");
-    if (c) c.textContent = count;
+    // Số "BÌNH LUẬN" (#review-count) do render() đặt theo số bình luận thật, không phải lượt đánh giá gộp
 }
 
 /* ------------------------------------------------------------------ */
@@ -246,7 +252,7 @@ function renderGallery(recipe) {
     }
 
     container.innerHTML = recipe.gallery
-        .map((image, i) => `<img src="${escapeHtml(image)}" alt="Ảnh ${i + 1}" class="gallery-thumb" />`)
+        .map((image, i) => `<img loading="lazy" decoding="async" src="${escapeHtml(image)}" alt="Ảnh ${i + 1}" class="gallery-thumb" />`)
         .join("");
     if (recipe.gallery.length < 2) container.hidden = true;
 
@@ -354,7 +360,7 @@ function renderDetailedSteps(recipe) {
                     ${step.images.map(image => {
                         const src = typeof image === "string" ? image : image.src;
                         const tall = typeof image === "object" && image.tall ? ' class="tall"' : "";
-                        return `<img src="${escapeHtml(imageUrl(recipe.id, src))}" alt="Bước ${i + 1}"${tall} loading="lazy" />`;
+                        return `<img loading="lazy" decoding="async" src="${escapeHtml(imageUrl(recipe.id, src))}" alt="Bước ${i + 1}"${tall} loading="lazy" />`;
                     }).join("")}
                 </div>` : ""}
             </div>`)
@@ -393,7 +399,7 @@ async function renderSimilar(recipe) {
 
     container.innerHTML = items.map(item => `
         <a href="${escapeHtml(NomNom.recipeUrl(item.id))}" class="similar-card">
-            <img src="${escapeHtml(imageUrl(item.id, item.image))}" alt="${escapeHtml(item.name)}" class="similar-image" loading="lazy" />
+            <img loading="lazy" decoding="async" src="${escapeHtml(imageUrl(item.id, item.image))}" alt="${escapeHtml(item.name)}" class="similar-image" loading="lazy" />
             <span class="recipe-name">${escapeHtml(item.name)}</span>
             ${item.price ? `<span class="recipe-price">${escapeHtml(NomNom.money(item.price))} / phần</span>` : ""}
             <span class="recipe-time">Thời gian: ${escapeHtml(NomNom.minutes(item.time))}</span>
@@ -443,6 +449,12 @@ function initServingsScaler(recipe, units) {
 
         servingsInput.value = servings;
         if (metaServings) metaServings.textContent = servings;
+
+        // Chi phí: tổng tính theo số phần đang chọn, giá mỗi phần giữ nguyên
+        if (recipe.costTotal) {
+            recipe.costText = costTextOf(recipe.pricePerServing * servings, recipe.pricePerServing);
+            document.querySelectorAll("[data-bind='costText']").forEach(el => { el.textContent = recipe.costText; });
+        }
 
         scalableItems.forEach(span => {
             const unit = span.dataset.unit;
@@ -722,7 +734,7 @@ function initReviews(recipe) {
             return `
             <li class="comment" data-review-id="${escapeHtml(r.id)}">
                 <div class="comment-avatar-column">
-                    <img src="${escapeHtml(user.avatar || FALLBACK_AVATAR)}" alt="${escapeHtml(user.username || "Người dùng")}" class="comment-avatar" />
+                    <img loading="lazy" decoding="async" src="${escapeHtml(user.avatar || FALLBACK_AVATAR)}" alt="${escapeHtml(user.username || "Người dùng")}" class="comment-avatar" />
                 </div>
                 <div class="comment-body">
                     <div class="comment-top">

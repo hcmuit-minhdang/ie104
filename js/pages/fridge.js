@@ -1,5 +1,5 @@
 /* Luồng tìm công thức theo nguyên liệu tủ lạnh.
-   - /pages/fridge.html: form chọn nguyên liệu -> chuyển sang /pages/fridge-results.html?ingredients=dam:thit-bo,tinh-bot:gao
+   - /pages/fridge.html: form chọn nguyên liệu -> chuyển sang /pages/fridge-results.html?ingredients=dam:thit-bo,tinh-bot:gao&vung-mien=Miền Nam (bộ lọc nhãn tách riêng)
    - /pages/fridge-results.html: đọc query, khôi phục ô đã chọn, gọi NomNom.data.get("/fridge") (store.js tính điểm khớp nguyên liệu). */
 (function () {
   "use strict";
@@ -29,12 +29,22 @@
 
   function selectedTokens() {
     var out = [];
-    document.querySelectorAll(".filter-sidebar input[type=checkbox]:checked").forEach(function (box) {
+    document.querySelectorAll(".filter-sidebar input[type=checkbox]:checked:not([data-tag-filter])").forEach(function (box) {
       out.push(box.name + ":" + box.value);
     });
     // Nguyên liệu nhập tay ở mục "Khác": token "nhom:ten nguyen lieu"
     document.querySelectorAll(".filter-other-list button").forEach(function (chip) {
       out.push(chip.dataset.token);
+    });
+    return out;
+  }
+
+  // Bộ lọc nhãn (Chế độ ăn, Vùng miền, Ngân sách): mỗi nhóm một tham số trên URL, giống trang Danh mục (vd. vung-mien=Miền Nam)
+  var TAG_GROUPS = ["che-do-an", "vung-mien", "ngan-sach"];
+  function selectedTags() {
+    var out = {};
+    document.querySelectorAll(".filter-sidebar input[data-tag-filter]:checked").forEach(function (box) {
+      (out[box.name] = out[box.name] || []).push(box.value);
     });
     return out;
   }
@@ -180,6 +190,8 @@
       var keyword = kwInput ? kwInput.value.trim() : "";
       var parts = [];
       if (tokens.length) parts.push("ingredients=" + encodeURIComponent(tokens.join(",")).replace(/%3A/gi, ":").replace(/%2C/gi, ","));
+      var tags = selectedTags();
+      TAG_GROUPS.forEach(function (g) { if (tags[g]) parts.push(g + "=" + encodeURIComponent(tags[g].join(","))); });
       if (keyword) parts.push("keyword=" + encodeURIComponent(keyword));
       window.location.href = RESULTS_URL + (parts.length ? "?" + parts.join("&") : "");
     });
@@ -267,32 +279,40 @@
     if (pager) pager.innerHTML = NomNom.pagerHtml(p, pages, pageUrl);
   }
 
-  function loadResults(tokens, keyword) {
+  function loadResults(tokens, keyword, tags) {
     var list = document.getElementById("result-list");
     var summary = document.getElementById("result-summary");
     var pager = document.getElementById("pagination");
     if (!list || !summary) return;
     list.textContent = "";
     if (pager) pager.textContent = "";
-    if (!tokens.length) {
+    tags = tags || {};
+    var hasTags = TAG_GROUPS.some(function (g) { return tags[g] && tags[g].length; });
+    if (!tokens.length && !hasTags) {
       summary.textContent = "Bạn chưa chọn nguyên liệu nào. Hãy quay lại trang chọn nguyên liệu.";
       return;
     }
+    // Ô "Khác" (token "nhom:khac") không phải một nguyên liệu nên không đếm
+    var ingCount = tokens.filter(function (t) { return !/:khac$/.test(t); }).length;
     summary.textContent = "Đang tìm công thức phù hợp...";
     // Lấy tối đa 100 kết quả một lần rồi chia trang ở trình duyệt, nên đổi trang không tính lại
-    NomNom.data.get("/fridge", { ingredients: tokens.join(","), q: keyword, limit: 100 }).then(function (d) {
+    var query = { ingredients: tokens.join(","), q: keyword, limit: 100 };
+    TAG_GROUPS.forEach(function (g) { if (tags[g] && tags[g].length) query[g] = tags[g].join(","); });
+    NomNom.data.get("/fridge", query).then(function (d) {
       allItems = d.items || [];
       summary.textContent = "";
       if (!allItems.length) {
         summary.textContent = "Chưa có công thức phù hợp. Hãy thử chọn thêm nguyên liệu hoặc đổi từ khóa.";
         return;
       }
-      summary.append("Tìm thấy ", el("strong", "", String(allItems.length)), " công thức cho " + tokens.length + " nguyên liệu đã chọn" +
+      summary.append("Tìm thấy ", el("strong", "", String(allItems.length)), " công thức" +
+        (ingCount ? " cho " + ingCount + " nguyên liệu đã chọn" : "") +
+        (hasTags ? (ingCount ? ", " : " ") + "theo bộ lọc đã chọn" : "") +
         (keyword ? ", từ khóa “" + keyword + "”" : "") + ".");
       renderPage();
     }, function (e) {
       summary.textContent = "";
-      showError(list, NomNom.errorText(e), function () { loadResults(tokens, keyword); });
+      showError(list, NomNom.errorText(e), function () { loadResults(tokens, keyword, tags); });
     });
   }
 
@@ -316,9 +336,17 @@
     var params = new URLSearchParams(window.location.search);
     var tokens = (params.get("ingredients") || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
     var keyword = (params.get("keyword") || "").trim();
+    var tagSel = {};
+    TAG_GROUPS.forEach(function (g) {
+      var v = (params.get(g) || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+      if (v.length) tagSel[g] = v;
+    });
     // Khôi phục ô đã chọn từ query string và mở nhóm có ô được chọn.
     document.querySelectorAll(".filter-sidebar input[type=checkbox]").forEach(function (box) {
-      if (tokens.indexOf(box.name + ":" + box.value) !== -1) {
+      var on = box.hasAttribute("data-tag-filter")
+        ? (tagSel[box.name] || []).indexOf(box.value) !== -1
+        : tokens.indexOf(box.name + ":" + box.value) !== -1;
+      if (on) {
         box.checked = true;
         // Mở sẵn nhóm có ô được chọn
         var group = box.closest(".filter-accordion");
@@ -352,6 +380,6 @@
     document.querySelectorAll(".filter-other").forEach(function (block) { block.syncOther(); });
     var keywordInput = document.querySelector(".filter-sidebar input[name=keyword]");
     if (keywordInput) keywordInput.value = keyword;
-    loadResults(tokens, keyword);
+    loadResults(tokens, keyword, tagSel);
   }
 })();

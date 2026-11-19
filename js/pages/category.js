@@ -122,7 +122,7 @@
       pickerLoaded = true;
       box.innerHTML = items.map(function (c, i) {
         return '<a href="/pages/category.html?category=' + encodeURIComponent(c.id) + '" class="cat-picker__card">' +
-          '<img src="' + NomNom.esc(imgs[i] || "/images/food.png") + '" alt="" loading="lazy" />' +
+          '<img loading="lazy" decoding="async" src="' + NomNom.esc(imgs[i] || "/images/food.png") + '" alt="" loading="lazy" />' +
           '<span>' + NomNom.esc(c.name) + '</span></a>';
       }).join("") + '<a href="/pages/category.html?sort=rating" class="cat-picker__card cat-picker__card--all"><span class="cat-picker__all">Tất cả món</span></a>';
     });

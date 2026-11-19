@@ -84,14 +84,13 @@ body::before {
 .steps h3{font-size:27px;line-height:39px}
 
 /* team */
-.members{display:flex;flex-wrap:wrap;gap:28px;justify-content:center}
-.member{width:408px;padding:28px;display:flex;flex-direction:column;gap:24px}
-.profile{display:flex;align-items:center;gap:20px}
-.profile img{flex:none}
-.profile>div{display:flex;flex-direction:column;gap:6px}
-.member h3{font-size:26px;line-height:38px}
-.role{font-size:19px;line-height:28px}
-.desc{font-size:22px;line-height:32px}
+.members{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:20px}
+.member{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:0 14px 22px;background:#fffdf5;border:1.5px solid var(--ink);border-radius:8px;box-shadow:0 4px 0 rgba(41,41,41,.12);overflow:hidden}
+.member__banner{align-self:stretch;height:84px;margin:0 -14px 0;background:radial-gradient(circle at 18% 30%,rgba(255,255,255,.45) 0 9px,transparent 10px),radial-gradient(circle at 82% 55%,rgba(255,255,255,.35) 0 14px,transparent 15px),radial-gradient(circle at 60% 20%,rgba(255,255,255,.3) 0 6px,transparent 7px),var(--yellow)}
+.member__avatar{width:84px;height:84px;margin-top:-42px;border-radius:50%;border:5px solid #fff;background:linear-gradient(135deg,#fbc41b,#f59a23);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.18);position:relative}
+.member h3{font-size:20px;line-height:28px;margin-top:6px}
+.role{font-size:14px;line-height:20px;background:#fff1c2;color:#5a4300;border-radius:8px;padding:4px 10px}
+.mssv{font-size:14px;line-height:20px;color:#6b6558}
 
 /* cta */
 .cta{background:var(--yellow);display:flex;align-items:center;justify-content:space-between;gap:32px;padding:48px max(24px,calc(50% - 640px))}
@@ -106,7 +105,8 @@ body::before {
   .story-body,.cards,.steps,.cta{flex-direction:column}
   .story-img,.value-card,.steps li{width:100%;max-width:none}
   .steps::before{display:none}
-  .btn-yellow,.btn-dark,.member{width:100%}
+  .btn-yellow,.btn-dark{width:100%}
+  .members{grid-template-columns:repeat(3,minmax(0,1fr))}
   .tag{white-space:normal}
   .tag--team{width:auto;padding:24px}
   .heading-row{flex-wrap:wrap}
@@ -140,3 +140,5 @@ body::before {
 
 /* cuộn tới neo không bị header sticky che */
 section[id]{scroll-margin-top:96px}
+@media (max-width:700px){.members{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:440px){.members{grid-template-columns:1fr}}
