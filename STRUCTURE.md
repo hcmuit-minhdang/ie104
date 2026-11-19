@@ -46,12 +46,12 @@ Nhóm thống nhất theo hai báo cáo tham khảo của các khóa trước (M
 | Modifier | nối bằng `--` | `tag--team`, `u-btn--danger` |
 | Trạng thái | tiền tố `is-` | `is-open` |
 
-- Header, footer, đăng nhập, đăng ký (`css/components/`) đã đổi hết sang BEM (`site-header__...`, `site-footer__...`, `site-auth__...`, `site-login__...`, `site-signup__...`).
+- Header, footer, đăng nhập, đăng ký (`css/components/`) đã đổi hết sang BEM (`site-header__...`, `site-footer__...`, `site-auth__...`, `site-login__...`, `site-signup__...`); riêng trạng thái `site-header__menu-open` giữ tên cũ.
 - Các trang còn lại (`css/pages/`) vốn đặt tên kebab-case phẳng (`recipe-title`, `filter-panel`...). Giữ nguyên để khỏi vỡ giao diện; **thành phần mới** viết theo BEM (như `member__avatar`, `profile-banner__bg`).
 - CSS dùng chung nằm trong `css/components/`; mỗi trang một file trong `css/pages/`, chỉ áp dụng cho trang đó.
 
 **JavaScript: camelCase**
-- Biến và hàm: `pageSize`, `renderProfile()`, `loadState()`. Hằng số cấp module: `UPPER_SNAKE_CASE` (`PAGE_SIZE`, `KEY`).
+- Biến và hàm: `allItems`, `renderProfile()`, `loadState()`. Hằng số cấp module: `UPPER_SNAKE_CASE` (`PAGE_SIZE`, `KEY`).
 - Mỗi trang một file trong `js/pages/` trùng tên với trang; thành phần dùng chung trong `js/components/`.
 
 **Tệp và thư mục:** chữ thường, nối bằng `-` (`fridge-results.html`, `ingredient-picker.js`).

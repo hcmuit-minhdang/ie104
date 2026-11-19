@@ -21,16 +21,16 @@ Nguồn so sánh: *Báo cáo MyTicket* (4/2025) và *Báo cáo Game Store Websit
 | Bảng phân công và đánh giá thành viên | README có bảng thành viên, phân công, tiến độ | chép vào báo cáo |
 | 1.x Giới thiệu, mục tiêu, công nghệ | README: Tính năng, Công nghệ | viết |
 | Wireframe, thiết kế chi tiết | Figma (xem mục 3) | chụp hình đưa vào |
-| Sitemap | không có | vẽ từ danh sách trang (17 file HTML) |
+| Sitemap | không có | vẽ từ danh sách trang (16 file HTML) |
 | Quy tắc đặt tên, component, CSS, Git | `STRUCTURE.md` mục Quy tắc | chép vào |
 | Cấu trúc mã nguồn | `STRUCTURE.md`, README | chụp cây thư mục |
 | 2.x Từng trang kèm bảng mô tả thành phần | code có đủ trang | viết bảng mô tả cho từng trang (mẫu: bảng thành phần trang chủ) |
-| 3.1 Kiểm thử HTML (W3C validator) | chưa chạy | chạy validator cho 17 trang, ghi bảng kết quả |
+| 3.1 Kiểm thử HTML (W3C validator) | chưa chạy | chạy validator cho 16 trang, ghi bảng kết quả |
 | 3.1 Kiểm thử responsive (tablet, mobile) | đã thử tay ở 1440, 768, 375px | lập bảng các trang theo thiết bị |
 | 3.1 Kiểm thử JavaScript | đã thử tay mọi luồng chính (đăng nhập, lưu, đánh giá, đăng, sửa, xóa) | lập bảng kịch bản và kết quả |
 | 3.2 Tối ưu ảnh | có ảnh WebP, ảnh tải lên thu về 800px; còn nhiều PNG/JPG (khoảng 37 MB thư mục images) | nén thêm, chụp kích thước trước/sau |
-| 3.2 Tối ưu CSS/JS | không minify; JS nạp `defer` | tùy chọn |
-| 3.2 Tối ưu SEO | đã thêm `meta description`, Open Graph, `lang`, `alt` đủ cho mọi ảnh, `loading="lazy"` | chưa có canonical, sitemap.xml, robots.txt; vài trang thiếu `h1` (trang chủ, Góc của tôi, so sánh giá) |
+| 3.2 Tối ưu CSS/JS | không minify; phần lớn script nạp `defer` (riêng `store.js` nạp đồng bộ) | tùy chọn |
+| 3.2 Tối ưu SEO | đã thêm `meta description`, Open Graph, `lang`, `alt` đủ cho mọi ảnh, `loading="lazy"` (chỉ cho ảnh do JS tạo, ảnh tĩnh trong HTML chưa có) | chưa có canonical, sitemap.xml, robots.txt; vài trang thiếu `h1` (trang chủ, Góc của tôi, so sánh giá) |
 | 3.2 Lighthouse | chưa chạy | chạy trên bản Vercel, chụp điểm |
 | 4. Tổng kết, ưu/khuyết, hướng phát triển | không có | viết (README mục Giới hạn là nguyên liệu tốt) |
 | Tài liệu tham khảo | không có | liệt kê |

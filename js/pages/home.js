@@ -115,7 +115,7 @@ upBtn.addEventListener('click', () => {
       })).then(function (imgs) {
         var html = items.map(function (c, i) {
           return '<a href="/pages/category.html?category=' + encodeURIComponent(c.id) + '" class="category-card">' +
-            '<img loading="lazy" decoding="async" src="' + NomNom.esc(imgs[i] || "/images/food.png") + '" alt="' + NomNom.esc(c.name) + '" class="category-image" loading="lazy" />' +
+            '<img loading="lazy" decoding="async" src="' + NomNom.esc(imgs[i] || "/images/food.png") + '" alt="' + NomNom.esc(c.name) + '" class="category-image" />' +
             '<span class="category-name">' + NomNom.esc(c.name) + '</span></a>';
         }).join("");
         html += '<a href="/pages/category.html" class="category-card category-more">' +

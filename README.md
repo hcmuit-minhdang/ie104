@@ -172,6 +172,7 @@ Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt 
 - Gợi ý theo tủ lạnh so khớp với tối đa 8 nguyên liệu chính của mỗi món; nguyên liệu tự nhập không có trong danh mục sẽ không khớp được món nào.
 - Chi tiết (nguyên liệu, các bước) của một số công thức mẫu được sinh theo tên món, không phải công thức thật.
 - Giá nguyên liệu ở các cửa hàng là dữ liệu mô phỏng; nút *Mua ngay* chỉ mở trang chủ cửa hàng. Liên kết mạng xã hội ở footer và trang Liên hệ trỏ tới trang chủ chung của mạng xã hội (nhóm chưa có trang riêng).
+- Trang công thức tạo nội dung bằng JavaScript nên thẻ Open Graph (`og:title`, `og:description`) của trang này là chung, không theo từng món.
 
 ---
 

@@ -92,8 +92,8 @@
     function arrow(dir) {
       var li = document.createElement("li"), b = document.createElement("button");
       b.type = "button"; b.className = "pager__next"; b.dataset.dir = dir;
-      var img = '<img loading="lazy" decoding="async" src="/images/account/page-next.svg" alt="">';
-      b.innerHTML = dir === "next" ? "Trang sau" + img : img.replace("<img", '<img loading="lazy" decoding="async" style="transform:rotate(90deg)"') + "Trang trước";
+      var img = '<img src="/images/account/page-next.svg" alt="">';
+      b.innerHTML = dir === "next" ? "Trang sau" + img : img.replace("<img", '<img style="transform:rotate(90deg)"') + "Trang trước";
       li.appendChild(b); return li;
     }
     var set = {};

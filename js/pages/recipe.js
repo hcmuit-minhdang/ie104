@@ -360,7 +360,7 @@ function renderDetailedSteps(recipe) {
                     ${step.images.map(image => {
                         const src = typeof image === "string" ? image : image.src;
                         const tall = typeof image === "object" && image.tall ? ' class="tall"' : "";
-                        return `<img loading="lazy" decoding="async" src="${escapeHtml(imageUrl(recipe.id, src))}" alt="Bước ${i + 1}"${tall} loading="lazy" />`;
+                        return `<img loading="lazy" decoding="async" src="${escapeHtml(imageUrl(recipe.id, src))}" alt="Bước ${i + 1}"${tall} />`;
                     }).join("")}
                 </div>` : ""}
             </div>`)
@@ -399,7 +399,7 @@ async function renderSimilar(recipe) {
 
     container.innerHTML = items.map(item => `
         <a href="${escapeHtml(NomNom.recipeUrl(item.id))}" class="similar-card">
-            <img loading="lazy" decoding="async" src="${escapeHtml(imageUrl(item.id, item.image))}" alt="${escapeHtml(item.name)}" class="similar-image" loading="lazy" />
+            <img loading="lazy" decoding="async" src="${escapeHtml(imageUrl(item.id, item.image))}" alt="${escapeHtml(item.name)}" class="similar-image" />
             <span class="recipe-name">${escapeHtml(item.name)}</span>
             ${item.price ? `<span class="recipe-price">${escapeHtml(NomNom.money(item.price))} / phần</span>` : ""}
             <span class="recipe-time">Thời gian: ${escapeHtml(NomNom.minutes(item.time))}</span>

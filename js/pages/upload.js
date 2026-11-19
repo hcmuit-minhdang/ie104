@@ -112,7 +112,7 @@ function bindStepper(inputField) {
 function renderGallery() {
     galleryPreviews.innerHTML = gallery.map((g, i) => `
         <li class="preview-item${i === 0 ? " is-cover" : ""}">
-            <img loading="lazy" decoding="async" src="${esc(g.url)}" alt="Ảnh ${i + 1}">
+            <img src="${esc(g.url)}" alt="Ảnh ${i + 1}">
             ${i === 0 ? '<span class="preview-badge">Ảnh bìa</span>' : ""}
             <button type="button" class="preview-remove" data-index="${i}" aria-label="Xóa ảnh ${i + 1}">×</button>
         </li>`).join("");
@@ -232,9 +232,9 @@ function renderSteps() {
         <li data-step-row="${index}">
             <span class="step-label">BƯỚC ${index + 1}</span>
             <textarea class="textarea-input" data-step-text="${index}" placeholder="Thêm bước ${index + 1}" aria-label="Hướng dẫn cụ thể bước ${index + 1}">${esc(step.text)}</textarea>
-            ${step.preview ? `<div class="step-preview"><img loading="lazy" decoding="async" src="${esc(step.preview)}" alt="Ảnh bước ${index + 1}"><button type="button" class="preview-remove" data-step-image-remove="${index}" aria-label="Xóa ảnh bước ${index + 1}">×</button></div>` : ""}
+            ${step.preview ? `<div class="step-preview"><img src="${esc(step.preview)}" alt="Ảnh bước ${index + 1}"><button type="button" class="preview-remove" data-step-image-remove="${index}" aria-label="Xóa ảnh bước ${index + 1}">×</button></div>` : ""}
             <label for="step-image-${index}" class="image-upload step-image-upload">
-                <img loading="lazy" decoding="async" src="/images/icons/imageFile.svg" alt="" class="image-upload-icon">
+                <img src="/images/icons/imageFile.svg" alt="" class="image-upload-icon">
                 <span class="image-upload-text">${step.preview ? "Đổi hình ảnh" : "Nhấn vào đây để đăng tải hình ảnh"}</span>
             </label>
             <input type="file" id="step-image-${index}" data-step-image="${index}" accept="image/png,image/jpeg,image/webp">
