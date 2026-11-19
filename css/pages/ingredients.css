@@ -173,7 +173,7 @@ button {
 .store-card-container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    align-items: start;
+    align-items: stretch;
     padding: 0;
     gap: 36px 24px;
 }
@@ -182,7 +182,7 @@ button {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: fit-content;
+    height: auto;
     padding-bottom: 0;
     background-color: rgba(255, 255, 255, 0.5);
     box-shadow: none;
@@ -435,3 +435,7 @@ a.buy-button { display: block; text-align: center; text-decoration: none; }
     font-weight: 600;
     background-color: #f1efe6;
 }
+
+/* Các thẻ cùng hàng cao bằng nhau, nút MUA NGAY luôn nằm sát đáy thẻ */
+.store-card .ingredient-info { flex: 1 1 auto; }
+.store-card .buy-button { margin-top: auto; }
