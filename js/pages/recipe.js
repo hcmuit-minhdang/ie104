@@ -356,8 +356,8 @@ function renderDetailedSteps(recipe) {
             <div class="step" id="buoc-${i + 1}">
                 <span class="step-label">BƯỚC ${i + 1}</span>
                 ${step.text.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}
-                ${step.images.length ? `<div class="step-images">
-                    ${step.images.map(image => {
+                ${realImages(step.images).length ? `<div class="step-images">
+                    ${realImages(step.images).map(image => {
                         const src = typeof image === "string" ? image : image.src;
                         const tall = typeof image === "object" && image.tall ? ' class="tall"' : "";
                         return `<img loading="lazy" decoding="async" src="${escapeHtml(imageUrl(recipe.id, src))}" alt="Bước ${i + 1}"${tall} />`;
@@ -365,6 +365,11 @@ function renderDetailedSteps(recipe) {
                 </div>` : ""}
             </div>`)
         .join("");
+}
+
+// Bỏ ảnh giữ chỗ (placeholder.svg) để người xem không thấy khung "thay bằng ảnh thật"
+function realImages(images) {
+    return (images || []).filter(image => !String(typeof image === "string" ? image : image.src).includes("placeholder"));
 }
 
 function renderTocSteps(recipe) {

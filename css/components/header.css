@@ -623,3 +623,4 @@
 
 /* Liên kết không gạch chân */
 a { text-decoration: none; }
+h1, h2, h3 { text-wrap: balance; }

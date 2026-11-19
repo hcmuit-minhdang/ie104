@@ -1720,3 +1720,6 @@ a {
         width: min(640px, calc(100% - 294px));
     }
 }
+@media (min-width: 701px) and (max-width: 900px) {
+    .card-cost, .card-rating { max-width: calc(100% - 330px); }
+}

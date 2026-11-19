@@ -1199,12 +1199,12 @@ input[type="file"] {
     .draft-clear { display: block; margin: 0; }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
     #main-info-section { flex-direction: column; gap: 1.5em; padding: 1.2em; }
     #main-info, #time-input { min-width: 0; }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
     .nutrition-container { flex-direction: column; gap: 14px; padding: 14px; }
     .nutrients { min-width: 0; font-size: 1em; }
     .nutrients div { gap: 10px; }

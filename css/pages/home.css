@@ -1620,3 +1620,7 @@ a.recipe-card {
     #category-label { border-width: 3px; }
     #price-comparison-label, .price-comparison-link { border-width: 3px; }
 }
+
+.fridge-filter-link { text-wrap: balance; }
+.popular-recipes-line { flex: 1 1 60px; min-width: 60px; }
+.recipe-card-compressed .recipe-info { font-size: clamp(0.75rem, 1.5cqw, 1.5rem); }

@@ -14,7 +14,7 @@
     var guard = 0;
     // 1) Thu nhỏ chữ cho vừa MỘT dòng, nhưng không nhỏ quá 70% cỡ gốc (tối thiểu 11px) để tên không bị bé hơn chữ thân bài
     var floor1 = Math.max(MIN_SIZE, orig * 0.7);
-    while (el.scrollWidth > el.clientWidth + 1 && size - 0.5 >= floor1 && guard++ < 60) {
+    while (el.scrollWidth > el.clientWidth && size - 0.5 >= floor1 && guard++ < 60) {
       size -= 0.5;
       el.style.setProperty("font-size", size + "px");
     }
