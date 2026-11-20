@@ -1151,31 +1151,48 @@ a.recipe-card {
     letter-spacing: 0.05em;
 }
 
+/* Nút ABOUT US trên dải đen: một dòng, chữ đen đậm trên nền vàng, viền đen, bóng trắng lệch (nổi trên nền đen), có mũi tên */
 .about-us-button {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.7em 1.4em;
+    font-size: clamp(1.1rem, 1.7vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #000000;
     text-decoration: none;
-    color: white;
-    font-size: 2.8em;
-    font-weight: 900;
-    -webkit-text-stroke: 0.1em black;
-    paint-order: stroke fill;
-    text-shadow: 0.1em 0.1em 0 #292929;
     background-color: #FBC41B;
-    padding: 20px 50px;
-    letter-spacing: 0.1em;
-    border: 3px solid black;
-    margin: 0;
-    transition: all 0.3s ease;
+    border: 3px solid #000000;
+    box-shadow: 6px 6px 0 #ffffff;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
+.about-us-button::after {
+    content: "→";
+    font-size: 1.15em;
+    line-height: 1;
+}
+
+/* Rê chuột: nút lún xuống một nửa, đổi sang vàng sáng hơn */
 .about-us-button:hover {
-    box-shadow: 0.2em 0.2em 0 black;
-    transform: translate(-0.12em, -0.12em);
-    background-color: #dfa904;
+    background-color: #ffd54a;
+    transform: translate(3px, 3px);
+    box-shadow: 3px 3px 0 #ffffff;
 }
 
+/* Bấm: lún hẳn xuống, hết bóng */
 .about-us-button:active {
-    transform: scale(1);
-    box-shadow: 0.24em 0.24em 0 #292929;
+    transform: translate(6px, 6px);
+    box-shadow: none;
+}
+
+.about-us-button:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 4px;
 }
 
 /* =========================================================
@@ -1288,10 +1305,6 @@ a.recipe-card {
     }
     .about-us-description {
         font-size: clamp(1.4rem, 3.4vw, 2.8rem);
-    }
-    .about-us-button {
-        font-size: clamp(1.2rem, 3vw, 2.8rem);
-        padding: 0.4em 1.2em;
     }
 }
 
@@ -1410,9 +1423,6 @@ a.recipe-card {
     }
     .about-us-description {
         font-size: clamp(1.25rem, 5vw, 2.2rem);
-    }
-    .about-us-button {
-        font-size: clamp(1.1rem, 4.4vw, 2rem);
     }
 }
 
@@ -1600,7 +1610,6 @@ a.recipe-card {
 /* Màn hình rộng: cỡ chữ banner About và nhãn tìm kiếm theo Figma. */
 @media (min-width: 1400px) {
     .about-us-description { font-size: 2.39em; }
-    .about-us-button { font-size: 2.24em; padding: 14px 40px; }
     .about-us-banner { padding: 1.2em 10vw; }
     #search-label { font-size: 2.7rem; color: #000; }
 }
@@ -1614,7 +1623,6 @@ a.recipe-card {
 }
 @media (min-width: 1400px) {
     #fridge-filter-description { font-size: 51.02px; color: #292929; }
-    .about-us-button { font-weight: 800; }
     .view-more-button { color: #000; }
 }
 @media (min-width: 1400px) {
