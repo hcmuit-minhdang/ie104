@@ -203,23 +203,58 @@ Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt 
 
 Nhóm theo bộ quy tắc phổ biến của môn học: **BEM cho class CSS** và **camelCase cho JavaScript**.
 
-### Class CSS: BEM
+### Class CSS: áp dụng quy tắc BEM
 
-- Viết thường, kebab-case, theo dạng `block__element--modifier`; trạng thái dùng tiền tố `is-` hoặc `has-` (`is-open`, `is-active`).
-- Ví dụ trong code: `site-header__logo`, `filter-group__trigger`, `pagination__link--dots`, `ingredient-picker__pill`, `fridge-dialog__submit`.
-- **Phạm vi đã áp dụng:** header, footer, đăng nhập/đăng ký, trang cá nhân và các thành phần dùng chung (bộ lọc, phân trang, thanh kết quả, khung xương khi tải, hộp thoại tủ lạnh, bộ chọn nguyên liệu). Tính chung khoảng **29%** theo BEM (160/545 tên class xuất hiện trong CSS có `__` hoặc `--`).
-- **Chưa chuyển:** các trang lớn (chi tiết công thức, đăng tải, trang chủ) vẫn dùng tên kebab-case phẳng theo từng trang, ví dụ `recipe-card-full`, `card-section`. Không có class viết hoa hay gạch dưới đơn.
+Giao diện NomNom gồm nhiều khối lặp lại ở nhiều trang như header, footer, thẻ công thức, bộ lọc, phân trang, hộp thoại chọn nguyên liệu. Nhóm dùng phương pháp đặt tên **BEM** (Block, Element, Modifier) để mã CSS có cấu trúc rõ ràng, tách biệt chức năng và tránh trùng class giữa các trang.
+
+**BEM gồm 3 thành phần chính:**
+
+- **Block:** thành phần độc lập, đại diện cho một khu vực giao diện hoàn chỉnh.
+  Ví dụ: `site-header`, `site-footer`, `filter-sidebar`, `pagination`, `fridge-dialog`, `ingredient-picker`.
+- **Element:** thành phần con thuộc block, nối bằng hai dấu gạch dưới (`__`).
+  Ví dụ: `site-header__logo`, `filter-group__trigger`, `pagination__link`, `fridge-dialog__submit`, `ingredient-picker__pill`.
+- **Modifier:** thể hiện trạng thái, phiên bản hoặc kiểu của block hoặc element, nối bằng hai dấu gạch ngang (`--`).
+  Ví dụ: `pagination__link--dots`, `skeleton__line--short`, `recipe-status--missing`. Trạng thái do JavaScript bật tắt dùng tiền tố `is-` (`is-open`, `is-active`, `is-loading`).
+
+Tất cả viết chữ thường, các từ trong một tên nối bằng dấu gạch ngang (kebab-case).
+
+**Lợi ích khi áp dụng BEM cho NomNom:**
+
+- Tách biệt rõ từng phần giao diện như bộ lọc, phân trang, hộp thoại tủ lạnh.
+- Dễ mở rộng khi thêm biến thể mới (ví dụ thêm kiểu liên kết phân trang mới chỉ cần thêm một modifier).
+- Hạn chế trùng class giữa các trang: tên `filter-sidebar__title` không thể đụng với `title` của trang khác.
+- Phù hợp khi có nhiều thành viên cùng phát triển, nhìn tên class là biết nó thuộc khối nào.
+
+**Phạm vi đã áp dụng:** header, footer, đăng nhập, đăng ký, trang cá nhân và các thành phần dùng chung (bộ lọc, phân trang, thanh kết quả, khung xương khi tải, hộp thoại tủ lạnh, bộ chọn nguyên liệu). Tính chung khoảng **29%** tên class theo BEM (160/545 tên class xuất hiện trong CSS có `__` hoặc `--`). Các trang lớn (chi tiết công thức, đăng tải, trang chủ) vẫn dùng tên kebab-case phẳng theo từng trang, ví dụ `recipe-card-full`, `card-section`; nhóm không còn class viết hoa hay gạch dưới đơn.
 
 ### ID
 
-- Dùng kebab-case: `sort-select`, `recipe-grid`, `filter-form`. Id của khối BEM có thể có dạng `block__element` (`site-login__email`).
+Id đặt theo kebab-case, mô tả đúng vai trò phần tử: `sort-select`, `recipe-grid`, `filter-form`, `search-page-input`. Id của khối BEM có thể có dạng `block__element` (`site-login__email`).
 
-### JavaScript
+### JavaScript: sử dụng camelCase
 
-- Biến và hàm viết **camelCase** (`currentPage`, `renderPage()`); hằng số viết `UPPER_SNAKE` (`COLLECTIONS`, `MAX_AGE`).
-- Chỉ dùng **`const` và `let`**, không dùng `var` (toàn bộ `js/` đã chuyển, không còn `var`).
-- Tên hàm bắt đầu bằng động từ (`getX`, `renderX`, `loadX`, `handleX`); biến đúng/sai bắt đầu bằng `is` hoặc `has`.
-- Tên một hai chữ cái (`i`, `e`) chỉ dùng cho biến đếm và hàm gọi lại ngắn. Một số file cũ vẫn còn nhiều tên ngắn (`s`, `p`, `r`), nhóm đang sửa dần.
+Trong phần JavaScript, nhóm thống nhất dùng **camelCase** để đặt tên biến và hàm. Đây là chuẩn đặt tên phổ biến nhất trong lập trình web, giúp mã dễ đọc và nhất quán.
+
+**Quy tắc camelCase:**
+
+- Chữ cái đầu viết thường.
+- Các từ sau viết hoa chữ cái đầu tiên.
+- Hằng số dùng `UPPER_SNAKE`, chỉ khai báo bằng `const` hoặc `let` (không dùng `var`).
+
+**Ví dụ trong dự án NomNom:**
+
+- **Biến:** `sortSel`, `servingsInput`, `prepTime`, `savedSet`, `activeLink`; hằng số: `COLLECTIONS`, `DRAFT_KEY`.
+- **Hàm:** `loadCategories()`, `renderGallery()`, `renderQuickSteps()`, `requireLogin()`, `initScrollSpy()`, `showError()`.
+
+Tên hàm bắt đầu bằng động từ (`load`, `render`, `show`, `init`, `handle`); biến đúng/sai bắt đầu bằng `is` hoặc `has`.
+
+**Lợi ích trong chạy dự án:**
+
+- Dễ hiểu và đồng nhất giữa các file JavaScript như `home.js`, `category.js`, `recipe.js`, `upload.js`, `account.js`.
+- Thuận tiện khi xử lý các hành vi người dùng: lọc và sắp xếp công thức, lưu món, đăng tải công thức, mở hộp thoại chọn nguyên liệu.
+- Nhìn tên hàm là biết hàm vẽ giao diện (`render...`), tải dữ liệu (`load...`) hay xử lý sự kiện (`handle...`).
+
+Tên một hai chữ cái (`i`, `e`) chỉ dùng cho biến đếm và hàm gọi lại ngắn. Một số file cũ vẫn còn nhiều tên ngắn (`s`, `p`, `r`), nhóm đang sửa dần.
 
 ### Tên file và thư mục
 
