@@ -588,29 +588,22 @@
     clip: rect(0 0 0 0); white-space: nowrap;
 }
 
-/* Màn hình rộng: kích thước theo Figma (header cao 106px, logo lớn, chữ 20px). */
+/* Màn hình rộng (từ 1400px, chuẩn 1920): header mỏng 72px, logo 44px, chữ 18px */
 @media (min-width: 1400px) {
     .site-header {
-        --site-header-height: 106px;
+        --site-header-height: 72px;
+        font-size: 18px;
     }
-    .site-header__logo {
-        height: 56px;
-    }
+    .site-header__logo { height: 44px; }
+    .site-header__logo-box { width: 200px; }
     .site-header__auth button {
-        min-height: 46px;
-        width: 128px;
-        font-size: 20px;
+        width: 108px;
+        min-height: 36px;
+        padding: 0 4px;
+        font-size: 16px;
+        white-space: nowrap;
+        border-width: 0;
     }
-}
-@media (min-width: 1400px) {
-    .site-header__logo { height: 74px; }
-    .site-header__logo-box { width: 260px; }
-    .site-header__auth button { width: 108px; min-height: 37px; padding: 0 4px; font-size: 18px; white-space: nowrap; }
-}
-@media (min-width: 1400px) {
-    .site-header__auth button { border-width: 0; }
-}
-@media (min-width: 1400px) {
     #site-header__signup { border-width: 0; }
 }
 /* Cửa sổ 1121–1399px: menu "Công thức" không bị cắt ở mép trái. */

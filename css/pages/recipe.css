@@ -1714,10 +1714,19 @@ a {
     #toc-label { font-size: 16px; font-weight: 700; }
 }
 
-/* Tag tên món không che ảnh món ăn nằm bên phải khung công thức */
+/* Tag tên món không che ảnh món ăn nằm bên phải khung công thức, và không che các dòng bên dưới:
+   tag nằm trong dòng chảy của khung (không còn absolute), nội dung bên dưới tự dịch xuống theo chiều cao tag (1 hoặc 2 dòng) */
 @media (min-width: 701px) {
     .card-title-tag:not(.similar-title-tag) {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin: 38px 0 24px -48px;
         width: min(640px, calc(100% - 294px));
+    }
+    /* Đã có tag chiếm chỗ phía trên nên bỏ khoảng đệm cứng 160px; ảnh món vẫn nằm tuyệt đối ở góc phải */
+    .recipe-card-full .card-body {
+        padding-top: 0;
     }
 }
 @media (min-width: 701px) and (max-width: 900px) {
