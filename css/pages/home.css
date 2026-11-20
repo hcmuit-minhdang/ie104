@@ -337,7 +337,8 @@ button {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(8, 0.09fr); 
-    align-items: center;
+    /* Canh theo đỉnh: ảnh các ô luôn thẳng hàng, tên dài xuống 2 dòng (Tráng miệng, Xem Thêm) không đẩy ảnh lên */
+    align-items: start;
     justify-content: center;
     gap: clamp(12px, 0.8vw, 40px);
 }
