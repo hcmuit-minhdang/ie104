@@ -31,7 +31,7 @@ NomNom là website công thức nấu ăn giúp bạn trả lời câu hỏi que
 - 🗂️ **Quản lý công việc:** https://app.notion.com/p/IE104-NomNom-41c2218b6ea98086b85be6ce87b3a267?source=copy_link
 - 🎬 **Video báo cáo và demo (YouTube, unlisted):** _(điền link)_
 
-**Mục lục:** [Thành viên](#-thành-viên-nhóm) · [Tính năng](#-tính-năng) · [Hướng dẫn sử dụng](#-hướng-dẫn-sử-dụng-nhanh) · [Công nghệ](#-công-nghệ) · [Chạy trên máy](#-chạy-trên-máy) · [Triển khai](#️-triển-khai) · [Cấu trúc](#-cấu-trúc-thư-mục) · [Quy tắc đặt tên](#-quy-tắc-đặt-tên-và-làm-việc-nhóm) · [Giới hạn](#️-giới-hạn-đã-biết)
+**Mục lục:** [Thành viên](#-thành-viên-nhóm) · [Tính năng](#-tính-năng) · [Hướng dẫn sử dụng](#-hướng-dẫn-sử-dụng-nhanh) · [Công nghệ](#-công-nghệ) · [Chạy trên máy](#-chạy-trên-máy) · [Triển khai](#️-triển-khai) · [Cấu trúc](#-cấu-trúc-thư-mục) · [Quy tắc đặt tên](#-quy-tắc-đặt-tên-và-làm-việc-nhóm) · [Component và CSS](#-component-và-quy-tắc-css) · [Giới hạn](#️-giới-hạn-đã-biết)
 
 ---
 
@@ -231,6 +231,41 @@ Nhóm theo bộ quy tắc phổ biến của môn học: **BEM cho class CSS** v
 
 - Commit viết dạng `loại: mô tả ngắn` (`feat`, `fix`, `style`, `docs`, `refactor`), mô tả rõ nội dung thay đổi.
 - Repo làm việc nhóm có nhánh riêng cho từng thành viên (`Minh`, `Thach`, `Thinh`, `Thu`, `Phat`); mỗi nhánh gộp vào `main` bằng Pull Request. Repo `ie104` là bản ghép hoàn chỉnh cuối cùng.
+
+---
+
+## 🧩 Component và quy tắc CSS
+
+Phần này theo mục "Rule code" trong báo cáo: sau quy tắc đặt tên là component, quy tắc CSS và quy tắc làm việc với Git (ở trên).
+
+### Component
+
+Giao diện chia theo thành phần có chức năng rõ ràng, dùng lại được ở nhiều trang. Mỗi component có một file CSS trong `css/components/` và (nếu có xử lý) một file JS cùng tên trong `js/components/`.
+
+| Component | Vai trò | File |
+|---|---|---|
+| `site-header`, `site-footer` | Đầu và cuối trang, có mặt ở mọi trang | `header.css/js`, `footer.css` |
+| `site-login`, `site-signup` | Cửa sổ đăng nhập và đăng ký | `login.css/js`, `signup.css/js`, `auth.js` |
+| `filter-sidebar`, `filter-group`, `filter-other` | Bộ lọc dùng chung cho danh mục và tủ lạnh | `filter.css/js` |
+| `result-toolbar` | Thanh số kết quả, sắp xếp, nút lọc | `listing.css` |
+| `pagination` | Phân trang | `pager.css` |
+| `fridge-dialog` | Hộp thoại chọn nguyên liệu ở trang chủ | `fridge-filter.css/js` |
+| `skeleton` | Khung xương khi đang tải | `listing.css` |
+
+Quy tắc dùng component:
+
+- Component viết theo BEM, không phụ thuộc vào trang chứa nó; trang nào cần khác đi thì thêm modifier (`--`) thay vì sửa CSS của component.
+- Thành phần chỉ có ở một trang thì để trong `css/pages/` và `js/pages/` của trang đó (ví dụ `ingredient-picker` của trang đăng tải).
+- Mã JS của component chỉ thao tác trong phạm vi block của nó, không tự tìm phần tử của trang khác.
+
+### Quy tắc CSS cho dự án
+
+- **Tránh xung đột CSS:** class của trang đặt tên theo trang (`recipe-card-full`, `fridge-...`), class dùng chung đặt theo BEM; không viết selector trần như `div`, `a` hay `p` trong file của trang.
+- **Phần dùng chung** (header, footer, đăng nhập, bộ lọc, phân trang) chỉ viết trong `css/components/`. Sửa component thì sửa tại đây, không ghi đè ở file của trang.
+- **Mỗi trang có file CSS riêng** trong `css/pages/`, chỉ áp dụng cho trang đó và không ảnh hưởng trang khác. Trang nạp CSS component cần dùng rồi mới nạp CSS của trang, như `category.html` nạp `header`, `footer`, `filter`, `pager` rồi `category`, `listing`.
+- **Không viết `style="..."`** trong HTML; mọi kiểu dáng nằm trong file CSS.
+- **Hạn chế `!important`:** chỉ dùng khi buộc phải ghi đè (hiện còn 18 chỗ trong `css/`).
+- **Co giãn:** dùng `@media (max-width: ...)`; kiểm tra tối thiểu ở 1440px và 390px.
 
 ---
 
