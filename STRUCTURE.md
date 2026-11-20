@@ -7,6 +7,7 @@ NomNom/
 ├─ README.md, STRUCTURE.md   # tài liệu
 ├─ package.json              # chỉ có script start, không có dependency
 ├─ vercel.json               # cấu hình triển khai tĩnh
+├─ 404.html, robots.txt, sitemap.xml
 ├─ .gitignore
 ├─ pages/
 │  ├─ category.html          # chọn danh mục / danh sách món theo danh mục
@@ -37,7 +38,7 @@ Quy ước: đường dẫn trong HTML/CSS/JS dùng **đường dẫn tuyệt đ
 
 Chi tiết nằm trong [README.md](README.md#-quy-tắc-đặt-tên-và-làm-việc-nhóm). Tóm tắt:
 
-- **CSS:** BEM kebab-case (`block__element--modifier`, trạng thái `is-*`) cho header, footer, đăng nhập/đăng ký, trang cá nhân và các thành phần dùng chung; các trang lớn còn dùng tên kebab-case phẳng.
-- **ID:** kebab-case. **JavaScript:** camelCase, hằng `UPPER_SNAKE`, chỉ dùng `const`/`let`.
+- **CSS:** BEM kebab-case (`block__element--modifier`, trạng thái `is-*`); phần tử con của một khối luôn nối bằng `__`; tên khối viết phẳng theo từng trang là khối độc lập.
+- **ID:** kebab-case. **JavaScript:** camelCase, hằng `UPPER_SNAKE`, chỉ `const`/`let`, tên biến và hàm từ 3 ký tự trở lên.
 - **Tệp và thư mục:** chữ thường, nối bằng `-`; CSS và JS riêng của trang trùng tên với trang.
 - **Git:** commit dạng `loại: nội dung`; nhánh theo thành viên gộp vào `main` bằng Pull Request.

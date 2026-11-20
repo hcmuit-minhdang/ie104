@@ -17,45 +17,45 @@
   let reqId = 0;
 
   function readState() {
-    const p = new URLSearchParams(location.search);
-    const s = {
-      category: p.get("category") || "",
-      q: p.get("q") || "",
-      sort: p.get("sort") || "rating",
-      page: Math.max(1, parseInt(p.get("page"), 10) || 1)
+    const searchParams = new URLSearchParams(location.search);
+    const state = {
+      category: searchParams.get("category") || "",
+      q: searchParams.get("q") || "",
+      sort: searchParams.get("sort") || "rating",
+      page: Math.max(1, parseInt(searchParams.get("page"), 10) || 1)
     };
-    GROUPS.forEach(function (g) {
-      s[g] = (p.get(g) || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean);
+    GROUPS.forEach(function (group) {
+      state[group] = (searchParams.get(group) || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean);
     });
-    return s;
+    return state;
   }
-  function urlFor(s) {
+  function urlFor(state) {
     const out = [];
-    ["category", "q"].forEach(function (k) { if (s[k]) out.push(k + "=" + encodeURIComponent(s[k])); });
+    ["category", "q"].forEach(function (k) { if (state[k]) out.push(k + "=" + encodeURIComponent(state[k])); });
     // Nhóm lọc: giữ dấu phẩy và khoảng trắng dễ đọc trên URL
-    GROUPS.forEach(function (g) {
-      if (s[g] && s[g].length) out.push(g + "=" + s[g].map(encodeURIComponent).join(","));
+    GROUPS.forEach(function (group) {
+      if (state[group] && state[group].length) out.push(group + "=" + state[group].map(encodeURIComponent).join(","));
     });
-    if (s.sort && s.sort !== "rating") out.push("sort=" + encodeURIComponent(s.sort));
-    if (s.page > 1) out.push("page=" + s.page);
+    if (state.sort && state.sort !== "rating") out.push("sort=" + encodeURIComponent(state.sort));
+    if (state.page > 1) out.push("page=" + state.page);
     // Không có điều kiện nào: giữ sort=rating để URL không rỗng (URL rỗng là trang chọn danh mục)
     if (!out.length) out.push("sort=rating");
     return "/pages/category.html?" + out.join("&");
   }
-  function go(s, replace) {
-    const url = urlFor(s);
+  function navigateTo(state, replace) {
+    const url = urlFor(state);
     if (replace) history.replaceState(null, "", url); else history.pushState(null, "", url);
     render();
   }
 
   // Tick đúng các ô theo URL (mở sẵn nhóm nào có ô được chọn).
-  function syncChecks(s) {
-    GROUPS.forEach(function (g) {
-      const acc = document.querySelector('.filter-group[data-group="' + g + '"]');
+  function syncChecks(state) {
+    GROUPS.forEach(function (group) {
+      const acc = document.querySelector('.filter-group[data-group="' + group + '"]');
       if (!acc) return;
       let any = false;
       acc.querySelectorAll('input[type="checkbox"]').forEach(function (box) {
-        box.checked = s[g].indexOf(box.value) !== -1;
+        box.checked = state[group].indexOf(box.value) !== -1;
         if (box.checked) any = true;
       });
       if (any) setOpen(acc, true);
@@ -68,12 +68,12 @@
     if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
-  function syncControls(s) {
-    sortSel.value = s.sort;
-    if (sortSel.value !== s.sort) sortSel.value = "rating";
-    syncChecks(s);
-    const cat = categories.filter(function (c) { return c.id === s.category; })[0];
-    title.textContent = (cat ? cat.name : s.q ? 'Kết quả cho "' + s.q + '"' : s.sort === "new" ? "Công thức mới nhất" : "Tất cả món ăn").toUpperCase();
+  function syncControls(state) {
+    sortSel.value = state.sort;
+    if (sortSel.value !== state.sort) sortSel.value = "rating";
+    syncChecks(state);
+    const cat = categories.filter(function (category) { return category.id === state.category; })[0];
+    title.textContent = (cat ? cat.name : state.q ? 'Kết quả cho "' + state.q + '"' : state.sort === "new" ? "Công thức mới nhất" : "Tất cả món ăn").toUpperCase();
     document.title = (cat ? cat.name : "Danh mục món ăn") + " | NomNom";
   }
 
@@ -90,16 +90,16 @@
   }
 
   // Gắn enoughIngredients cho từng món theo các ô nguyên liệu đang chọn (chưa chọn gì thì chưa đủ)
-  function markEnough(items, s) {
+  function markEnough(items, state) {
     const chosen = {};
     const known = {};
-    INGREDIENT_GROUPS.forEach(function (g) {
-      s[g].forEach(function (v) { chosen[v] = true; });
-      document.querySelectorAll('input[type="checkbox"][name="' + g + '"]').forEach(function (b) { known[b.value] = true; });
+    INGREDIENT_GROUPS.forEach(function (group) {
+      state[group].forEach(function (value) { chosen[value] = true; });
+      document.querySelectorAll('input[type="checkbox"][name="' + group + '"]').forEach(function (b) { known[b.value] = true; });
     });
-    items.forEach(function (r) {
-      const need = (r.tags || []).filter(function (t) { return known[t]; });
-      r.enoughIngredients = need.length > 0 && need.every(function (t) { return chosen[t]; });
+    items.forEach(function (recipe) {
+      const need = (recipe.tags || []).filter(function (tag) { return known[tag]; });
+      recipe.enoughIngredients = need.length > 0 && need.every(function (tag) { return chosen[tag]; });
     });
   }
 
@@ -114,16 +114,16 @@
     if (pickerLoaded) return;
     const box = document.getElementById("cat-picker");
     const items = categories.slice();
-    Promise.all(items.map(function (c) {
-      return NomNom.data.get("/recipes", { category: c.id, limit: 1, sort: "rating" }).then(function (r) {
-        return r.items && r.items[0] ? r.items[0].image : null;
+    Promise.all(items.map(function (category) {
+      return NomNom.data.get("/recipes", { category: category.id, limit: 1, sort: "rating" }).then(function (response) {
+        return response.items && response.items[0] ? response.items[0].image : null;
       }, function () { return null; });
     })).then(function (imgs) {
       pickerLoaded = true;
-      box.innerHTML = items.map(function (c, i) {
-        return '<a href="/pages/category.html?category=' + encodeURIComponent(c.id) + '" class="cat-picker__card">' +
+      box.innerHTML = items.map(function (category, i) {
+        return '<a href="/pages/category.html?category=' + encodeURIComponent(category.id) + '" class="cat-picker__card">' +
           '<img loading="lazy" decoding="async" src="' + NomNom.esc(imgs[i] || "/images/food.png") + '" alt="" />' +
-          '<span>' + NomNom.esc(c.name) + '</span></a>';
+          '<span>' + NomNom.esc(category.name) + '</span></a>';
       }).join("") + '<a href="/pages/category.html?sort=rating" class="cat-picker__card cat-picker__card--all"><span class="cat-picker__all">Tất cả món</span></a>';
     });
   }
@@ -132,31 +132,31 @@
     if (!location.search) { showPicker(); return; }
     pickerBox.hidden = true;
     layoutBox.hidden = false;
-    const s = readState();
-    syncControls(s);
-    const id = ++reqId;
+    const state = readState();
+    syncControls(state);
+    const requestId = ++reqId;
     msg.hidden = true;
     grid.setAttribute("aria-busy", "true");
     grid.innerHTML = NomNom.skeletonHtml(6);
     pager.innerHTML = "";
     count.textContent = "Đang tải...";
-    const params = { category: s.category, q: s.q, sort: s.sort, page: s.page, limit: LIMIT };
-    GROUPS.forEach(function (g) { if (s[g].length) params[g] = s[g].join(","); });
-    NomNom.data.get("/recipes", params).then(function (d) {
-      if (id !== reqId) return;
+    const params = { category: state.category, q: state.q, sort: state.sort, page: state.page, limit: LIMIT };
+    GROUPS.forEach(function (group) { if (state[group].length) params[group] = state[group].join(","); });
+    NomNom.data.get("/recipes", params).then(function (response) {
+      if (requestId !== reqId) return;
       grid.setAttribute("aria-busy", "false");
-      if (d.pages && s.page > d.pages) { s.page = d.pages; go(s, true); return; }
-      count.textContent = d.total ? "Có " + d.total + " món ăn" : "Không có món ăn";
-      markEnough(d.items || [], s);
+      if (response.pages && state.page > response.pages) { state.page = response.pages; navigateTo(state, true); return; }
+      count.textContent = response.total ? "Có " + response.total + " món ăn" : "Không có món ăn";
+      markEnough(response.items || [], state);
       // Chưa chọn nguyên liệu nào (chưa lọc) thì không hiện nhãn; lọc rồi mới hiện "Đủ / Chưa đủ nguyên liệu"
-      const filtered = INGREDIENT_GROUPS.some(function (g) { return s[g].length > 0; });
-      grid.innerHTML = (d.items || []).map(function (r) { return NomNom.cardHtml(r, null, null, filtered); }).join("");
-      if (!d.items || !d.items.length) showMessage("Không tìm thấy món ăn phù hợp. Hãy thử bỏ bớt bộ lọc.");
-      pager.innerHTML = NomNom.pagerHtml(d.page || s.page, d.pages || 1, function (p) {
-        return urlFor(Object.assign({}, s, { page: p }));
+      const filtered = INGREDIENT_GROUPS.some(function (group) { return state[group].length > 0; });
+      grid.innerHTML = (response.items || []).map(function (recipe) { return NomNom.cardHtml(recipe, null, null, filtered); }).join("");
+      if (!response.items || !response.items.length) showMessage("Không tìm thấy món ăn phù hợp. Hãy thử bỏ bớt bộ lọc.");
+      pager.innerHTML = NomNom.pagerHtml(response.page || state.page, response.pages || 1, function (pageNumber) {
+        return urlFor(Object.assign({}, state, { page: pageNumber }));
       });
     }).catch(function (e) {
-      if (id !== reqId) return;
+      if (requestId !== reqId) return;
       grid.setAttribute("aria-busy", "false");
       grid.innerHTML = "";
       count.textContent = "";
@@ -165,26 +165,26 @@
   }
 
   function update(patch) {
-    const s = Object.assign(readState(), { page: 1 }, patch);
-    go(s);
+    const state = Object.assign(readState(), { page: 1 }, patch);
+    navigateTo(state);
   }
 
   // Gửi bộ lọc một lần khi bấm "TÌM CÔNG THỨC PHÙ HỢP": gom các ô đã tick của mọi nhóm rồi lọc từ trang 1
   filterForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    const p = {};
-    GROUPS.forEach(function (g) {
-      p[g] = [];
-      document.querySelectorAll('input[type="checkbox"][name="' + g + '"]:checked').forEach(function (b) { p[g].push(b.value); });
+    const filterParams = {};
+    GROUPS.forEach(function (group) {
+      filterParams[group] = [];
+      document.querySelectorAll('input[type="checkbox"][name="' + group + '"]:checked').forEach(function (b) { filterParams[group].push(b.value); });
     });
-    update(p);
+    update(filterParams);
   });
   sortSel.addEventListener("change", function () { update({ sort: sortSel.value }); });
   document.getElementById("filter-reset").addEventListener("click", function (e) {
     e.preventDefault();
     const cleared = { category: readState().category, q: "", sort: "rating", page: 1 };
-    GROUPS.forEach(function (g) { cleared[g] = []; });
-    go(cleared);
+    GROUPS.forEach(function (group) { cleared[group] = []; });
+    navigateTo(cleared);
   });
   pager.addEventListener("click", function (e) {
     const a = e.target.closest("a[data-page]");
@@ -195,6 +195,6 @@
   });
   window.addEventListener("popstate", render);
 
-  NomNom.data.get("/categories").then(function (d) { categories = d.items || []; }, function () { categories = []; })
+  NomNom.data.get("/categories").then(function (response) { categories = response.items || []; }, function () { categories = []; })
     .then(render);
 })();

@@ -1,14 +1,5 @@
-.anton-regular {
-    font-family: "Anton", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
 
-.inter-regular {
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
+
 
 *,
 *::before,
@@ -48,7 +39,7 @@ button {
 
 /* ---------- Hero ---------- */
 
-.hero-section {
+.hero__section {
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -58,7 +49,7 @@ button {
     min-height: 470px;
 }
 
-.banner-container {
+.banner__container {
     flex: 1 1 0;
     min-width: 0;
     max-width: 689px;
@@ -67,7 +58,7 @@ button {
     position: relative;
 }
 
-.banner-track {
+.banner__track {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -85,17 +76,17 @@ button {
   font-weight: 600;
 }
 
-.slide-1 {
+.slide--first {
     background-image: url(/images/banner1.avif);
     background-repeat: no-repeat;
     background-size: cover;
 }
-.slide-2 {
+.slide--second {
     background-image: url(/images/banner2.jpg);
     background-repeat: no-repeat;
     background-size: cover;
 }
-.slide-3 {
+.slide--third {
     background-image: url(/images/banner3.jpg);
     background-repeat: no-repeat;
     background-size: cover;
@@ -269,20 +260,12 @@ button {
 }
 
 @media (max-width: 900px) {
-    .hero-section {
+    .hero__section {
         flex-direction: column;
         align-items: center;
         min-height: 0;
     }
 
-    .hero-banner {
-        width: 100%;
-        flex: none;
-        max-width: 689px;
-        aspect-ratio: 689 / 440;
-        min-height: 0;
-        order: 1;
-    }
 
     .fridge-filter-container {
         flex: none;
@@ -462,7 +445,7 @@ button {
     height: 0.4em;
 }
 
-.recipe-card-compressed {
+.compact-recipe-card {
     display: flex;
     flex-direction: column;
     aspect-ratio: 4/3.2;
@@ -471,7 +454,7 @@ button {
     transition: all 0.3s ease;
 }
 
-.recipe-card-compressed .recipe-info {
+.compact-recipe-card .recipe-info {
     font-size: clamp(0.6rem, 1.5cqw, 1.5rem);
     text-decoration: none;
     position: absolute;
@@ -483,7 +466,7 @@ button {
     align-items: flex-start;
 }
 
-.recipe-card-compressed .recipe-info span {
+.compact-recipe-card .recipe-info span {
     display: inline-block;  
     width: fit-content;
     background-color: white;
@@ -493,22 +476,22 @@ button {
     padding: 0.1em 0.5em;
 }
 
-.recipe-card-compressed .recipe-name {
+.compact-recipe-card .recipe-name {
     font-size: 1.9em;
     font-weight: 700;
 }
 
-.recipe-card-compressed .recipe-price {
+.compact-recipe-card .recipe-price {
     font-size: 1em;
     font-weight: 400;
 }
 
-.recipe-card-compressed .recipe-time {
+.compact-recipe-card .recipe-time {
     font-size: 1em;
     font-weight: 600;
 }
 
-.recipe-card-compressed .recipe-time::before {
+.compact-recipe-card .recipe-time::before {
     content: "";
     display: inline-block;
     width: 1em;
@@ -521,7 +504,7 @@ button {
     margin: 2px 8px 2px 2px;
 }
 
-.recipe-card-compressed img {
+.compact-recipe-card img {
     display: block;
     width: 100%;
     height: 100%;
@@ -529,11 +512,11 @@ button {
     inset: 0;
 }
 
-.recipe-card-compressed:hover {
+.compact-recipe-card:hover {
     transform: scale(1.02);
 }
 
-.recipe-card-compressed:active {
+.compact-recipe-card:active {
     transform: scale(1);
 }
 
@@ -706,7 +689,7 @@ aside {
     object-fit: cover;
 }
 
-.cookbook-icon-bg {
+.cookbook-backdrop {
     z-index: 1;
 }
 
@@ -737,24 +720,7 @@ aside {
     border-bottom: 4px solid black;
 }
 
-.leader-more-button {
-    margin: 0.5vw 2.2vw 1.5vw auto;
-    font-size: 1.15em;
-    width: fit-content;
-    text-transform: uppercase;
-    padding: 0.5em 1.6em;
-    border: 3px solid black;
-    font-size: 1.25em;
-    font-weight: 700;
-    display: block;
-    text-align: right;
-    transition: all 0.3s ease;
-}
 
-.leader-more-button:hover {
-    transform: translate(-2%, -2%);
-    box-shadow: 0.26em 0.26em 0 #292929;
-}
 
 .star-icon, .heart-icon {
     left: 1%;
@@ -769,7 +735,7 @@ aside {
     margin-top: 2px;
 }
 
-.cta-sign-up {
+.cta__sign-up {
     background-image: url(/images/icons/camo-black.svg);
     background-color: #292929;
     container-type: inline-size;
@@ -789,11 +755,11 @@ aside {
     overflow: hidden;
 }
 
-.cta-sign-up > * {
+.cta__sign-up > * {
     --u: max(11px, 3cqw);
 }
  
-.cta-sign-up p:not(.support-log-in-text) {
+.cta__sign-up p:not(.support-log-in-text) {
     font-size: calc(var(--u) * 1.9);
     line-height: calc(var(--u) * 2.6);
     color: white;
@@ -802,7 +768,7 @@ aside {
     padding: 0 2.4em;
 }
  
-.cta-sign-up-button {
+.cta__sign-up-button {
     border-radius: 0;
     background-color: #FBC41B;
     color: black;
@@ -814,7 +780,7 @@ aside {
     transition: all 0.3s ease;
 }
 
-.cta-sign-up-button:hover {
+.cta__sign-up-button:hover {
     box-shadow: 0 0.36em 0 black;
     transform: translateY(-5%);
     background-color: #dfa904;
@@ -867,7 +833,7 @@ aside {
     flex-direction: row;
 }
 
-.price-comparison-banner-left {
+.price-comparison-banner__left {
     
     background-repeat: no-repeat;
     background-size: cover;
@@ -882,7 +848,7 @@ aside {
     text-align: left;
 }
 
-.price-comparison-banner-left::before {
+.price-comparison-banner__left::before {
     position: absolute;
     z-index: -2;
     content: "";
@@ -892,7 +858,7 @@ aside {
     background-position: center;
 }
 
-.price-comparison-banner-left::after {
+.price-comparison-banner__left::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -922,7 +888,7 @@ aside {
     width: 70%;
 }
 
-.price-comparison-banner-right {
+.price-comparison-banner__right {
     display: flex;
     flex: 1 1 0;
     flex-direction: column;
@@ -999,7 +965,7 @@ aside {
     padding: 0 10vw;
 }
 
-.new-community-recipe-container {
+.new-community-recipe__container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));   /* 4 thẻ rộng bằng nhau */
     align-items: stretch;   /* các thẻ cao bằng nhau */
@@ -1077,7 +1043,7 @@ a.recipe-card {
     margin: 2px 8px 2px 2px;
 }
 
-.new-community-recipe-title {
+.new-community-recipe__title {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -1097,7 +1063,7 @@ a.recipe-card {
     margin: 0
 }
 
-.new-community-recipe-line {
+.new-community-recipe__line {
     height: 0.5em;
 }
 
@@ -1140,7 +1106,7 @@ a.recipe-card {
     color: #FBC41B;
 }
 
-.leader-more-button:active, .cta-sign-up-button:active {
+.cta__sign-up-button:active {
     transform: scale(1);
 }
 
@@ -1250,7 +1216,7 @@ a.recipe-card {
     .leaderboard-section {
         font-size: clamp(0.7rem, 2.4cqw, 1rem);
     }
-    .cta-sign-up {
+    .cta__sign-up {
         flex: none;
         height: auto;
     }
@@ -1300,7 +1266,7 @@ a.recipe-card {
     .new-community-recipe {
         padding: 0 clamp(16px, 6vw, 64px);
     }
-    .new-community-recipe-container {
+    .new-community-recipe__container {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: clamp(1rem, 3vw, 2rem);
@@ -1321,7 +1287,7 @@ a.recipe-card {
 
 /* ---------- ≤ 900px : patch for the existing 900px hero rules ---------- */
 @media (max-width: 900px) {
-    .banner-container {
+    .banner__container {
         order: 1;
         flex: none;
         width: 100%;
@@ -1340,7 +1306,7 @@ a.recipe-card {
 /* ---------- ≤ 768px : tablet portrait ---------- */
 @media (max-width: 768px) {
 
-    .hero-section {
+    .hero__section {
         padding: 32px clamp(16px, 5vw, 40px);
     }
 
@@ -1356,7 +1322,7 @@ a.recipe-card {
     .popular-recipes-container {
         gap: 24px;
     }
-    .recipe-card-compressed .recipe-info {
+    .compact-recipe-card .recipe-info {
         font-size: clamp(0.6rem, 1.8cqw, 1.1rem);
     }
     .popular-more-button {
@@ -1377,11 +1343,11 @@ a.recipe-card {
     .price-comparison-banner {
         flex-direction: column;
     }
-    .price-comparison-banner-left,
-    .price-comparison-banner-right {
+    .price-comparison-banner__left,
+    .price-comparison-banner__right {
         flex: none;
     }
-    .price-comparison-banner-left {
+    .price-comparison-banner__left {
         min-height: clamp(260px, 60vw, 380px);
     }
     #pcb-question {
@@ -1441,7 +1407,7 @@ a.recipe-card {
 @media (max-width: 480px) {
 
     /* Hero */
-    .hero-section {
+    .hero__section {
         padding: 24px 16px;
     }
     #fridge-filter-description {
@@ -1504,11 +1470,11 @@ a.recipe-card {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-    .recipe-card-compressed .recipe-info {
+    .compact-recipe-card .recipe-info {
         font-size: clamp(0.7rem, 3cqw, 1rem);
     }
     .popular-recipes-title,
-    .new-community-recipe-title {
+    .new-community-recipe__title {
         flex-direction: column;
         align-items: stretch;
         gap: 0.5rem;
@@ -1533,13 +1499,13 @@ a.recipe-card {
     }
 
     /* Sign-up CTA */
-    .cta-sign-up {
+    .cta__sign-up {
         height: auto;
     }
-    .cta-sign-up > * {
+    .cta__sign-up > * {
         --u: max(11px, 4.4cqw);
     }
-    .cta-sign-up p:not(.support-log-in-text) {
+    .cta__sign-up p:not(.support-log-in-text) {
         padding: 0 0.5em;
         margin: 0 0.75em;
     }
@@ -1557,7 +1523,7 @@ a.recipe-card {
     .new-community-recipe {
         padding: 0 16px;
     }
-    .new-community-recipe-container {
+    .new-community-recipe__container {
         grid-template-columns: 1fr;
         gap: 1.25rem;
     }
@@ -1604,7 +1570,7 @@ a.recipe-card {
         flex: 1 1 auto;
         grid-template-rows: repeat(2, minmax(0, 1fr));
     }
-    .recipe-card-compressed {
+    .compact-recipe-card {
         aspect-ratio: auto;
         min-height: calc((100cqw - 45px) / 2 * 0.8);   /* không thấp hơn tỉ lệ 4:3.2 gốc */
     }
@@ -1643,4 +1609,4 @@ a.recipe-card {
 
 .fridge-filter-link { text-wrap: balance; }
 .popular-recipes-line { flex: 1 1 60px; min-width: 60px; }
-.recipe-card-compressed .recipe-info { font-size: clamp(0.75rem, 1.5cqw, 1.5rem); }
+.compact-recipe-card .recipe-info { font-size: clamp(0.75rem, 1.5cqw, 1.5rem); }

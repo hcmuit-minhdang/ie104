@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="/css/pages/ingredient-picker.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
         <script src="/js/store.js"></script>
         <script src="/js/data.js" defer></script>
         <script type="module" src="/js/pages/upload.js"></script>
@@ -47,7 +47,7 @@
                         <details>
 
                             <summary>Công thức <img class="site-header__arrow"
-                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="">
                             </summary>
 
                             <ul>
@@ -62,7 +62,7 @@
                         <details>
 
                             <summary>Về chúng tôi <img class="site-header__arrow"
-                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="">
                             </summary>
 
                             <ul>
@@ -168,10 +168,10 @@
                                 </div>
                                 <div class="input-field">
                                     <div class="servings-control">
-                                        <label for="servings-input" class="small-input-label">Khẩu phần</label>
-                                        <div class="small-input-wrapper">
+                                        <label for="servings-input" class="small-input__label">Khẩu phần</label>
+                                        <div class="small-input__wrapper">
                                             <input type="number" id="servings-input" class="small-input" value="3" min="1" data-bind-value="baseServings" />
-                                            <div class="small-input-buttons">
+                                            <div class="small-input__buttons">
                                                 <button type="button" class="stepper-button stepper-button--up" aria-label="Tăng khẩu phần"></button>
                                                 <button type="button" class="stepper-button stepper-button--down" aria-label="Giảm khẩu phần"></button>
                                             </div>
@@ -182,10 +182,10 @@
                             <div id="time-input">
                                 <h3>THỜI GIAN</h3>
                                 <div class="input-field">
-                                    <label for="prep-time-input" class="small-input-label">Chuẩn bị</label>
-                                    <div class="small-input-wrapper">
+                                    <label for="prep-time-input" class="small-input__label">Chuẩn bị</label>
+                                    <div class="small-input__wrapper">
                                         <input id="prep-time-input" class="small-input" type="number" min="1" name="prepTime" placeholder="30">
-                                        <div class="small-input-buttons">
+                                        <div class="small-input__buttons">
                                             <button type="button" class="stepper-button stepper-button--up" aria-label="Tăng thời gian chuẩn bị"></button>
                                             <button type="button" class="stepper-button stepper-button--down" aria-label="Giảm thời gian chuẩn bị"></button>
                                         </div>
@@ -193,10 +193,10 @@
                                     <span class="unit-note note">Đơn vị: phút</span>
                                 </div>
                                 <div class="input-field">
-                                    <label for="cook-time-input" class="small-input-label">Nấu</label>
-                                    <div class="small-input-wrapper">
+                                    <label for="cook-time-input" class="small-input__label">Nấu</label>
+                                    <div class="small-input__wrapper">
                                         <input id="cook-time-input" class="small-input" type="number" min="1" name="cookTime" placeholder="30">
-                                        <div class="small-input-buttons">
+                                        <div class="small-input__buttons">
                                             <button type="button" class="stepper-button stepper-button--up" aria-label="Tăng thời gian nấu"></button>
                                             <button type="button" class="stepper-button stepper-button--down" aria-label="Giảm thời gian nấu"></button>
                                         </div>
@@ -214,13 +214,13 @@
                         </div>
                         <div class="description-text">
                             <span class="note" id="description-note">Mô tả món ăn của bạn càng thật hấp dẫn nhé!</span>
-                            <textarea class="textarea-input" id="description-input" name="description" placeholder="Mô tả món ăn tại đây"></textarea>
+                            <textarea class="textarea-input" id="description-input" name="description" placeholder="Mô tả món ăn tại đây" aria-label="Mô tả món ăn"></textarea>
                         </div>
                         <h4>Hình ảnh</h4>
                             <span class="note" id="image-note">Thêm từ 1 đến 5 hình ảnh món ăn (ảnh đầu tiên là ảnh bìa)</span>
                             <label for="gallery-images" class="image-upload">
-                                <img src="/images/icons/image-file.svg" alt="" class="image-upload-icon">
-                                <span class="image-upload-text">Nhấn vào đây để đăng tải hình ảnh</span>
+                                <img src="/images/icons/image-file.svg" alt="" class="image-upload__icon">
+                                <span class="image-upload__text">Nhấn vào đây để đăng tải hình ảnh</span>
                             </label>
                             <input type="file" id="gallery-images" name="gallery" accept="image/png,image/jpeg,image/webp" multiple >
                             <ul class="gallery-previews" id="gallery-previews"></ul>
@@ -228,10 +228,10 @@
 
 
                     <!-- ---------- Thẻ công thức ---------- -->
-                    <section class="recipe-card-full" id="cong-thuc">
-                        <h2 class="card-title-tag">CHUẨN BỊ</h2>
+                    <section class="full-recipe-card" id="cong-thuc">
+                        <h2 class="card__title-tag">CHUẨN BỊ</h2>
 
-                        <div class="card-body">
+                        <div class="card__body">
                         <!-- ---------- Nhập nguyên liệu ---------- -->
                         <section class="recipe-description-section" id="nguyen-lieu">
                             <div class="title recipe-description">
@@ -243,7 +243,7 @@
                         </section>
 
                             <!-- Hướng dẫn ngắn gọn -->
-                            <section class="card-section" id="huong-dan-ngan-gon">
+                            <section class="card__section" id="huong-dan-ngan-gon">
                                 <div class="title recipe-description">
                                     <h3>HƯỚNG DẪN NGẮN GỌN</h3>
                                     <div class="line"></div>
@@ -253,7 +253,7 @@
                             </section>
 
                             <!-- Dinh dưỡng -->
-                            <section class="card-section" id="dinh-duong">
+                            <section class="card__section" id="dinh-duong">
                                 <div class="title recipe-description">
                                     <h3>DINH DƯỠNG</h3>
                                     <div class="line"></div>
@@ -263,30 +263,30 @@
                                 <div class="nutrition-container" id="nutrition-container">
                                     <div class="left nutrients">
                                         <div>
-                                            <label for="calories" class="nutrient-label">Calories<span class="nutrient-input-note">(kcal)</span></label>
-                                            <input class="nutrient-input" id="calories" name="calories" type="number" min="0" placeholder="930"> 
+                                            <label for="calories" class="nutrient-label">Calories<span class="nutrient__input-note">(kcal)</span></label>
+                                            <input class="nutrient__input" id="calories" name="calories" type="number" min="0" placeholder="930"> 
                                         </div>
                                         <div>
-                                            <label for="carbs">Carbohydrates<span class="nutrient-input-note">(g)</span></label>
-                                            <input class="nutrient-input" id="carbs" name="carbs" type="number" min="0" placeholder="93">
+                                            <label for="carbs">Carbohydrates<span class="nutrient__input-note">(g)</span></label>
+                                            <input class="nutrient__input" id="carbs" name="carbs" type="number" min="0" placeholder="93">
                                         </div>
                                         <div>
-                                            <label for="protein">Protein<span class="nutrient-input-note">(g)</span></label>
-                                            <input class="nutrient-input" id="protein" name="protein" type="number" min="0" placeholder="44">
+                                            <label for="protein">Protein<span class="nutrient__input-note">(g)</span></label>
+                                            <input class="nutrient__input" id="protein" name="protein" type="number" min="0" placeholder="44">
                                         </div>
                                     </div>
                                     <div class="right nutrients">
                                         <div>
-                                            <label for="fat">Fat<span class="nutrient-input-note">(g)</span></label>
-                                            <input class="nutrient-input" id="fat" name="fat" type="number" min="0" placeholder="47">
+                                            <label for="fat">Fat<span class="nutrient__input-note">(g)</span></label>
+                                            <input class="nutrient__input" id="fat" name="fat" type="number" min="0" placeholder="47">
                                         </div>
                                         <div>
-                                            <label for="sodium">Sodium<span class="nutrient-input-note">(mg)</span></label>
-                                            <input class="nutrient-input" id="sodium" name="sodium" type="number" min="0" placeholder="2500">
+                                            <label for="sodium">Sodium<span class="nutrient__input-note">(mg)</span></label>
+                                            <input class="nutrient__input" id="sodium" name="sodium" type="number" min="0" placeholder="2500">
                                         </div>
                                         <div>
-                                            <label for="fiber">Fiber<span class="nutrient-input-note">(g)</span></label>
-                                            <input class="nutrient-input" id="fiber" name="fiber" type="number" min="0" placeholder="3">
+                                            <label for="fiber">Fiber<span class="nutrient__input-note">(g)</span></label>
+                                            <input class="nutrient__input" id="fiber" name="fiber" type="number" min="0" placeholder="3">
                                         </div>
                                     </div>
                                 </div>
@@ -297,7 +297,7 @@
                     <!-- ---------- Hướng dẫn cụ thể ---------- -->
                     <section class="detailed-guide" id="huong-dan-cu-the">
                         <div class="title detailed-guide-title">
-                            <h2 id="detailed-guide-label" class="detailed-guide-tag">HƯỚNG DẪN CỤ THỂ</h2>
+                            <h2 id="detailed-guide-label" class="detailed-guide__tag">HƯỚNG DẪN CỤ THỂ</h2>
                             <div class="line"></div>
                         </div>
                         <button type="button" id="add-detailed-btn" class="add-detailed-step-btn">THÊM BƯỚC</button>
@@ -306,8 +306,8 @@
 
                     <div class="line bottom-divider"></div>
                     <div class="upload-status" id="upload-status" role="status" aria-live="polite" hidden>
-                        <p class="upload-status-text" id="upload-status-text"></p>
-                        <div class="upload-progress" id="upload-progress-wrap" hidden><div class="upload-progress-bar" id="upload-progress"></div></div>
+                        <p class="upload-status__text" id="upload-status-text"></p>
+                        <div class="upload-progress" id="upload-progress-wrap" hidden><div class="upload-progress__bar" id="upload-progress"></div></div>
                     </div>
                     <input type="submit" class="upload-btn" id="upload-submit" value="ĐĂNG TẢI CÔNG THỨC">
                     <input type="button" class="draft-btn" id="draft-save" value="LƯU BẢN NHÁP">
@@ -319,24 +319,24 @@
                     <nav class="toc" aria-label="Tổng quan">
                         <p id="toc-label">TỔNG QUAN</p>
 
-                        <details class="toc-group toc-active" open>
+                        <details class="toc__group toc-active" open>
                             <summary>Thông tin chính</summary>
-                            <ul class="toc-sublist">
+                            <ul class="toc__sublist">
                                 <li class="toc-current"><a href="#thong-tin-chung">Thông tin chung</a></li>
                                 <li><a href="#mo-ta">Mô tả</a></li>
                             </ul>
                         </details>
 
-                        <details class="toc-group" open>
+                        <details class="toc__group" open>
                             <summary>Chuẩn bị</summary>
-                            <ul class="toc-sublist">
+                            <ul class="toc__sublist">
                                 <li><a href="#nguyen-lieu" class="toc-current">Nguyên liệu</a></li>
                                 <li><a href="#huong-dan-ngan-gon">Hướng dẫn ngắn gọn</a></li>
                                 <li><a href="#dinh-duong">Dinh dưỡng</a></li>
                             </ul>
                         </details>
 
-                        <a href="#huong-dan-cu-the" class="toc-single">Hướng dẫn cụ thể</a>
+                        <a href="#huong-dan-cu-the" class="toc__single">Hướng dẫn cụ thể</a>
                     </nav>
                 </aside>
             </div>
@@ -391,11 +391,11 @@
                     </svg>
                 </h2>
                 <nav class="site-footer__links">
-                    <a href="#"><img src="/images/icons/footer-facebook.svg" alt="Logo-Facebook">Facebook</a>
-                    <a href="#"><img src="/images/icons/footer-instagram.svg"
-                            alt="Logo-Instagram">Instagram</a>
-                    <a href="#"><img src="/images/icons/footer-youtube.svg" alt="Logo-Youtube">Youtube</a>
-                    <a href="#"><img src="/images/icons/footer-tiktok.svg" alt="Logo-Tiktok">Tiktok</a>
+                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-facebook.svg" alt="">Facebook</a>
+                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-instagram.svg"
+                            alt="">Instagram</a>
+                    <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-youtube.svg" alt="">Youtube</a>
+                    <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-tiktok.svg" alt="">Tiktok</a>
                 </nav>
             </div>
         </div>

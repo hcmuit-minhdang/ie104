@@ -42,18 +42,18 @@ function imageUrl(recipeId, path) {
 }
 
 function toast(message) {
-    let el = document.getElementById("recipe-toast");
-    if (!el) {
-        el = document.createElement("div");
-        el.id = "recipe-toast";
-        el.className = "recipe-toast";
-        el.setAttribute("role", "status");
-        document.body.appendChild(el);
+    let toastElement = document.getElementById("recipe-toast");
+    if (!toastElement) {
+        toastElement = document.createElement("div");
+        toastElement.id = "recipe-toast";
+        toastElement.className = "recipe-toast";
+        toastElement.setAttribute("role", "status");
+        document.body.appendChild(toastElement);
     }
-    el.textContent = message;
-    el.classList.add("show");
+    toastElement.textContent = message;
+    toastElement.classList.add("is-visible");
     clearTimeout(toast.timer);
-    toast.timer = setTimeout(() => el.classList.remove("show"), 2600);
+    toast.timer = setTimeout(() => toastElement.classList.remove("is-visible"), 2600);
 }
 
 function currentUser() {
@@ -95,7 +95,7 @@ function showRecipeError(title, message) {
         <article class="recipe-article recipe-state">
             <h1 id="recipe-title">${escapeHtml(title)}</h1>
             <p class="recipe-description">${escapeHtml(message)}</p>
-            <p class="recipe-state-links">
+            <p class="recipe-state__links">
                 <a href="/pages/category.html" class="view-more-button">XEM DANH MỤC</a>
                 <a href="/" class="view-more-button">VỀ TRANG CHỦ</a>
             </p>
@@ -106,16 +106,16 @@ function showRecipeError(title, message) {
 /* Chuẩn hoá dữ liệu từ kho dữ liệu (hỗ trợ cả dạng recipe.json và dạng upload) */
 /* ------------------------------------------------------------------ */
 
-function asArray(v) {
-    if (Array.isArray(v)) return v;
-    if (v == null || v === "") return [];
-    return [v];
+function asArray(value) {
+    if (Array.isArray(value)) return value;
+    if (value == null || value === "") return [];
+    return [value];
 }
 
 function formatDate(iso) {
-    const d = new Date(iso);
-    if (isNaN(d)) return "";
-    return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
+    const date = new Date(iso);
+    if (isNaN(date)) return "";
+    return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
 }
 
 function costTextOf(total, perServing) {
@@ -123,7 +123,7 @@ function costTextOf(total, perServing) {
 }
 
 function normalizeRecipe(raw, recipeId) {
-    const num = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+    const num = rawValue => { const parsed = Number(rawValue); return Number.isFinite(parsed) ? parsed : 0; };
     const title = raw.title || raw.name || "Công thức";
     const baseServings = Math.max(1, num(raw.baseServings || raw.servings) || 1);
     const prepTime = num(raw.prepTime);
@@ -146,13 +146,13 @@ function normalizeRecipe(raw, recipeId) {
 
     const steps = asArray(raw.steps).map(step => {
         if (typeof step === "string") return { text: [step], images: [] };
-        const text = asArray(step.text).map(String).filter(t => t.trim());
+        const text = asArray(step.text).map(String).filter(line => line.trim());
         const images = asArray(step.images ?? step.image).filter(Boolean);
         return { text, images };
     });
 
-    let quickSteps = asArray(raw.quickSteps).map(String).filter(t => t.trim());
-    if (!quickSteps.length) quickSteps = steps.map(s => s.text[0]).filter(Boolean);
+    let quickSteps = asArray(raw.quickSteps).map(String).filter(line => line.trim());
+    if (!quickSteps.length) quickSteps = steps.map(step => step.text[0]).filter(Boolean);
 
     const author = raw.author;
     const authorName = author && typeof author === "object" ? author.username : (author || "");
@@ -199,19 +199,19 @@ function starsHtml(score) {
 }
 
 function renderBindings(recipe) {
-    document.querySelectorAll("[data-bind]").forEach(el => {
-        const value = getValue(recipe, el.dataset.bind);
-        if (value !== undefined) el.textContent = value;
+    document.querySelectorAll("[data-bind]").forEach(element => {
+        const value = getValue(recipe, element.dataset.bind);
+        if (value !== undefined) element.textContent = value;
     });
 
-    document.querySelectorAll("[data-bind-value]").forEach(el => {
-        const value = getValue(recipe, el.dataset.bindValue);
-        if (value !== undefined) el.value = value;
+    document.querySelectorAll("[data-bind-value]").forEach(element => {
+        const value = getValue(recipe, element.dataset.bindValue);
+        if (value !== undefined) element.value = value;
     });
 
-    document.querySelectorAll("[data-stars]").forEach(el => {
-        const value = getValue(recipe, el.dataset.stars);
-        if (value !== undefined) el.innerHTML = starsHtml(value);
+    document.querySelectorAll("[data-stars]").forEach(element => {
+        const value = getValue(recipe, element.dataset.stars);
+        if (value !== undefined) element.innerHTML = starsHtml(value);
     });
 
     // Ẩn phần trống
@@ -220,7 +220,7 @@ function renderBindings(recipe) {
         sub.previousElementSibling?.remove();
         sub.remove();
     }
-    if (!recipe.costText) document.querySelectorAll(".recipe-meta .meta-line:nth-child(2), .card-cost").forEach(el => { el.hidden = true; });
+    if (!recipe.costText) document.querySelectorAll(".recipe-meta .meta-line:nth-child(2), .card__cost").forEach(element => { element.hidden = true; });
     if (!recipe.featuredReview.text) document.querySelector(".featured-review")?.setAttribute("hidden", "");
     if (!recipe.uploaded) document.querySelector(".upload-date")?.setAttribute("hidden", "");
 }
@@ -230,8 +230,8 @@ function updateRatingDisplay(recipe, average, count) {
     recipe.ratingScore = average;
     recipe.reviewCount = count;
     recipe.ratingText = `${Number(average).toFixed(1)} | ${count} Reviews`;
-    document.querySelectorAll("[data-stars='ratingScore']").forEach(el => { el.innerHTML = starsHtml(average); });
-    document.querySelectorAll("[data-bind='ratingText']").forEach(el => { el.textContent = recipe.ratingText; });
+    document.querySelectorAll("[data-stars='ratingScore']").forEach(element => { element.innerHTML = starsHtml(average); });
+    document.querySelectorAll("[data-bind='ratingText']").forEach(element => { element.textContent = recipe.ratingText; });
     // Số "BÌNH LUẬN" (#review-count) do render() đặt theo số bình luận thật, không phải lượt đánh giá gộp
 }
 
@@ -242,7 +242,7 @@ function updateRatingDisplay(recipe, average, count) {
 function renderGallery(recipe) {
     const container = document.getElementById("gallery-thumbs");
     const mainImage = document.querySelector(".gallery-main");
-    const cardImage = document.querySelector(".card-image");
+    const cardImage = document.querySelector(".card__image");
     if (!container || !mainImage || !cardImage) return;
 
     if (!recipe.gallery.length) {
@@ -354,9 +354,9 @@ function renderDetailedSteps(recipe) {
     container.innerHTML = recipe.steps
         .map((step, i) => `
             <div class="step" id="buoc-${i + 1}">
-                <span class="step-label">BƯỚC ${i + 1}</span>
+                <span class="step__label">BƯỚC ${i + 1}</span>
                 ${step.text.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}
-                ${realImages(step.images).length ? `<div class="step-images">
+                ${realImages(step.images).length ? `<div class="step__images">
                     ${realImages(step.images).map(image => {
                         const src = typeof image === "string" ? image : image.src;
                         const tall = typeof image === "object" && image.tall ? ' class="tall"' : "";
@@ -375,10 +375,10 @@ function realImages(images) {
 function renderTocSteps(recipe) {
     const container = document.getElementById("toc-steps");
     if (!container) return;
-    if (!recipe.steps.length) { container.closest(".toc-group")?.setAttribute("hidden", ""); return; }
+    if (!recipe.steps.length) { container.closest(".toc__group")?.setAttribute("hidden", ""); return; }
 
     container.innerHTML = recipe.steps
-        .map((_, i) => `<li><a href="#buoc-${i + 1}">Bước ${i + 1}</a></li>`)
+        .map((item, i) => `<li><a href="#buoc-${i + 1}">Bước ${i + 1}</a></li>`)
         .join("");
 }
 
@@ -391,10 +391,10 @@ async function renderSimilar(recipe) {
     try {
         const categoryParam = recipe.categoryId || recipe.category;
         const data = await NomNom.data.get("/recipes", { category: categoryParam || undefined, limit: 5 });
-        items = (data.items || []).filter(r => r.id !== recipe.id);
+        items = (data.items || []).filter(candidate => candidate.id !== recipe.id);
         if (!items.length) {
             const any = await NomNom.data.get("/recipes", { limit: 5, sort: "rating" });
-            items = (any.items || []).filter(r => r.id !== recipe.id);
+            items = (any.items || []).filter(candidate => candidate.id !== recipe.id);
         }
     } catch (e) {
         console.warn("Không tải được công thức tương tự", e);
@@ -458,7 +458,7 @@ function initServingsScaler(recipe, units) {
         // Chi phí: tổng tính theo số phần đang chọn, giá mỗi phần giữ nguyên
         if (recipe.costTotal) {
             recipe.costText = costTextOf(recipe.pricePerServing * servings, recipe.pricePerServing);
-            document.querySelectorAll("[data-bind='costText']").forEach(el => { el.textContent = recipe.costText; });
+            document.querySelectorAll("[data-bind='costText']").forEach(element => { element.textContent = recipe.costText; });
         }
 
         scalableItems.forEach(span => {
@@ -511,17 +511,17 @@ function initScrollSpy() {
         if (link === activeLink) return;
         activeLink = link;
 
-        document.querySelectorAll(".toc .toc-current").forEach(el => el.classList.remove("toc-current"));
-        document.querySelectorAll(".toc .toc-active").forEach(el => el.classList.remove("toc-active"));
-        document.querySelectorAll(".toc a[aria-current]").forEach(el => el.removeAttribute("aria-current"));
+        document.querySelectorAll(".toc .is-current").forEach(element => element.classList.remove("is-current"));
+        document.querySelectorAll(".toc .is-active").forEach(element => element.classList.remove("is-active"));
+        document.querySelectorAll(".toc a[aria-current]").forEach(element => element.removeAttribute("aria-current"));
 
         // Link trong danh sách con -> đánh dấu <li>; link đơn (Bình luận) -> đánh dấu chính nó
         const marker = link.closest("li") || link;
-        marker.classList.add("toc-current");
+        marker.classList.add("is-current");
         link.setAttribute("aria-current", "location");
 
-        const group = link.closest(".toc-group");
-        if (group) group.classList.add("toc-active");
+        const group = link.closest(".toc__group");
+        if (group) group.classList.add("is-active");
     }
 
     function update() {
@@ -625,8 +625,8 @@ function initPrintShare(recipe) {
     document.querySelector(".print-recipe-button")?.addEventListener("click", () => window.print());
 
     const url = window.location.href;
-    const fb = document.getElementById("share-facebook");
-    if (fb) fb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    const facebookLink = document.getElementById("share-facebook");
+    if (facebookLink) facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
 
     const copy = document.getElementById("share-copy");
     copy?.addEventListener("click", async event => {
@@ -650,10 +650,10 @@ function initPrintShare(recipe) {
 /* ------------------------------------------------------------------ */
 
 function formatDateTime(iso) {
-    const d = new Date(iso);
-    if (isNaN(d)) return "";
-    const p = n => String(n).padStart(2, "0");
-    return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${String(d.getFullYear()).slice(2)} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    const date = new Date(iso);
+    if (isNaN(date)) return "";
+    const pad = number => String(number).padStart(2, "0");
+    return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${String(date.getFullYear()).slice(2)} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 function initReviews(recipe) {
@@ -681,9 +681,9 @@ function initReviews(recipe) {
     function paintPicker(hover) {
         const shown = hover || rating;
         picker.querySelectorAll(".star-pick").forEach(btn => {
-            const v = Number(btn.dataset.value);
-            btn.classList.toggle("on", v <= shown);
-            btn.setAttribute("aria-checked", String(v === rating));
+            const selectedRating = Number(btn.dataset.value);
+            btn.classList.toggle("is-on", selectedRating <= shown);
+            btn.setAttribute("aria-checked", String(selectedRating === rating));
         });
     }
 
@@ -701,14 +701,14 @@ function initReviews(recipe) {
     picker.addEventListener("mouseleave", () => paintPicker());
 
     function ownReview() {
-        const me = currentUser();
-        return me ? reviews.find(r => r.user && r.user.id === me.id) : null;
+        const viewer = currentUser();
+        return viewer ? reviews.find(review => review.user && review.user.id === viewer.id) : null;
     }
 
     function syncForm() {
-        const me = currentUser();
+        const viewer = currentUser();
         const own = ownReview();
-        if (formAvatar) formAvatar.src = (me && me.avatar) || FALLBACK_AVATAR;
+        if (formAvatar) formAvatar.src = (viewer && viewer.avatar) || FALLBACK_AVATAR;
         if (own) {
             if (!textarea.dataset.touched) textarea.value = own.text || "";
             if (!rating) rating = own.rating;
@@ -730,27 +730,27 @@ function initReviews(recipe) {
     }
 
     function render() {
-        const me = currentUser();
+        const viewer = currentUser();
         document.getElementById("review-count").textContent = reviews.length;
         empty.hidden = reviews.length > 0;
-        list.innerHTML = sorted().map(r => {
-            const user = r.user || {};
-            const mine = me && user.id === me.id;
+        list.innerHTML = sorted().map(review => {
+            const user = review.user || {};
+            const mine = viewer && user.id === viewer.id;
             return `
-            <li class="comment" data-review-id="${escapeHtml(r.id)}">
-                <div class="comment-avatar-column">
-                    <img loading="lazy" decoding="async" src="${escapeHtml(user.avatar || FALLBACK_AVATAR)}" alt="${escapeHtml(user.username || "Người dùng")}" class="comment-avatar" />
+            <li class="comment" data-review-id="${escapeHtml(review.id)}">
+                <div class="comment__avatar-column">
+                    <img loading="lazy" decoding="async" src="${escapeHtml(user.avatar || FALLBACK_AVATAR)}" alt="${escapeHtml(user.username || "Người dùng")}" class="comment__avatar" />
                 </div>
-                <div class="comment-body">
-                    <div class="comment-top">
-                        <span class="comment-author">${escapeHtml(user.username || "Người dùng ẩn danh")}</span>
-                        <span class="comment-time">${escapeHtml(formatDateTime(r.createdAt))}</span>
+                <div class="comment__body">
+                    <div class="comment__top">
+                        <span class="comment__author">${escapeHtml(user.username || "Người dùng ẩn danh")}</span>
+                        <span class="comment__time">${escapeHtml(formatDateTime(review.createdAt))}</span>
                     </div>
-                    <div class="comment-stars" aria-label="${Number(r.rating) || 0} trên 5 sao"><span class="stars">${starsHtml(r.rating)}</span></div>
-                    <p class="comment-text">${escapeHtml(r.text)}</p>
-                    <div class="comment-actions">
-                        <button type="button" class="like-button${r.liked ? " is-liked" : ""}" data-action="like" aria-pressed="${r.liked ? "true" : "false"}">${Number(r.likes) || 0}</button>
-                        ${mine ? '<button type="button" class="reply-button delete-review-button" data-action="delete">Xóa</button>' : ""}
+                    <div class="comment__stars" aria-label="${Number(review.rating) || 0} trên 5 sao"><span class="stars">${starsHtml(review.rating)}</span></div>
+                    <p class="comment__text">${escapeHtml(review.text)}</p>
+                    <div class="comment__actions">
+                        <button type="button" class="like-button${review.liked ? " is-liked" : ""}" data-action="like" aria-pressed="${review.liked ? "true" : "false"}">${Number(review.likes) || 0}</button>
+                        ${mine ? '<button type="button" class="reply__button delete-review-button" data-action="delete">Xóa</button>' : ""}
                     </div>
                 </div>
             </li>`;
@@ -802,9 +802,9 @@ function initReviews(recipe) {
     list.addEventListener("click", async event => {
         const btn = event.target.closest("[data-action]");
         if (!btn) return;
-        const li = btn.closest("[data-review-id]");
-        const id = li.dataset.reviewId;
-        const review = reviews.find(r => String(r.id) === id);
+        const listItem = btn.closest("[data-review-id]");
+        const reviewId = listItem.dataset.reviewId;
+        const review = reviews.find(item => String(item.id) === reviewId);
         if (!review) return;
 
         if (btn.dataset.action === "like") {
@@ -818,7 +818,7 @@ function initReviews(recipe) {
             review.likes = (Number(review.likes) || 0) + (review.liked ? 1 : -1);
             render();
             try {
-                const res = await NomNom.data.post(`/reviews/${encodeURIComponent(id)}/like`);
+                const res = await NomNom.data.post(`/reviews/${encodeURIComponent(reviewId)}/like`);
                 if (res) { review.liked = !!res.liked; review.likes = Number(res.likes) || 0; }
             } catch (error) {
                 review.liked = before.liked;
@@ -829,7 +829,7 @@ function initReviews(recipe) {
         } else if (btn.dataset.action === "delete") {
             if (!window.confirm("Xóa đánh giá của bạn?")) return;
             try {
-                await NomNom.data.del(`/reviews/${encodeURIComponent(id)}`);
+                await NomNom.data.del(`/reviews/${encodeURIComponent(reviewId)}`);
                 rating = 0;
                 textarea.value = "";
                 textarea.dataset.touched = "";
@@ -858,7 +858,7 @@ function initReviews(recipe) {
 function normalizeUnits(units) {
     if (Array.isArray(units)) {
         const map = {};
-        units.forEach(u => { map[u.id || u.label] = u; });
+        units.forEach(unit => { map[unit.id || unit.label] = unit; });
         return map;
     }
     return units || {};
@@ -898,7 +898,7 @@ async function init() {
     try {
         // category có thể là id (danh mục chọn khi upload) -> hiện tên, giữ id để lọc công thức tương tự
         const cats = await NomNom.data.get("/categories");
-        const hit = (cats.items || []).find(c => c.id === recipe.category || c.name === recipe.category);
+        const hit = (cats.items || []).find(category => category.id === recipe.category || category.name === recipe.category);
         if (hit) { recipe.categoryId = hit.id; recipe.category = hit.name; }
     } catch (e) { /* giữ nguyên */ }
 

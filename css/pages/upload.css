@@ -1,14 +1,5 @@
-.anton-regular {
-    font-family: "Anton", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
 
-.inter-regular {
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
+
 
 *,
 *::before,
@@ -142,7 +133,7 @@ h4 {
   background-color: #292929;
 }
 
-.main-info-tag, .detailed-guide-tag {
+.main-info-tag, .detailed-guide__tag {
     margin: 0;
     padding: 0.6em 1em 0.5em 1em;
     font-size: 2.5rem;
@@ -170,7 +161,7 @@ h4 {
     font-size: 1em;
 }
 
-.card-title-tag {
+.card__title-tag {
     position: absolute;
     z-index: 2;
     top: 38px;
@@ -284,13 +275,13 @@ input[type="file"] {
     text-align: center;
 }
  
-.image-upload-icon {
+.image-upload__icon {
     display: block;
     width: auto;
     height: 80px;
 }
  
-.image-upload-text {
+.image-upload__text {
     font-size: 1em;
     font-weight: 600;
     color: #3a3a3a;
@@ -299,7 +290,7 @@ input[type="file"] {
     transition: all 0.3s ease;
 }
 
-.image-upload-text:hover {
+.image-upload__text:hover {
     background-color: #FBC41B;
     transform: translate(-2px, -2px);
     box-shadow: 3px 3px 0 black;
@@ -352,14 +343,14 @@ input[type="file"] {
 
 /* ---------- Thẻ công thức ---------- */
 
-.recipe-card-full {
+.full-recipe-card {
     position: relative;
     margin-top: 4em;
     border: 3px solid #1a1a1a;
     background-color: #ffffff;
 }
 
-.card-image {
+.card__image {
     position: absolute;
     z-index: 1;
     top: -48px;
@@ -369,48 +360,41 @@ input[type="file"] {
     object-fit: cover;
 }
 
-.card-body {
+.card__body {
     padding: 160px 42px 0;
 }
 
-.card-cost {
+.card__cost {
     margin: 0 0 20px;
     font-size: 1rem;
 }
 
-.card-cost em {
+.card__cost em {
     color: #555555;
 }
 
-.card-rating {
+.card__rating {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 14px;
 }
 
-.card-rating .stars {
+.card__rating .stars {
     font-size: 1.5rem;
 }
 
-.card-description {
-    max-width: 55%;
-    margin: 22px 0 20px;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: #222222;
-}
 
-.card-author {
+.card__author {
     margin: 0;
     font-size: 0.95rem;
 }
 
-.card-author a {
+.card__author a {
     text-underline-offset: 3px;
 }
 
-.card-time-row {
+.card__time-row {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -419,14 +403,14 @@ input[type="file"] {
     margin-top: 26px;
 }
 
-.small-input-label {
+.small-input__label {
     display: block;
     margin-bottom: 8px;
     font-size: 0.95rem;
     font-weight: 800;
 }
 
-.small-input-wrapper {
+.small-input__wrapper {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -434,7 +418,7 @@ input[type="file"] {
 }
 
 .small-input {
-    width: 50px!important;
+    width: 50px;
     height: 40px;
     padding: 0;
     border: 1.5px solid #292929;
@@ -453,13 +437,13 @@ input[type="file"] {
     margin: 0;
 }
 
-.small-input-buttons {
+.small-input__buttons {
     display: flex;
     flex-direction: column;
     gap: 1px;
 }
 
-.small-input-buttons button {
+.small-input__buttons button {
     width: 38px;
     height: 20px;
     padding: 0;
@@ -505,14 +489,14 @@ input[type="file"] {
     margin-top: 10px;
 }
 
-.card-buttons {
+.card__buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
     margin: 40px 0 50px;
 }
 
-.card-button {
+.card__button {
     padding: 1.05em 0.5em;
     border: 3px solid #1a1a1a;
     background-color: #ffffff;
@@ -523,18 +507,18 @@ input[type="file"] {
     transition: all 0.3s ease;
 }
 
-.card-button:hover {
+.card__button:hover {
     background-color: #FBC41B;
     transform: translate(-0.06em, -0.06em);
     box-shadow: 0.2em 0.2em 0 #292929;
 }
 
-.card-button:active {
+.card__button:active {
     transform: scale(0.98);
     box-shadow: none;
 }
 
-.card-section {
+.card__section {
     margin-bottom: 56px;
 }
 
@@ -666,7 +650,7 @@ input[type="file"] {
     font-weight: 600;
 }
 
-.nutrient-input {
+.nutrient__input {
     width: 100px;
     height: auto;
     padding: 5px 10px;
@@ -680,12 +664,12 @@ input[type="file"] {
     appearance: textfield;
 }
 
-.nutrient-input::placeholder {
+.nutrient__input::placeholder {
     font-size: 0.9em;
     font-weight: 300;
 }
 
-.nutrient-input:focus {
+.nutrient__input:focus {
     border: 1px solid black;
 }
 
@@ -702,7 +686,7 @@ input[type="file"] {
     width: 10em;
 }
 
-.nutrient-input-note {
+.nutrient__input-note {
     margin-left: 0.4em;
     font-size: 1em;
     font-weight: 300;
@@ -721,7 +705,7 @@ input[type="file"] {
     padding: 0 16px;
 }
 
-.step-label {
+.step__label {
     display: inline-block;
     width: fit-content;
     padding: 0.35em 1em;
@@ -828,11 +812,11 @@ input[type="file"] {
     font-weight: 800;
 }
 
-.toc-group {
+.toc__group {
     margin-bottom: 14px;
 }
 
-.toc-group summary {
+.toc__group summary {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -848,11 +832,11 @@ input[type="file"] {
     transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-.toc-group summary::-webkit-details-marker {
+.toc__group summary::-webkit-details-marker {
     display: none;
 }
 
-.toc-group summary::after {
+.toc__group summary::after {
     content: "";
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
@@ -860,20 +844,20 @@ input[type="file"] {
     transition: transform 0.3s ease;
 }
 
-.toc-group:not([open]) summary::after {
+.toc__group:not([open]) summary::after {
     transform: rotate(-90deg);
 }
 
-.toc-group summary:hover {
+.toc__group summary:hover {
     color: #000000;
 }
 
-.toc-active summary {
+.is-active summary {
     color: #000000;
     border-left-color: #FBC41B;
 }
 
-.toc-sublist {
+.toc__sublist {
     display: flex;
     flex-direction: column;
     gap: 9px;
@@ -882,25 +866,25 @@ input[type="file"] {
     list-style: none;
 }
 
-.toc-sublist a {
+.toc__sublist a {
     color: #555555;
     font-size: 0.78rem;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-.toc-sublist a:hover {
+.toc__sublist a:hover {
     color: #000000;
     text-decoration: none;
     text-underline-offset: 3px;
 }
 
-.toc-sublist li {
+.toc__sublist li {
     position: relative;
 }
 
-/* Ô vuông vàng báo mục đang xem: luôn có sẵn, ẩn bằng scale(0) rồi bung ra khi .toc-current */
-.toc-sublist .toc-current::before {
+/* Ô vuông vàng báo mục đang xem: luôn có sẵn, ẩn bằng scale(0) rồi bung ra khi .is-current */
+.toc__sublist .is-current::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -912,16 +896,16 @@ input[type="file"] {
     transition: transform 0.3s ease;
 }
 
-.toc-sublist .toc-current::before {
+.toc__sublist .is-current::before {
     transform: translateY(-50%) scale(1);
 }
 
-.toc-current a {
+.is-current a {
     color: #000000;
     font-weight: 700;
 }
 
-.toc-single {
+.toc__single {
     display: block;
     padding: 2px 8px 2px 12px;
     border-left: 3px solid transparent;
@@ -933,11 +917,11 @@ input[type="file"] {
     transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-.toc-single:hover {
+.toc__single:hover {
     color: #000000;
 }
 
-.toc-single.toc-current {
+.toc__single.is-current {
     color: #000000;
     border-left-color: #FBC41B;
 }
@@ -995,7 +979,7 @@ input[type="file"] {
         padding: 22px 18px;
     }
 
-    .card-title-tag {
+    .card__title-tag {
         position: relative;
         top: auto;
         left: auto;
@@ -1004,7 +988,7 @@ input[type="file"] {
         font-size: 1.5rem;
     }
 
-    .card-image {
+    .card__image {
         position: static;
         width: 100%;
         height: auto;
@@ -1012,23 +996,20 @@ input[type="file"] {
         margin-top: 20px;
     }
 
-    .card-body {
+    .card__body {
         padding: 20px 20px 0;
     }
 
-    .card-description {
-        max-width: 100%;
-    }
 
-    .card-time-row {
+    .card__time-row {
         flex-direction: column;
     }
 
-    .card-buttons {
+    .card__buttons {
         grid-template-columns: 1fr;
     }
 
-    .card-button {
+    .card__button {
         font-size: 1.15rem;
     }
 
@@ -1044,7 +1025,7 @@ input[type="file"] {
         font-size: 1rem;
     }
 
-    .step-images {
+    .step__images {
         grid-template-columns: 1fr;
     }
 
@@ -1060,11 +1041,11 @@ input[type="file"] {
         font-size: 1.2rem;
     }
 
-    .similar-recipes-container {
+    .similar-recipes__container {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .comment-section {
+    .comment__section {
         padding: 0;
     }
 
@@ -1078,12 +1059,12 @@ input[type="file"] {
         height: 52px;
     }
 
-    .review-form-footer {
+    .review-form__footer {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .comment-list {
+    .comment__list {
         padding-left: 0;
     }
 
@@ -1123,15 +1104,15 @@ input[type="file"] {
     padding: 0;
     list-style: none;
 }
-.preview-item, .step-preview {
+.preview-item, .step__preview {
     position: relative;
     width: 140px;
     height: 105px;
     border: 2px solid #292929;
     background: #fff;
 }
-.step-preview { margin: 10px 0; width: 200px; height: 150px; }
-.preview-item img, .step-preview img { width: 100%; height: 100%; object-fit: cover; }
+.step__preview { margin: 10px 0; width: 200px; height: 150px; }
+.preview-item img, .step__preview img { width: 100%; height: 100%; object-fit: cover; }
 .preview-badge {
     position: absolute;
     left: 0;
@@ -1157,7 +1138,7 @@ input[type="file"] {
 }
 .preview-remove:hover { background: #FBC41B; }
 /* Ô ảnh của từng bước: biểu tượng và nút chữ nằm cùng một hàng, khung tự cao theo nội dung */
-.step-image-upload {
+.step__image-upload {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 16px 20px;
@@ -1165,7 +1146,7 @@ input[type="file"] {
     margin-top: 10px;
     cursor: pointer;
 }
-.step-image-upload .image-upload-icon { height: 52px; }
+.step__image-upload .image-upload__icon { height: 52px; }
 
 .upload-status {
     margin: 18px 0;
@@ -1176,9 +1157,9 @@ input[type="file"] {
 }
 .upload-status[data-kind="error"] { border-color: #c0261b; color: #c0261b; }
 .upload-status[data-kind="ok"] { border-color: #2b7a33; color: #2b7a33; }
-.upload-status-text { margin: 0; }
+.upload-status__text { margin: 0; }
 .upload-progress { margin-top: 10px; height: 10px; background: #eee; border: 1px solid #292929; }
-.upload-progress-bar { height: 100%; width: 0; background: #FBC41B; transition: width 0.3s ease; }
+.upload-progress__bar { height: 100%; width: 0; background: #FBC41B; transition: width 0.3s ease; }
 
 .upload-btn, .draft-btn { cursor: pointer; }
 .upload-btn:disabled, .draft-btn:disabled { opacity: 0.6; cursor: wait; }
@@ -1208,7 +1189,7 @@ input[type="file"] {
     .nutrition-container { flex-direction: column; gap: 14px; padding: 14px; }
     .nutrients { min-width: 0; font-size: 1em; }
     .nutrients div { gap: 10px; }
-    .nutrient-input { width: 90px; }
+    .nutrient__input { width: 90px; }
     .title { gap: 10px; }
     .title h3, .title h2 { white-space: normal; overflow-wrap: anywhere; }
     h3, h4 { white-space: normal; overflow-wrap: anywhere; }

@@ -4,7 +4,7 @@
     const form = document.querySelector(".site-login__form");
     if (!form || !window.NomNomAuth || form.dataset.initialized) return;
     form.dataset.initialized = "true";
-    const A = window.NomNomAuth;
+    const auth = window.NomNomAuth;
     const idInput = form.elements.email;
     const submit = form.querySelector(".site-auth__submit");
 
@@ -17,22 +17,22 @@
 
     form.addEventListener("submit", event => {
         event.preventDefault(); // Không gửi mật khẩu lên URL hoặc tải lại trang.
-        if (submit.disabled || !A.validateForm(form)) return;
+        if (submit.disabled || !auth.validateForm(form)) return;
         const label0 = submit.textContent;
         submit.disabled = true;
         submit.textContent = "Đang đăng nhập...";
-        A.http("POST", "/auth/login", { identifier: idInput.value.trim(), password: form.elements.password.value })
+        auth.http("POST", "/auth/login", { identifier: idInput.value.trim(), password: form.elements.password.value })
             .then(data => {
-                A.submitted(data.user);
+                auth.submitted(data.user);
             })
             .catch(err => {
                 const name = err.field === "identifier" ? "email" : err.field;
                 const input = name && form.elements[name];
                 if (input && input.matches && input.matches("input")) {
-                    A.setFieldError(input, err.message);
+                    auth.setFieldError(input, err.message);
                     input.focus();
                 } else {
-                    A.showMessage(form, err.message);
+                    auth.showMessage(form, err.message);
                 }
             })
             .then(() => {

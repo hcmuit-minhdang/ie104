@@ -220,8 +220,8 @@
             event.preventDefault();
             window.NomNomStore.run("GET", "/recipes?limit=50")
                 .then(res => {
-                    const d = res.data;
-                    const items = (d && d.items) || [];
+                    const data = res.data;
+                    const items = (data && data.items) || [];
                     if (!items.length) throw new Error("empty");
                     const pick = items[Math.floor(Math.random() * items.length)];
                     location.href = "/pages/recipe.html?id=" + encodeURIComponent(pick.id);

@@ -4,7 +4,7 @@
     const form = document.querySelector(".site-signup__form");
     if (!form || !window.NomNomAuth || form.dataset.initialized) return;
     form.dataset.initialized = "true";
-    const A = window.NomNomAuth;
+    const auth = window.NomNomAuth;
     const password = form.elements.password;
     const confirmation = form.elements.confirmPassword;
     const username = form.elements.username;
@@ -19,8 +19,8 @@
         }
     }
     function checkRules() {
-        const u = username.value.trim().toLowerCase();
-        username.setCustomValidity(u && !/^[a-z0-9_.]{3,24}$/.test(u)
+        const usernameValue = username.value.trim().toLowerCase();
+        username.setCustomValidity(usernameValue && !/^[a-z0-9_.]{3,24}$/.test(usernameValue)
             ? "Tên tài khoản gồm 3–24 ký tự: chữ thường không dấu, số, dấu _ hoặc ." : "");
         password.setCustomValidity(password.value && password.value.length < 6
             ? "Mật khẩu cần ít nhất 6 ký tự." : "");
@@ -35,23 +35,23 @@
         if (submit.disabled) return;
         checkRules();
         checkConfirmation(); // Kiểm tra lại cả trường hợp trình duyệt tự điền.
-        if (!A.validateForm(form)) return;
+        if (!auth.validateForm(form)) return;
         const label0 = submit.textContent;
         submit.disabled = true;
         submit.textContent = "Đang đăng ký...";
-        A.http("POST", "/auth/register", {
+        auth.http("POST", "/auth/register", {
             username: username.value.trim().toLowerCase(),
             email: form.elements.email.value.trim(),
             password: password.value
         }).then(data => {
-            A.submitted(data.user);
+            auth.submitted(data.user);
         }).catch(err => {
             const input = err.field && form.elements[err.field];
             if (input && input.matches && input.matches("input")) {
-                A.setFieldError(input, err.message);
+                auth.setFieldError(input, err.message);
                 input.focus();
             } else {
-                A.showMessage(form, err.message);
+                auth.showMessage(form, err.message);
             }
         }).then(() => {
             submit.disabled = false;

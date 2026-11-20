@@ -1,6 +1,10 @@
+/* Font Inter (biến thể 100-900) tự lưu trong dự án: khai báo một lần ở đây, mọi trang đã nạp header.css nên dùng chung. */
 @font-face {
-    font-family: 'inter' ;
-    src: url(/fonts/inter-variable.ttf);
+    font-family: "Inter";
+    src: url("/fonts/inter-variable.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
 }
 
 .site-header {
@@ -15,7 +19,7 @@
     height: auto;
     width: 100%;
     font-size: 20px;
-    font-family: 'inter', Arial, Helvetica, sans-serif;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
     line-height: 1.5;
     color: black;
     position: sticky;

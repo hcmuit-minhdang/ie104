@@ -1,14 +1,5 @@
-.anton-regular {
-    font-family: "Anton", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
 
-.inter-regular {
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
+
 
 *,
 *::before,
@@ -132,7 +123,7 @@ a {
     background-color: #FBC41B;
 }
 
-.card-title-tag {
+.card__title-tag {
     position: absolute;
     z-index: 2;
     top: 38px;
@@ -429,14 +420,14 @@ a {
     font-size: 1.9rem;
 }
 
-.featured-review-text {
+.featured-review__text {
     margin: 18px 0 0;
     max-width: 620px;
     font-size: 1.1rem;
     line-height: 1.5;
 }
 
-.featured-review-author {
+.featured-review__author {
     margin-top: 24px;
     font-size: 1.05rem;
     font-weight: 800;
@@ -445,14 +436,14 @@ a {
 
 /* ---------- Thẻ công thức ---------- */
 
-.recipe-card-full {
+.full-recipe-card {
     position: relative;
     margin-top: 86px;
     border: 3px solid #1a1a1a;
     background-color: #ffffff;
 }
 
-.card-image {
+.card__image {
     position: absolute;
     z-index: 1;
     top: -48px;
@@ -462,49 +453,42 @@ a {
     object-fit: cover;
 }
 
-.card-body {
+.card__body {
     padding: 160px 42px 0;
 }
 
-.card-cost {
+.card__cost {
     margin: 0 0 20px;
     font-size: 1rem;
 }
 
-.card-cost em {
+.card__cost em {
     color: #555555;
 }
 
-.card-rating {
+.card__rating {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 14px;
 }
 
-.card-rating .stars {
+.card__rating .stars {
     font-size: 1.5rem;
 }
 
-.card-description {
-    max-width: 55%;
-    margin: 22px 0 20px;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: #222222;
-}
 
-.card-author {
+.card__author {
     margin: 0;
     font-size: 0.95rem;
     margin-top: 20px;
 }
 
-.card-author a {
+.card__author a {
     text-underline-offset: 3px;
 }
 
-.card-time-row {
+.card__time-row {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -602,14 +586,14 @@ a {
     color: #333333;
 }
 
-.card-buttons {
+.card__buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
     margin: 40px 0 50px;
 }
 
-.card-button {
+.card__button {
     padding: 1.05em 0.5em;
     border: 3px solid #1a1a1a;
     background-color: #ffffff;
@@ -620,18 +604,18 @@ a {
     transition: all 0.3s ease;
 }
 
-.card-button:hover {
+.card__button:hover {
     background-color: #FBC41B;
     transform: translate(-0.06em, -0.06em);
     box-shadow: 0.2em 0.2em 0 #292929;
 }
 
-.card-button:active {
+.card__button:active {
     transform: scale(0.98);
     box-shadow: none;
 }
 
-.card-section {
+.card__section {
     margin-bottom: 56px;
 }
 
@@ -809,7 +793,7 @@ a {
     padding: 0 16px;
 }
 
-.step-label {
+.step__label {
     display: inline-block;
     padding: 0.35em 1em;
     background-color: #FBC41B;
@@ -826,21 +810,21 @@ a {
     line-height: 1.4;
 }
 
-.step-images {
+.step__images {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 3px;
     margin-top: 22px;
 }
 
-.step-images img {
+.step__images img {
     width: 100%;
     aspect-ratio: 1.62;
     object-fit: cover;
     border-radius: 8px;
 }
 
-.step-images img.tall {
+.step__images img.tall {
     aspect-ratio: 285 / 348;
 }
 
@@ -860,7 +844,7 @@ a {
     font-size: 1.8rem;
 }
 
-.similar-recipes-container {
+.similar-recipes__container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
@@ -925,7 +909,7 @@ a {
 
 /* ---------- Bình luận ---------- */
 
-.comment-section {
+.comment__section {
     margin-top: 40px;
     padding: 0 8px;
 }
@@ -963,7 +947,7 @@ a {
     outline: 2px solid #FBC41B;
 }
 
-.review-form-footer {
+.review-form__footer {
     grid-column: 2;
     display: flex;
     flex-direction: row;
@@ -980,7 +964,7 @@ a {
     gap: 12px;
 }
 
-.review-rating-label {
+.review-rating__label {
     font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.04em;
@@ -1018,7 +1002,7 @@ a {
     border-top: 3px solid #c4c4c4;
 }
 
-.comment-header {
+.comment__header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -1026,7 +1010,7 @@ a {
     gap: 16px;
 }
 
-.comment-count {
+.comment__count {
     margin: 0;
     padding-bottom: 6px;
     border-bottom: 3px solid #FBC41B;
@@ -1035,7 +1019,7 @@ a {
     text-transform: uppercase;
 }
 
-.comment-sort {
+.comment__sort {
     padding: 0.3em 2.2em 0.3em 1.6em;
     border: none;
     border-bottom: 3px solid #292929;
@@ -1052,12 +1036,12 @@ a {
     -webkit-appearance: none;
 }
 
-.comment-sort:focus {
+.comment__sort:focus {
     outline: none;
     border-bottom-color: #FBC41B;
 }
 
-.comment-list {
+.comment__list {
     display: flex;
     flex-direction: column;
     gap: 34px;
@@ -1072,13 +1056,13 @@ a {
     column-gap: 14px;
 }
 
-.comment-avatar-column {
+.comment__avatar-column {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.comment-avatar {
+.comment__avatar {
     flex: 0 0 42px;
     width: 42px;
     height: 42px;
@@ -1086,38 +1070,32 @@ a {
     border-radius: 50%;
 }
 
-.thread-line {
-    flex: 1 1 auto;
-    width: 2px;
-    margin-top: 2px;
-    background-color: #FBC41B;
-}
 
-.comment-body {
+.comment__body {
     min-width: 0;
 }
 
-.comment-top {
+.comment__top {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 12px;
 }
 
-.comment-author {
+.comment__author {
     font-size: 1.1rem;
     font-weight: 800;
     color: #333333;
 }
 
-.comment-time {
+.comment__time {
     display: flex;
     align-items: center;
     font-size: 0.72rem;
     color: #777777;
 }
 
-.comment-time::before {
+.comment__time::before {
     content: "";
     display: inline-block;
     width: 1.1em;
@@ -1129,7 +1107,7 @@ a {
     margin-right: 6px;
 }
 
-.comment-text {
+.comment__text {
     margin: 6px 0 0;
     max-width: 560px;
     font-size: 0.85rem;
@@ -1137,7 +1115,7 @@ a {
     color: #333333;
 }
 
-.comment-actions {
+.comment__actions {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -1176,7 +1154,7 @@ a {
     transform: scale(0.92);
 }
 
-.reply-button {
+.reply__button {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -1190,7 +1168,7 @@ a {
     transition: all 0.3s ease;
 }
 
-.reply-button::before {
+.reply__button::before {
     content: "";
     width: 1.3em;
     height: 1.3em;
@@ -1200,70 +1178,25 @@ a {
     background-position: center;
 }
 
-.reply-button:hover {
+.reply__button:hover {
     background-color: #dfa904;
     box-shadow: 0.15em 0.15em 0 #292929;
     transform: translate(-0.05em, -0.05em);
 }
 
-.reply-button:active {
+.reply__button:active {
     transform: scale(0.96);
     box-shadow: none;
 }
 
-/* Đường nối bình luận - trả lời */
 
-.thread {
-    grid-column: 1;
-    position: relative;
-    left: 9px;
-    justify-self: center;
-    align-self: start;
-    width: 100%;
-    height: 56px;
-    margin-left: 22px;
-    border-left: 2px solid #FBC41B;
-    border-bottom: 2px solid #FBC41B;
-    border-bottom-left-radius: 18px;
-}
 
-.thread::before {
-    content: "−";
-    position: relative;
-    top: 0;
-    left: -11px;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    background-color: #ffffff;
-    border: 2px solid #FBC41B;
-    border-radius: 50%;
-    font-size: 0.9rem;
-    font-weight: 800;
-    line-height: 1;
-    color: #FBC41B;
-}
-
-.reply-list {
-    grid-column: 2;
-    margin: 18px 0 0;
-    padding: 0;
-    list-style: none;
-}
 
 .comment.reply {
     padding: 18px 24px 8px 14px;
     background-color: #FFF9E5;
 }
 
-.comment-more {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 40px;
-}
 
 /* ---------- Sidebar tổng quan ---------- */
 
@@ -1287,11 +1220,11 @@ a {
     font-weight: 800;
 }
 
-.toc-group {
+.toc__group {
     margin-bottom: 14px;
 }
 
-.toc-group summary {
+.toc__group summary {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -1307,11 +1240,11 @@ a {
     transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-.toc-group summary::-webkit-details-marker {
+.toc__group summary::-webkit-details-marker {
     display: none;
 }
 
-.toc-group summary::after {
+.toc__group summary::after {
     content: "";
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
@@ -1319,20 +1252,20 @@ a {
     transition: transform 0.3s ease;
 }
 
-.toc-group:not([open]) summary::after {
+.toc__group:not([open]) summary::after {
     transform: rotate(-90deg);
 }
 
-.toc-group summary:hover {
+.toc__group summary:hover {
     color: #000000;
 }
 
-.toc-active summary {
+.is-active summary {
     color: #000000;
     border-left-color: #FBC41B;
 }
 
-.toc-sublist {
+.toc__sublist {
     display: flex;
     flex-direction: column;
     gap: 9px;
@@ -1341,27 +1274,27 @@ a {
     list-style: none;
 }
 
-.toc-sublist a {
+.toc__sublist a {
     color: #555555;
     font-size: 0.78rem;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-.toc-sublist a:hover {
+.toc__sublist a:hover {
     color: #000000;
     text-decoration: none;
     text-underline-offset: 3px;
 }
 
-.toc-sublist li {
+.toc__sublist li {
     position: relative;
     font-size: 0.78rem;
     line-height: 1.4; /* cùng cỡ chữ với liên kết để ô vuông vàng nằm giữa dòng chữ */
 }
 
-/* Ô vuông vàng báo mục đang xem: luôn có sẵn, ẩn bằng scale(0) rồi bung ra khi .toc-current */
-.toc-sublist .toc-current::before {
+/* Ô vuông vàng báo mục đang xem: luôn có sẵn, ẩn bằng scale(0) rồi bung ra khi .is-current */
+.toc__sublist .is-current::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -1373,16 +1306,16 @@ a {
     transition: transform 0.3s ease;
 }
 
-.toc-sublist .toc-current::before {
+.toc__sublist .is-current::before {
     transform: translateY(-50%) scale(1);
 }
 
-.toc-current a {
+.is-current a {
     color: #000000;
     font-weight: 700;
 }
 
-.toc-single {
+.toc__single {
     display: block;
     padding: 2px 8px 2px 12px;
     border-left: 3px solid transparent;
@@ -1394,11 +1327,11 @@ a {
     transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-.toc-single:hover {
+.toc__single:hover {
     color: #000000;
 }
 
-.toc-single.toc-current {
+.toc__single.is-current {
     color: #000000;
     border-left-color: #FBC41B;
 }
@@ -1456,7 +1389,7 @@ a {
         padding: 22px 18px;
     }
 
-    .card-title-tag {
+    .card__title-tag {
         position: relative;
         top: auto;
         left: auto;
@@ -1465,7 +1398,7 @@ a {
         font-size: 1.5rem;
     }
 
-    .card-image {
+    .card__image {
         position: static;
         width: 100%;
         height: auto;
@@ -1473,23 +1406,20 @@ a {
         margin-top: 20px;
     }
 
-    .card-body {
+    .card__body {
         padding: 20px 20px 0;
     }
 
-    .card-description {
-        max-width: 100%;
-    }
 
-    .card-time-row {
+    .card__time-row {
         flex-direction: column;
     }
 
-    .card-buttons {
+    .card__buttons {
         grid-template-columns: 1fr;
     }
 
-    .card-button {
+    .card__button {
         font-size: 1.15rem;
     }
 
@@ -1505,7 +1435,7 @@ a {
         font-size: 1rem;
     }
 
-    .step-images {
+    .step__images {
         grid-template-columns: 1fr;
     }
 
@@ -1521,11 +1451,11 @@ a {
         font-size: 1.2rem;
     }
 
-    .similar-recipes-container {
+    .similar-recipes__container {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .comment-section {
+    .comment__section {
         padding: 0;
     }
 
@@ -1539,12 +1469,12 @@ a {
         height: 52px;
     }
 
-    .review-form-footer {
+    .review-form__footer {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .comment-list {
+    .comment__list {
         padding-left: 0;
     }
 
@@ -1573,10 +1503,10 @@ a {
     transition: opacity 0.25s ease, transform 0.25s ease;
     z-index: 2000;
 }
-.recipe-toast.show { opacity: 1; transform: translate(-50%, 0); }
+.recipe-toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
 
 .recipe-state { padding: 60px 0; }
-.recipe-state-links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
+.recipe-state__links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
 
 /* Nút lưu (trái tim) */
 .save-button.is-saved,
@@ -1596,7 +1526,7 @@ a {
     cursor: pointer;
     transition: transform 0.15s ease, color 0.15s ease;
 }
-.star-pick.on { color: #FBC41B; }
+.star-pick.is-on { color: #FBC41B; }
 .star-pick:hover { transform: scale(1.15); }
 .star-pick:focus-visible { outline: 2px solid #292929; outline-offset: 2px; border-radius: 4px; }
 
@@ -1611,11 +1541,11 @@ a {
 .review-message.is-error { color: #c0261b; }
 .submit-review-button:disabled { opacity: 0.6; cursor: wait; }
 
-.comment-stars .stars { font-size: 1.1rem; }
-.comment-stars { margin-top: 4px; }
+.comment__stars .stars { font-size: 1.1rem; }
+.comment__stars { margin-top: 4px; }
 .like-button.is-liked { color: #b07d00; font-weight: 800; }
 .delete-review-button { cursor: pointer; }
-.comment-empty {
+.comment__empty {
     padding: 28px 12px;
     text-align: center;
     color: #666;
@@ -1641,8 +1571,8 @@ a {
     body { background: #ffffff !important; }
 
     .site-header, .site-footer, .recipe-sidebar, .recipe-toast, dialog,
-    .recipe-article > :not(.recipe-card-full),
-    .card-buttons, .share-section, .servings-buttons { display: none !important; }
+    .recipe-article > :not(.full-recipe-card),
+    .card__buttons, .share-section, .servings-buttons { display: none !important; }
 
     .recipe-page, .recipe-layout, .recipe-article {
         display: block !important;
@@ -1653,19 +1583,19 @@ a {
     }
 
     /* Chừa lề trái/trên vì nhãn tên món lòi ra ngoài khung và ảnh nhô lên trên khung. */
-    .recipe-card-full {
+    .full-recipe-card {
         margin: 64px 0 0 48px !important;
         box-shadow: none !important;
     }
 
     /* Hàng nút đã ẩn nên chừa khoảng trước mục Nguyên liệu. */
-    .card-time-row { margin-bottom: 28px !important; }
+    .card__time-row { margin-bottom: 28px !important; }
 
     /* Cho phép khối dài (Nguyên liệu, Hướng dẫn) ngắt qua trang để không để trống nửa trang;
        chỉ giữ nguyên từng dòng nguyên liệu, từng bước và tiêu đề không bị tách khỏi nội dung. */
-    .card-section { break-inside: auto; margin-bottom: 28px !important; }
-    .card-section .title { break-inside: avoid; break-after: avoid; }
-    .card-section > ul, .card-section > ol { orphans: 3; widows: 3; }
+    .card__section { break-inside: auto; margin-bottom: 28px !important; }
+    .card__section .title { break-inside: avoid; break-after: avoid; }
+    .card__section > ul, .card__section > ol { orphans: 3; widows: 3; }
     .ingredient-list li,
     .ingredient-list label,
     .quick-step-list li,
@@ -1687,7 +1617,7 @@ a {
 
 /* Tên món ở đầu trang và trong khung công thức: một dòng, tên dài được fit-names.js thu nhỏ để không đè lên nội dung bên dưới */
 #recipe-title,
-.card-title-tag:not(.similar-title-tag) {
+.card__title-tag:not(.similar-title-tag) {
     white-space: nowrap;
     overflow: hidden;
 }
@@ -1697,16 +1627,16 @@ a {
     #recipe-title { font-size: 48px; font-weight: 800; }
     .ingredient-list label { font-size: 18px; font-weight: 500; color: #292929; }
     .step p { font-size: 21.3px; font-weight: 500; }
-    .step-label { font-size: 21.3px; font-weight: 700; }
+    .step__label { font-size: 21.3px; font-weight: 700; }
     #share-label { font-size: 40.8px; }
 }
 @media (min-width: 1400px) {
-    .title h2, .card-title-tag, #detailed-guide-label { font-weight: 800; }
-    #detailed-guide-label, .card-title-tag:not(.similar-title-tag) { font-size: 44.36px; }
+    .title h2, .card__title-tag, #detailed-guide-label { font-weight: 800; }
+    #detailed-guide-label, .card__title-tag:not(.similar-title-tag) { font-size: 44.36px; }
     .recipe-article { padding-left: 72px; }
     .quick-step-list p { font-size: 18px; font-weight: 500; color: #292929; }
     .step p { color: #292929; }
-    .toc-sublist a { color: #050505; font-weight: 500; }
+    .toc__sublist a { color: #050505; font-weight: 500; }
 }
 @media (min-width: 1400px) {
     .meta-line strong { font-weight: 800; }
@@ -1717,7 +1647,7 @@ a {
 /* Tag tên món không che ảnh món ăn nằm bên phải khung công thức, và không che các dòng bên dưới:
    tag nằm trong dòng chảy của khung (không còn absolute), nội dung bên dưới tự dịch xuống theo chiều cao tag (1 hoặc 2 dòng) */
 @media (min-width: 701px) {
-    .card-title-tag:not(.similar-title-tag) {
+    .card__title-tag:not(.similar-title-tag) {
         position: relative;
         top: auto;
         left: auto;
@@ -1725,10 +1655,10 @@ a {
         width: min(640px, calc(100% - 294px));
     }
     /* Đã có tag chiếm chỗ phía trên nên bỏ khoảng đệm cứng 160px; ảnh món vẫn nằm tuyệt đối ở góc phải */
-    .recipe-card-full .card-body {
+    .full-recipe-card .card__body {
         padding-top: 0;
     }
 }
 @media (min-width: 701px) and (max-width: 900px) {
-    .card-cost, .card-rating { max-width: calc(100% - 330px); }
+    .card__cost, .card__rating { max-width: calc(100% - 330px); }
 }

@@ -1,11 +1,8 @@
 const MAX_SUGGESTIONS = 12;
 let instanceCount = 0;
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, (replacedValue) => {
-    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[replacedValue];
-  });
-}
+// Dùng hàm escape chung của data.js để không có nhiều bản riêng.
+const escapeHTML = window.NomNom.esc;
 
 function normalize(text) {
   return String(text ?? "")
@@ -86,9 +83,9 @@ export async function createIngredientPicker(root, options = {}) {
     sheet: root.querySelector('[data-part="sheet"]')
   };
 
-  function findIngredient(id) {
+  function findIngredient(ingredientId) {
     return ingredients.find((ingredient) => {
-      return ingredient.id === id;
+      return ingredient.id === ingredientId;
     });
   }
 

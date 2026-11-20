@@ -229,15 +229,15 @@
     function settlePending() {
         const list = pending;
         pending = [];
-        list.forEach(p => (currentUser ? p.resolve(currentUser) : p.reject(new Error("Đã đóng cửa sổ đăng nhập."))));
+        list.forEach(pendingRequest => (currentUser ? pendingRequest.resolve(currentUser) : pendingRequest.reject(new Error("Đã đóng cửa sổ đăng nhập."))));
     }
 
     function addUserLine(user) {
         const list = document.querySelector("[data-header-member] ul");
         if (!list) return;
         // Không hiện dòng "Xin chào" nữa: chỉ dọn dòng cũ nếu còn
-        const li = list.querySelector(".site-header__user");
-        if (li) li.remove();
+        const listItem = list.querySelector(".site-header__user");
+        if (listItem) listItem.remove();
     }
 
     function setUser(user) {
@@ -249,7 +249,7 @@
         if (changed || !setUser.once) {
             setUser.once = true;
             document.dispatchEvent(new CustomEvent("nomnom:auth-change", { detail: { user: currentUser } }));
-            listeners.slice().forEach(cb => { try { cb(currentUser); } catch (e) { console.error(e); } });
+            listeners.slice().forEach(callback => { try { callback(currentUser); } catch (e) { console.error(e); } });
         }
         if (currentUser) settlePending();
     }
@@ -260,8 +260,8 @@
         const next = new URLSearchParams(location.search).get("next");
         if (next) {
             try {
-                const u = new URL(next, location.origin);
-                if (u.origin === location.origin) location.href = u.pathname + u.search + u.hash;
+                const nextUrl = new URL(next, location.origin);
+                if (nextUrl.origin === location.origin) location.href = nextUrl.pathname + nextUrl.search + nextUrl.hash;
             } catch (e) { /* next không hợp lệ -> bỏ qua */ }
         }
     }
@@ -285,22 +285,22 @@
         });
     }
 
-    function onChange(cb) {
-        if (typeof cb === "function") listeners.push(cb);
-        return () => { const i = listeners.indexOf(cb); if (i >= 0) listeners.splice(i, 1); };
+    function onChange(callback) {
+        if (typeof callback === "function") listeners.push(callback);
+        return () => { const i = listeners.indexOf(callback); if (i >= 0) listeners.splice(i, 1); };
     }
 
-    const ready = http("GET", "/me").then(d => d && d.user || null, () => null).then(user => {
+    const ready = http("GET", "/me").then(data => data && data.user || null, () => null).then(user => {
         setUser(user);
-        const q = new URLSearchParams(location.search);
-        if (!user && (q.get("login") === "1" || q.get("signup") === "1")) {
-            open(q.get("signup") === "1" ? "signup" : "login");
+        const queryParams = new URLSearchParams(location.search);
+        if (!user && (queryParams.get("login") === "1" || queryParams.get("signup") === "1")) {
+            open(queryParams.get("signup") === "1" ? "signup" : "login");
         }
         return user;
     });
 
     const api = {
-        ready, user: null, refresh(u) { setUser(u); }, open, requireLogin, logout, onChange,
+        ready, user: null, refresh(updatedUser) { setUser(updatedUser); }, open, requireLogin, logout, onChange,
         // dùng nội bộ bởi login.js / signup.js
         validateForm, showMessage, setFieldError, http,
         submitted(user) { setUser(user); afterLogin(); }

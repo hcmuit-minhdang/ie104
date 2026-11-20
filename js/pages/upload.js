@@ -61,25 +61,25 @@ function setStatus(text, kind, progress) {
 }
 
 function clearErrors() {
-    form.querySelectorAll(".field-error").forEach(el => el.remove());
-    form.querySelectorAll(".has-error").forEach(el => el.classList.remove("has-error"));
+    form.querySelectorAll(".field-error").forEach(element => element.remove());
+    form.querySelectorAll(".has-error").forEach(element => element.classList.remove("has-error"));
 }
 
 function showError(target, message) {
     if (!target) return null;
     target.classList.add("has-error");
-    const p = document.createElement("p");
-    p.className = "field-error";
-    p.setAttribute("role", "alert");
-    p.textContent = message;
+    const paragraph = document.createElement("p");
+    paragraph.className = "field-error";
+    paragraph.setAttribute("role", "alert");
+    paragraph.textContent = message;
     const anchor = target.closest(".input-field") || target;
-    anchor.insertAdjacentElement(target.closest(".input-field") ? "beforeend" : "afterend", p);
+    anchor.insertAdjacentElement(target.closest(".input-field") ? "beforeend" : "afterend", paragraph);
     return target;
 }
 
-function toInt(v) {
-    const n = parseInt(String(v).replace(/\D/g, ""), 10);
-    return Number.isFinite(n) ? n : 0;
+function toInt(value) {
+    const parsed = parseInt(String(value).replace(/\D/g, ""), 10);
+    return Number.isFinite(parsed) ? parsed : 0;
 }
 
 /* ------------------------------------------------------------------ */
@@ -92,7 +92,7 @@ priceInput.addEventListener("input", event => {
 });
 
 function bindStepper(inputField) {
-    const wrapper = inputField.closest(".small-input-wrapper");
+    const wrapper = inputField.closest(".small-input__wrapper");
     if (!wrapper) return;
     const min = Number(inputField.min) || 0;
     wrapper.querySelector(".stepper-button--up")?.addEventListener("click", () => {
@@ -110,9 +110,9 @@ function bindStepper(inputField) {
 /* ------------------------------------------------------------------ */
 
 function renderGallery() {
-    galleryPreviews.innerHTML = gallery.map((g, i) => `
+    galleryPreviews.innerHTML = gallery.map((image, i) => `
         <li class="preview-item${i === 0 ? " is-cover" : ""}">
-            <img src="${esc(g.url)}" alt="Ảnh ${i + 1}">
+            <img src="${esc(image.url)}" alt="Ảnh ${i + 1}">
             ${i === 0 ? '<span class="preview-badge">Ảnh bìa</span>' : ""}
             <button type="button" class="preview-remove" data-index="${i}" aria-label="Xóa ảnh ${i + 1}">×</button>
         </li>`).join("");
@@ -132,11 +132,11 @@ galleryInput.addEventListener("change", () => {
     galleryInput.value = "";
     form.querySelectorAll('.field-error[data-for="gallery"]').forEach(e => e.remove());
     if (errors.length) {
-        const p = document.createElement("p");
-        p.className = "field-error";
-        p.dataset.for = "gallery";
-        p.textContent = [...new Set(errors)].join(" ");
-        galleryPreviews.insertAdjacentElement("beforebegin", p);
+        const paragraph = document.createElement("p");
+        paragraph.className = "field-error";
+        paragraph.dataset.for = "gallery";
+        paragraph.textContent = [...new Set(errors)].join(" ");
+        galleryPreviews.insertAdjacentElement("beforebegin", paragraph);
     }
     renderGallery();
 });
@@ -209,9 +209,9 @@ addQuickBtn.addEventListener("click", () => {
 });
 
 quickContainer.addEventListener("input", event => {
-    const ta = event.target.closest("textarea");
-    if (!ta) return;
-    quickSteps[Number(ta.dataset.quick)] = ta.value;
+    const textarea = event.target.closest("textarea");
+    if (!textarea) return;
+    quickSteps[Number(textarea.dataset.quick)] = textarea.value;
     scheduleDraft();
 });
 
@@ -230,12 +230,12 @@ quickContainer.addEventListener("click", event => {
 function renderSteps() {
     stepsContainer.innerHTML = steps.map((step, index) => `
         <li data-step-row="${index}">
-            <span class="step-label">BƯỚC ${index + 1}</span>
+            <span class="step__label">BƯỚC ${index + 1}</span>
             <textarea class="textarea-input" data-step-text="${index}" placeholder="Thêm bước ${index + 1}" aria-label="Hướng dẫn cụ thể bước ${index + 1}">${esc(step.text)}</textarea>
-            ${step.preview ? `<div class="step-preview"><img src="${esc(step.preview)}" alt="Ảnh bước ${index + 1}"><button type="button" class="preview-remove" data-step-image-remove="${index}" aria-label="Xóa ảnh bước ${index + 1}">×</button></div>` : ""}
-            <label for="step-image-${index}" class="image-upload step-image-upload">
-                <img src="/images/icons/image-file.svg" alt="" class="image-upload-icon">
-                <span class="image-upload-text">${step.preview ? "Đổi hình ảnh" : "Nhấn vào đây để đăng tải hình ảnh"}</span>
+            ${step.preview ? `<div class="step__preview"><img src="${esc(step.preview)}" alt="Ảnh bước ${index + 1}"><button type="button" class="preview-remove" data-step-image-remove="${index}" aria-label="Xóa ảnh bước ${index + 1}">×</button></div>` : ""}
+            <label for="step-image-${index}" class="image-upload step__image-upload">
+                <img src="/images/icons/image-file.svg" alt="" class="image-upload__icon">
+                <span class="image-upload__text">${step.preview ? "Đổi hình ảnh" : "Nhấn vào đây để đăng tải hình ảnh"}</span>
             </label>
             <input type="file" id="step-image-${index}" data-step-image="${index}" accept="image/png,image/jpeg,image/webp">
             <button type="button" class="remove-step-btn remove-step-btn--detailed" data-step-remove="${index}">XÓA</button>
@@ -250,9 +250,9 @@ addStepBtn.addEventListener("click", () => {
 });
 
 stepsContainer.addEventListener("input", event => {
-    const ta = event.target.closest("textarea");
-    if (!ta) return;
-    steps[Number(ta.dataset.stepText)].text = ta.value;
+    const textarea = event.target.closest("textarea");
+    if (!textarea) return;
+    steps[Number(textarea.dataset.stepText)].text = textarea.value;
     scheduleDraft();
 });
 
@@ -269,9 +269,9 @@ stepsContainer.addEventListener("change", event => {
 });
 
 stepsContainer.addEventListener("click", event => {
-    const rm = event.target.closest("[data-step-remove]");
-    if (rm) {
-        const [removed] = steps.splice(Number(rm.dataset.stepRemove), 1);
+    const removeButton = event.target.closest("[data-step-remove]");
+    if (removeButton) {
+        const [removed] = steps.splice(Number(removeButton.dataset.stepRemove), 1);
         if (removed && removed.preview) URL.revokeObjectURL(removed.preview);
         renderSteps();
         scheduleDraft();
@@ -293,25 +293,25 @@ stepsContainer.addEventListener("click", event => {
 
 function collectDraft() {
     const nutrition = {};
-    NUTRIENTS.forEach(n => { nutrition[n] = document.getElementById(n)?.value || ""; });
+    NUTRIENTS.forEach(nutrientId => { nutrition[nutrientId] = document.getElementById(nutrientId)?.value || ""; });
     return {
         title: nameInput.value, category: (categoryInput.selectedOptions && categoryInput.selectedOptions[0] && categoryInput.value ? categoryInput.selectedOptions[0].textContent.trim() : categoryInput.value), cost: priceInput.value,
         servings: servingsInput.value, prep: prepTimeInput.value, cook: cookTimeInput.value,
         description: descriptionInput.value, quickSteps: quickSteps.slice(),
-        steps: steps.map(s => s.text), nutrition, ingredients: pickerItems, savedAt: Date.now()
+        steps: steps.map(step => step.text), nutrition, ingredients: pickerItems, savedAt: Date.now()
     };
 }
 
-function isDraftEmpty(d) {
-    return !d.title && !d.description && !d.prep && !d.cook && !d.cost
-        && !d.quickSteps.some(Boolean) && !d.steps.some(Boolean) && !(d.ingredients || []).length;
+function isDraftEmpty(draft) {
+    return !draft.title && !draft.description && !draft.prep && !draft.cook && !draft.cost
+        && !draft.quickSteps.some(Boolean) && !draft.steps.some(Boolean) && !(draft.ingredients || []).length;
 }
 
 function saveDraft(manual) {
     try {
-        const d = collectDraft();
-        if (isDraftEmpty(d)) { localStorage.removeItem(DRAFT_KEY); draftClearBtn.hidden = true; }
-        else { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); draftClearBtn.hidden = false; }
+        const draft = collectDraft();
+        if (isDraftEmpty(draft)) { localStorage.removeItem(DRAFT_KEY); draftClearBtn.hidden = true; }
+        else { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); draftClearBtn.hidden = false; }
         if (manual) setStatus("Đã lưu bản nháp trên trình duyệt này (ảnh cần chọn lại khi quay lại).", "ok");
     } catch (e) {
         if (manual) setStatus("Không thể lưu bản nháp trên trình duyệt này.", "error");
@@ -340,25 +340,25 @@ function clearDraft() {
     draftClearBtn.hidden = true;
 }
 
-function applyDraft(d) {
-    if (!d) return;
-    nameInput.value = d.title || "";
-    if (d.category) {
+function applyDraft(draft) {
+    if (!draft) return;
+    nameInput.value = draft.title || "";
+    if (draft.category) {
         // Bản nháp lưu tên hiển thị của danh mục, còn value của <option> là id: khớp theo cả hai
-        const opt = Array.from(categoryInput.options).find(o => o.value === d.category || o.textContent.trim() === d.category);
+        const opt = Array.from(categoryInput.options).find(option => option.value === draft.category || option.textContent.trim() === draft.category);
         if (opt) categoryInput.value = opt.value;
     }
-    priceInput.value = d.cost || "";
-    if (d.servings) servingsInput.value = d.servings;
-    prepTimeInput.value = d.prep || "";
-    cookTimeInput.value = d.cook || "";
-    descriptionInput.value = d.description || "";
-    quickSteps = (d.quickSteps || []).slice();
-    steps = (d.steps || []).map(text => ({ text, file: null, preview: "" }));
-    NUTRIENTS.forEach(n => { const el = document.getElementById(n); if (el && d.nutrition) el.value = d.nutrition[n] || ""; });
+    priceInput.value = draft.cost || "";
+    if (draft.servings) servingsInput.value = draft.servings;
+    prepTimeInput.value = draft.prep || "";
+    cookTimeInput.value = draft.cook || "";
+    descriptionInput.value = draft.description || "";
+    quickSteps = (draft.quickSteps || []).slice();
+    steps = (draft.steps || []).map(text => ({ text, file: null, preview: "" }));
+    NUTRIENTS.forEach(nutrientId => { const element = document.getElementById(nutrientId); if (element && draft.nutrition) element.value = draft.nutrition[nutrientId] || ""; });
     renderQuickSteps();
     renderSteps();
-    draftIngredients = d.ingredients || [];
+    draftIngredients = draft.ingredients || [];
 }
 
 form.addEventListener("input", scheduleDraft);
@@ -376,7 +376,7 @@ draftClearBtn.addEventListener("click", () => {
 function validate() {
     clearErrors();
     const errors = [];
-    const add = (el, msg) => errors.push(showError(el, msg));
+    const add = (element, msg) => errors.push(showError(element, msg));
 
     if (nameInput.value.trim().length < 3) add(nameInput, "Vui lòng nhập tên công thức (ít nhất 3 ký tự).");
     if (!categoryInput.value) add(categoryInput, "Vui lòng chọn danh mục.");
@@ -389,15 +389,15 @@ function validate() {
     if (!ingredients.length) add(document.getElementById("ingredient-picker"), "Vui lòng thêm ít nhất 1 nguyên liệu.");
     else if (ingredients.some(i => !(Number(i.qty) > 0))) add(document.getElementById("ingredient-picker"), "Nhập số lượng (lớn hơn 0) cho tất cả nguyên liệu.");
 
-    const filled = steps.filter(s => s.text.trim());
+    const filled = steps.filter(step => step.text.trim());
     if (!filled.length) add(addStepBtn, "Vui lòng thêm ít nhất 1 bước trong hướng dẫn cụ thể.");
-    else steps.forEach((s, i) => {
-        if (!s.text.trim()) add(stepsContainer.querySelector(`[data-step-text="${i}"]`), `Bước ${i + 1} đang để trống: hãy nhập nội dung hoặc xóa bước.`);
+    else steps.forEach((step, i) => {
+        if (!step.text.trim()) add(stepsContainer.querySelector(`[data-step-text="${i}"]`), `Bước ${i + 1} đang để trống: hãy nhập nội dung hoặc xóa bước.`);
     });
 
-    NUTRIENTS.forEach(n => {
-        const el = document.getElementById(n);
-        if (el && el.value !== "" && !(Number(el.value) >= 0)) add(el, "Giá trị dinh dưỡng phải là số không âm.");
+    NUTRIENTS.forEach(nutrientId => {
+        const element = document.getElementById(nutrientId);
+        if (element && element.value !== "" && !(Number(element.value) >= 0)) add(element, "Giá trị dinh dưỡng phải là số không âm.");
     });
 
     const first = errors.find(Boolean);
@@ -413,10 +413,10 @@ function validate() {
 /* ------------------------------------------------------------------ */
 
 function nutritionPayload() {
-    const get = n => document.getElementById(n)?.value.trim() || "";
+    const get = elementId => document.getElementById(elementId)?.value.trim() || "";
     const unitOf = { calories: " kcal", carbs: "g", protein: "g", fat: "g", sodium: " mg", fiber: "g" };
     const out = { servings: toInt(servingsInput.value) || 1 };
-    NUTRIENTS.forEach(n => { out[n] = get(n) ? get(n) + unitOf[n] : ""; });
+    NUTRIENTS.forEach(nutrientId => { out[nutrientId] = get(nutrientId) ? get(nutrientId) + unitOf[nutrientId] : ""; });
     return out;
 }
 
@@ -449,19 +449,19 @@ async function handleSubmit(event) {
     setBusy(true);
     try {
         // 3) Tải ảnh
-        const stepFiles = steps.filter(s => s.text.trim());
-        const totalImages = gallery.length + stepFiles.filter(s => s.file).length;
+        const stepFiles = steps.filter(step => step.text.trim());
+        const totalImages = gallery.length + stepFiles.filter(step => step.file).length;
         let done = 0;
         const bump = () => { done++; setStatus(`Đang tải ảnh ${done}/${totalImages}...`, "info", totalImages ? done / (totalImages + 1) : 0); };
         setStatus(totalImages ? `Đang tải ảnh 0/${totalImages}...` : "Đang đăng công thức...", "info", 0);
 
         const galleryUrls = [];
-        for (const g of gallery) { galleryUrls.push(await uploadFile(g.file)); bump(); }
+        for (const image of gallery) { galleryUrls.push(await uploadFile(image.file)); bump(); }
         const stepPayload = [];
-        for (const s of stepFiles) {
+        for (const step of stepFiles) {
             let image = "";
-            if (s.file) { image = await uploadFile(s.file); bump(); }
-            stepPayload.push({ text: s.text.trim(), image });
+            if (step.file) { image = await uploadFile(step.file); bump(); }
+            stepPayload.push({ text: step.text.trim(), image });
         }
 
         // 4) Gửi công thức
@@ -487,7 +487,7 @@ async function handleSubmit(event) {
             ingredients: pickerItems.map(i => ({
                 ingredientId: i.ingredientId, name: i.name, quantity: Number(i.qty), qty: Number(i.qty), unit: i.unit
             })),
-            quickSteps: quickSteps.map(t => t.trim()).filter(Boolean),
+            quickSteps: quickSteps.map(line => line.trim()).filter(Boolean),
             steps: stepPayload,
             nutrition: nutritionPayload(),
             tags: []
@@ -525,10 +525,10 @@ function initScrollSpy() {
     function setActive(link) {
         if (link === activeLink) return;
         activeLink = link;
-        document.querySelectorAll(".toc .toc-current").forEach(el => el.classList.remove("toc-current"));
-        document.querySelectorAll(".toc .toc-active").forEach(el => el.classList.remove("toc-active"));
-        (link.closest("li") || link).classList.add("toc-current");
-        link.closest(".toc-group")?.classList.add("toc-active");
+        document.querySelectorAll(".toc .is-current").forEach(element => element.classList.remove("is-current"));
+        document.querySelectorAll(".toc .is-active").forEach(element => element.classList.remove("is-active"));
+        (link.closest("li") || link).classList.add("is-current");
+        link.closest(".toc__group")?.classList.add("is-active");
     }
 
     function update() {
@@ -562,10 +562,10 @@ function initScrollSpy() {
 async function loadCategories() {
     try {
         const data = await api.get("/categories");
-        (data.items || []).forEach(c => {
+        (data.items || []).forEach(category => {
             const opt = document.createElement("option");
-            opt.value = c.id;
-            opt.textContent = c.name;
+            opt.value = category.id;
+            opt.textContent = category.name;
             categoryInput.appendChild(opt);
         });
     } catch (e) {

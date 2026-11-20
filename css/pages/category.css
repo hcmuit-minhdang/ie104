@@ -1,14 +1,5 @@
-.anton-regular {
-    font-family: "Anton", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
 
-.inter-regular {
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
+
 
 *,
 *::before,
@@ -83,7 +74,7 @@ a {
     text-align: center;
 }
 
-.hero-stroke-title {
+.hero__stroke-title {
     margin: 0 0 10px;
     font-size: clamp(2rem, 4.2vw, 3.2rem);
     font-weight: 900;
@@ -98,7 +89,7 @@ a {
     transform: translateX(-0.05em);
 }
 
-.hero-subtitle {
+.hero__subtitle {
     margin: 0;
     font-size: clamp(1rem, 1.5vw, 1.25rem);
     font-weight: 600;
@@ -147,92 +138,16 @@ a {
     background-color: #FBC41B;
 }
 
-/* ---------- Phần "Món ăn được yêu thích" ---------- */
 
-.favorite-recipes-grid {
-    display: grid;
-    grid-template-columns: 1.05fr 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 26px 24px;
-}
 
-.recipe-card-compressed.featured-tall {
-    grid-row: span 2;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    height: 100%;
-    min-height: 420px;
-    transition: all 0.3s ease;
-}
 
-.recipe-card-compressed.featured-tall img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
-.recipe-card-compressed.featured-tall .recipe-info {
-    font-size: clamp(0.75rem, 1.1vw, 0.95rem);
-    text-decoration: none;
-    position: absolute;
-    bottom: 1.2em;
-    left: 1.1em;
-    display: flex;
-    flex-direction: column;
-}
 
-.recipe-card-compressed.featured-tall .recipe-info span {
-    display: inline-block;
-    width: fit-content;
-    background-color: white;
-    color: black;
-    margin-bottom: 0.22em;
-    text-align: left;
-    padding: 0.15em 0.55em;
-}
 
-.recipe-card-compressed.featured-tall .recipe-name {
-    font-size: 1.55em;
-    font-weight: 800;
-    text-decoration: none;
-}
 
-.recipe-card-compressed.featured-tall .recipe-price {
-    font-size: 0.95em;
-    font-weight: 500;
-    text-decoration: none;
-}
 
-.recipe-card-compressed.featured-tall .recipe-time {
-    font-size: 0.95em;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-}
 
-.recipe-card-compressed.featured-tall .recipe-time::before {
-    content: "";
-    display: inline-block;
-    width: 1.1em;
-    height: 1.1em;
-    background-image: url("/images/clock.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    margin-right: 6px;
-}
 
-.recipe-card-compressed.featured-tall:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0.45em 0 #FBC41B;
-}
-
-.recipe-card-compressed.featured-tall:active {
-    transform: scale(0.99);
-}
 
 /* ---------- Lưới 3 cột tiêu chuẩn & Thẻ món ăn ---------- */
 
@@ -358,11 +273,7 @@ a {
     .recipes-grid-3 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .recipe-card-compressed.featured-tall {
-        grid-column: span 2;
-        grid-row: span 1;
-        min-height: 320px;
-    }
+    
 }
 
 @media (max-width: 480px) {
@@ -371,9 +282,7 @@ a {
     .recipes-grid-3 {
         grid-template-columns: 1fr;
     }
-    .recipe-card-compressed.featured-tall {
-        grid-column: span 1;
-    }
+    
     .site-header {
         flex-wrap: wrap;
         gap: 12px;
@@ -391,8 +300,8 @@ a {
 
 
 /* ---------- Chọn danh mục (khi vào trang không kèm tham số) ---------- */
-.cat-picker-section[hidden], .category-page-layout[hidden] { display: none !important; }
-.cat-picker-section { width: min(1100px, 88vw); margin: 40px auto 80px; }
+.cat-picker__section[hidden], .category-page-layout[hidden] { display: none !important; }
+.cat-picker__section { width: min(1100px, 88vw); margin: 40px auto 80px; }
 .cat-picker {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -434,8 +343,8 @@ a {
 
 /* Màn hình rộng: cỡ chữ hero và tiêu đề mục theo Figma. */
 @media (min-width: 1400px) {
-    .hero-stroke-title { font-size: 2.07rem; }
-    .hero-subtitle { font-size: 24px; font-weight: 700; color: #4b5563; }
+    .hero__stroke-title { font-size: 2.07rem; }
+    .hero__subtitle { font-size: 24px; font-weight: 700; color: #4b5563; }
     .title h2 { font-size: 40px; }
     .food-name { font-size: 22.45px; }
 }
@@ -444,7 +353,7 @@ a {
 }
 @media (min-width: 1400px) {
     .category-page-layout { max-width: 1330px; }
-    .hero-stroke-title { font-weight: 800; }
+    .hero__stroke-title { font-weight: 800; }
 }
 @media (min-width: 1400px) {
     .title h2 { font-weight: 800; }

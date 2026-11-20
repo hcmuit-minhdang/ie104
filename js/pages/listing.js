@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   const NomNom = (window.NomNom = window.NomNom || {});
-  const esc = function (s) { return NomNom.esc(s); };
+  const esc = function (text) { return NomNom.esc(text); };
 
   NomNom.fallbackImg = function (img) {
     img.onerror = null;
@@ -11,33 +11,33 @@
 
   /* Nhãn trạng thái nguyên liệu trên thẻ món ở Danh mục / Tìm kiếm (theo Figma).
      Dữ liệu có thể có enoughIngredients: false để hiện "Chưa đủ nguyên liệu"; mặc định là đủ. */
-  NomNom.statusTagHtml = function (r) {
-    return r.enoughIngredients === false
+  NomNom.statusTagHtml = function (recipe) {
+    return recipe.enoughIngredients === false
       ? '<span class="recipe-status recipe-status--missing">Chưa đủ nguyên liệu</span>'
       : '<span class="recipe-status">Đủ nguyên liệu</span>';
   };
 
-  /* Thẻ món ăn (RecipeCard) -> HTML. cls: 'similar-card' (category/search) | 'recipe-card' | 'recipe-card-compressed' */
+  /* Thẻ món ăn (RecipeCard) -> HTML. cls: 'similar-card' (category/search) | 'recipe-card' | 'compact-recipe-card' */
   /* showStatus = true: hiện nhãn "Đủ / Chưa đủ nguyên liệu" (chỉ trang Danh mục dùng); mặc định ẩn. */
-  NomNom.cardHtml = function (r, cls, imgCls, showStatus) {
+  NomNom.cardHtml = function (recipe, cls, imgCls, showStatus) {
     cls = cls || "similar-card";
     imgCls = imgCls || "similar-image";
     const plain = cls === "similar-card";
-    const img = r.image || "/images/food.png";
-    return '<a href="' + esc(NomNom.recipeUrl(r.id)) + '" class="' + cls + '">' +
-      '<img loading="lazy" decoding="async" src="' + esc(img) + '" alt="' + esc(r.name) + '" class="' + imgCls + '" onerror="NomNom.fallbackImg(this)">' +
+    const img = recipe.image || "/images/food.png";
+    return '<a href="' + esc(NomNom.recipeUrl(recipe.id)) + '" class="' + cls + '">' +
+      '<img loading="lazy" decoding="async" src="' + esc(img) + '" alt="' + esc(recipe.name) + '" class="' + imgCls + '" onerror="NomNom.fallbackImg(this)">' +
       (plain ? "" : '<div class="recipe-info">') +
-      '<span class="recipe-name">' + esc(r.name) + '</span>' +
-      '<span class="recipe-price">' + esc(NomNom.money(r.price)) + ' / phần</span>' +
-      (plain && showStatus ? NomNom.statusTagHtml(r) : "") +
-      '<span class="recipe-time">Thời gian: ' + esc(NomNom.minutes(r.time)) + '</span>' +
+      '<span class="recipe-name">' + esc(recipe.name) + '</span>' +
+      '<span class="recipe-price">' + esc(NomNom.money(recipe.price)) + ' / phần</span>' +
+      (plain && showStatus ? NomNom.statusTagHtml(recipe) : "") +
+      '<span class="recipe-time">Thời gian: ' + esc(NomNom.minutes(recipe.time)) + '</span>' +
       (plain ? "" : '</div>') +
       '</a>';
   };
 
-  NomNom.skeletonHtml = function (n, cls) {
+  NomNom.skeletonHtml = function (count, cls) {
     let out = "";
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < count; i++) {
       out += '<div class="' + (cls || "similar-card") + ' is-skeleton" aria-hidden="true"><div class="skeleton__img"></div><span class="skeleton__line"></span><span class="skeleton__line skeleton__line--short"></span></div>';
     }
     return out;
@@ -47,8 +47,8 @@
   NomNom.pagerHtml = function (page, pages, hrefFor) {
     if (!pages || pages <= 1) return "";
     const out = [];
-    function link(p, label, active, aria) {
-      return '<a href="' + esc(hrefFor(p)) + '" class="pagination__link' + (active ? " is-active" : "") + '" data-page="' + p + '" aria-label="' + aria + '"' +
+    function link(pageNumber, label, active, aria) {
+      return '<a href="' + esc(hrefFor(pageNumber)) + '" class="pagination__link' + (active ? " is-active" : "") + '" data-page="' + pageNumber + '" aria-label="' + aria + '"' +
         (active ? ' aria-current="page"' : "") + '>' + label + '</a>';
     }
     /* Nút trước/sau luôn hiện như Figma; ở trang đầu/cuối thì mờ và không bấm được. */
@@ -57,12 +57,12 @@
     }
     out.push(page > 1 ? link(page - 1, "◀ Trang trước", false, "Trang trước") : disabled("◀ Trang trước"));
     const show = {};
-    [1, 2, page - 1, page, page + 1, pages - 1, pages].forEach(function (p) { if (p >= 1 && p <= pages) show[p] = true; });
+    [1, 2, page - 1, page, page + 1, pages - 1, pages].forEach(function (pageNumber) { if (pageNumber >= 1 && pageNumber <= pages) show[pageNumber] = true; });
     let last = 0;
-    Object.keys(show).map(Number).sort(function (a, b) { return a - b; }).forEach(function (p) {
-      if (last && p - last > 1) out.push('<span class="pagination__link pagination__link--dots">...</span>');
-      out.push(link(p, p, p === page, "Trang " + p));
-      last = p;
+    Object.keys(show).map(Number).sort(function (a, b) { return a - b; }).forEach(function (pageNumber) {
+      if (last && pageNumber - last > 1) out.push('<span class="pagination__link pagination__link--dots">...</span>');
+      out.push(link(pageNumber, pageNumber, pageNumber === page, "Trang " + pageNumber));
+      last = pageNumber;
     });
     out.push(page < pages ? link(page + 1, "Trang sau ▶", false, "Trang sau") : disabled("Trang sau ▶"));
     return out.join("");

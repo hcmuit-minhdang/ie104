@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/pages/recipe.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
         <meta name="description" content="Công thức nấu ăn trên NomNom." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="NomNom" />
@@ -47,7 +47,7 @@
                         <details>
 
                             <summary>Công thức <img class="site-header__arrow"
-                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="">
                             </summary>
 
                             <ul>
@@ -62,7 +62,7 @@
                         <details>
 
                             <summary>Về chúng tôi <img class="site-header__arrow"
-                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="">
                             </summary>
 
                             <ul>
@@ -188,25 +188,25 @@
 
                         <blockquote class="featured-review">
                             <span class="stars" data-stars="featuredReview.rating"></span>
-                            <p class="featured-review-text" data-bind="featuredReview.text"></p>
-                            <cite class="featured-review-author" data-bind="featuredReview.author"></cite>
+                            <p class="featured-review__text" data-bind="featuredReview.text"></p>
+                            <cite class="featured-review__author" data-bind="featuredReview.author"></cite>
                         </blockquote>
                     </section>
 
                     <!-- ---------- Thẻ công thức ---------- -->
-                    <section class="recipe-card-full" id="cong-thuc">
-                        <h2 class="card-title-tag" data-bind="title"></h2>
-                        <img src="" alt="" class="card-image" data-bind-src="cardImage" />
+                    <section class="full-recipe-card" id="cong-thuc">
+                        <h2 class="card__title-tag" data-bind="title"></h2>
+                        <img src="" alt="" class="card__image" data-bind-src="cardImage" />
 
-                        <div class="card-body">
-                            <p class="card-cost"><strong>CHI PHÍ</strong> <em data-bind="costText"></em></p>
-                            <div class="card-rating">
+                        <div class="card__body">
+                            <p class="card__cost"><strong>CHI PHÍ</strong> <em data-bind="costText"></em></p>
+                            <div class="card__rating">
                                 <span class="stars" data-stars="ratingScore"></span>
                                 <span class="rating-score" data-bind="ratingText"></span>
                             </div>
-                            <p class="card-author"><strong>TÁC GIẢ:</strong> <span data-bind="author"></span></p>
+                            <p class="card__author"><strong>TÁC GIẢ:</strong> <span data-bind="author"></span></p>
 
-                            <div class="card-time-row">
+                            <div class="card__time-row">
                                 <div class="servings-control">
                                     <label for="servings-input" class="servings-label">KHẨU PHẦN</label>
                                     <div class="servings-input-wrapper">
@@ -233,13 +233,13 @@
                                 </div>
                             </div>
 
-                            <div class="card-buttons">
-                                <button type="button" class="card-button save-recipe-button" aria-pressed="false">LƯU CÔNG THỨC</button>
-                                <button type="button" class="card-button print-recipe-button">IN CÔNG THỨC</button>
+                            <div class="card__buttons">
+                                <button type="button" class="card__button save-recipe-button" aria-pressed="false">LƯU CÔNG THỨC</button>
+                                <button type="button" class="card__button print-recipe-button">IN CÔNG THỨC</button>
                             </div>
 
                             <!-- Nguyên liệu -->
-                            <section class="card-section" id="nguyen-lieu">
+                            <section class="card__section" id="nguyen-lieu">
                                 <div class="title ingredients-title">
                                     <h2 id="ingredients-label">NGUYÊN LIỆU</h2>
                                     <div class="line"></div>
@@ -248,7 +248,7 @@
                             </section>
 
                             <!-- Hướng dẫn ngắn gọn -->
-                            <section class="card-section" id="huong-dan-ngan-gon">
+                            <section class="card__section" id="huong-dan-ngan-gon">
                                 <div class="title quick-guide-title">
                                     <h2 id="quick-guide-label">HƯỚNG DẪN NGẮN GỌN</h2>
                                     <div class="line"></div>
@@ -257,7 +257,7 @@
                             </section>
 
                             <!-- Dinh dưỡng -->
-                            <section class="card-section" id="dinh-duong">
+                            <section class="card__section" id="dinh-duong">
                                 <div class="title nutrition-title">
                                     <h2 id="nutrition-label">DINH DƯỠNG</h2>
                                     <div class="line"></div>
@@ -288,19 +288,19 @@
 
                     <!-- ---------- Công thức tương tự ---------- -->
                     <section class="similar-recipes">
-                        <h2 class="card-title-tag similar-title-tag">CÔNG THỨC TƯƠNG TỰ</h2>
-                        <div class="similar-recipes-container" id="similar-recipes-container"></div>
+                        <h2 class="card__title-tag similar-title-tag">CÔNG THỨC TƯƠNG TỰ</h2>
+                        <div class="similar-recipes__container" id="similar-recipes-container"></div>
                         <a href="/pages/search.html" class="similar-more-button view-more-button">XEM THÊM</a>
                     </section>
 
                     <!-- ---------- Bình luận ---------- -->
-                    <section class="comment-section" id="binh-luan">
+                    <section class="comment__section" id="binh-luan">
                         <form class="review-form" id="review-form" novalidate>
                             <img src="/images/avatar.jpg" alt="Bạn" class="review-avatar" id="review-avatar" />
                             <textarea id="review-text" maxlength="2000" placeholder="Chia sẻ cảm nhận của bạn về món này..." aria-label="Viết đánh giá"></textarea>
-                            <div class="review-form-footer">
+                            <div class="review-form__footer">
                                 <div class="review-rating">
-                                    <span class="review-rating-label">ĐÁNH GIÁ</span>
+                                    <span class="review-rating__label">ĐÁNH GIÁ</span>
                                     <span class="star-picker" id="star-picker" role="radiogroup" aria-label="Chọn số sao">
                                         <button type="button" class="star-pick" role="radio" aria-checked="false" data-value="1" aria-label="1 sao">★</button>
                                         <button type="button" class="star-pick" role="radio" aria-checked="false" data-value="2" aria-label="2 sao">★</button>
@@ -316,17 +316,17 @@
 
                         <div class="review-divider"></div>
 
-                        <div class="comment-header">
-                            <p class="comment-count"><span id="review-count">0</span> BÌNH LUẬN</p>
-                            <select class="comment-sort" id="comment-sort" aria-label="Sắp xếp bình luận">
+                        <div class="comment__header">
+                            <p class="comment__count"><span id="review-count">0</span> BÌNH LUẬN</p>
+                            <select class="comment__sort" id="comment-sort" aria-label="Sắp xếp bình luận">
                                 <option value="new">Mới nhất</option>
                                 <option value="old">Cũ nhất</option>
                                 <option value="likes">Nhiều lượt thích nhất</option>
                             </select>
                         </div>
 
-                        <ul class="comment-list" id="comment-list"></ul>
-                        <p class="comment-empty" id="comment-empty" hidden>Chưa có bình luận nào. Hãy là người đầu tiên đánh giá món này!</p>
+                        <ul class="comment__list" id="comment-list"></ul>
+                        <p class="comment__empty" id="comment-empty" hidden>Chưa có bình luận nào. Hãy là người đầu tiên đánh giá món này!</p>
                     </section>
                 </article>
 
@@ -335,29 +335,29 @@
                     <nav class="toc" aria-label="Tổng quan">
                         <p id="toc-label">TỔNG QUAN</p>
 
-                        <details class="toc-group toc-active" open>
+                        <details class="toc__group toc-active" open>
                             <summary>Thông tin chính</summary>
-                            <ul class="toc-sublist">
+                            <ul class="toc__sublist">
                                 <li class="toc-current"><a href="#thong-tin-chung">Thông tin chung</a></li>
                                 <li><a href="#mo-ta">Mô tả</a></li>
                             </ul>
                         </details>
 
-                        <details class="toc-group" open>
+                        <details class="toc__group" open>
                             <summary>Chuẩn bị</summary>
-                            <ul class="toc-sublist">
+                            <ul class="toc__sublist">
                                 <li><a href="#nguyen-lieu" class="toc-current">Nguyên liệu</a></li>
                                 <li><a href="#huong-dan-ngan-gon">Hướng dẫn ngắn gọn</a></li>
                                 <li><a href="#dinh-duong">Dinh dưỡng</a></li>
                             </ul>
                         </details>
 
-                        <details class="toc-group" open>
+                        <details class="toc__group" open>
                             <summary>Hướng dẫn cụ thể</summary>
-                            <ul class="toc-sublist" id="toc-steps"></ul>
+                            <ul class="toc__sublist" id="toc-steps"></ul>
                         </details>
 
-                        <a href="#binh-luan" class="toc-single">Bình luận</a>
+                        <a href="#binh-luan" class="toc__single">Bình luận</a>
                     </nav>
                 </aside>
 
@@ -413,11 +413,11 @@
                     </svg>
                 </h2>
                 <nav class="site-footer__links">
-                    <a href="#"><img src="/images/icons/footer-facebook.svg" alt="Logo-Facebook">Facebook</a>
-                    <a href="#"><img src="/images/icons/footer-instagram.svg"
-                            alt="Logo-Instagram">Instagram</a>
-                    <a href="#"><img src="/images/icons/footer-youtube.svg" alt="Logo-Youtube">Youtube</a>
-                    <a href="#"><img src="/images/icons/footer-tiktok.svg" alt="Logo-Tiktok">Tiktok</a>
+                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-facebook.svg" alt="">Facebook</a>
+                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-instagram.svg"
+                            alt="">Instagram</a>
+                    <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-youtube.svg" alt="">Youtube</a>
+                    <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-tiktok.svg" alt="">Tiktok</a>
                 </nav>
             </div>
         </div>

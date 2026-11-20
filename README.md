@@ -174,6 +174,7 @@ NomNom/
 ├─ README.md, STRUCTURE.md   # tài liệu
 ├─ package.json              # chỉ có script start, không có dependency
 ├─ vercel.json               # cấu hình triển khai tĩnh
+├─ 404.html, robots.txt, sitemap.xml
 ├─ .gitignore
 ├─ pages/
 │  ├─ category.html          # chọn danh mục / danh sách món theo danh mục
@@ -201,7 +202,18 @@ Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt 
 
 ## 📏 Quy tắc đặt tên và làm việc nhóm
 
-Nhóm theo bộ quy tắc phổ biến của môn học: **BEM cho class CSS** và **camelCase cho JavaScript**.
+Nhóm thống nhất một bộ quy tắc chung, theo hai báo cáo tham khảo của môn học (MyTicket, Game Store): **BEM cho class CSS**, **camelCase cho JavaScript**, kèm quy tắc component, quy tắc CSS và quy tắc Git. Toàn bộ code hiện tại đã được sửa theo bộ quy tắc này; riêng tên class phẳng của các trang lớn còn như mô tả ở mục BEM bên dưới.
+
+**Tóm tắt 8 quy tắc bắt buộc:**
+
+1. Class CSS viết thường, kebab-case, theo BEM: `block`, `block__element`, `block--modifier`.
+2. Phần tử con của một khối đặt tên bằng `__`, **không** nối vào tên khối bằng một dấu `-` (ví dụ `comment__list`, không phải `comment-list`).
+3. Trạng thái do JavaScript bật tắt dùng tiền tố `is-` hoặc `has-` (`is-open`, `is-active`, `has-error`).
+4. Id viết kebab-case, không trùng trong một trang; tên file chữ thường, kebab-case.
+5. JavaScript: biến và hàm viết camelCase, hằng số `UPPER_SNAKE`, lớp `PascalCase`; chỉ dùng `const` và `let`.
+6. Tên biến và hàm dài ít nhất 3 ký tự và nói rõ vai trò; chỉ `i`, `j`, `k` (đếm vòng lặp), `e` (sự kiện, lỗi), `a`, `b` (hàm so sánh) và `$`, `$$` được ngắn hơn.
+7. HTML không có `style="..."`; mọi ảnh có `alt` (ảnh trang trí để `alt=""`); mỗi trang có đúng một `h1`; nút bấm chỉ có biểu tượng thì có `aria-label`.
+8. Chú thích viết tiếng Việt; không để `console.log` khi nộp.
 
 ### Class CSS: áp dụng quy tắc BEM
 
@@ -210,7 +222,7 @@ Giao diện NomNom gồm nhiều khối lặp lại ở nhiều trang như heade
 **BEM gồm 3 thành phần chính:**
 
 - **Block:** thành phần độc lập, đại diện cho một khu vực giao diện hoàn chỉnh.
-  Ví dụ: `site-header`, `site-footer`, `filter-sidebar`, `pagination`, `fridge-dialog`, `ingredient-picker`.
+  Ví dụ: `site-header`, `site-footer`, `filter-sidebar`, `pagination`, `fridge-dialog`, `ingredient-picker`, `comment`, `hero`, `toc`.
 - **Element:** thành phần con thuộc block, nối bằng hai dấu gạch dưới (`__`).
   Ví dụ: `site-header__logo`, `filter-group__trigger`, `pagination__link`, `fridge-dialog__submit`, `ingredient-picker__pill`.
 - **Modifier:** thể hiện trạng thái, phiên bản hoặc kiểu của block hoặc element, nối bằng hai dấu gạch ngang (`--`).
@@ -225,7 +237,7 @@ Tất cả viết chữ thường, các từ trong một tên nối bằng dấu
 - Hạn chế trùng class giữa các trang: tên `filter-sidebar__title` không thể đụng với `title` của trang khác.
 - Phù hợp khi có nhiều thành viên cùng phát triển, nhìn tên class là biết nó thuộc khối nào.
 
-**Phạm vi đã áp dụng:** header, footer, đăng nhập, đăng ký, trang cá nhân và các thành phần dùng chung (bộ lọc, phân trang, thanh kết quả, khung xương khi tải, hộp thoại tủ lạnh, bộ chọn nguyên liệu). Tính chung khoảng **29%** tên class theo BEM (160/545 tên class xuất hiện trong CSS có `__` hoặc `--`). Các trang lớn (chi tiết công thức, đăng tải, trang chủ) vẫn dùng tên kebab-case phẳng theo từng trang, ví dụ `recipe-card-full`, `card-section`; nhóm không còn class viết hoa hay gạch dưới đơn.
+**Phạm vi đã áp dụng:** mọi phần tử con có tên bắt đầu bằng tên một khối đã chuyển sang `__` (ví dụ `comment__list`, `hero__content`, `step__preview`, `cta__sign-up-button`, `card__image`), và các class chỉ trạng thái (`show`, `on`, `toc-active`, `toc-current`) đã đổi sang `is-visible`, `is-on`, `is-active`, `is-current`. Tính chung có **47%** tên class theo BEM (250/536 tên class xuất hiện trong CSS có `__` hoặc `--`). Phần còn lại là tên khối viết phẳng theo từng trang, mỗi tên là một khối độc lập của trang đó, không phải con của khối khác. Các lớp biến thể trước đây viết phẳng (`slide-1`, `tag-du`, `recipe-card-full`...) đã đổi thành modifier hoặc tên khối riêng (`slide--first`, `food-tag--enough`, `full-recipe-card`).
 
 ### ID
 
@@ -254,7 +266,7 @@ Tên hàm bắt đầu bằng động từ (`load`, `render`, `show`, `init`, `h
 - Thuận tiện khi xử lý các hành vi người dùng: lọc và sắp xếp công thức, lưu món, đăng tải công thức, mở hộp thoại chọn nguyên liệu.
 - Nhìn tên hàm là biết hàm vẽ giao diện (`render...`), tải dữ liệu (`load...`) hay xử lý sự kiện (`handle...`).
 
-Tên một hai chữ cái (`i`, `e`) chỉ dùng cho biến đếm và hàm gọi lại ngắn. Một số file cũ vẫn còn nhiều tên ngắn (`s`, `p`, `r`), nhóm đang sửa dần.
+Ngoại lệ: lớp và hàm khởi tạo viết PascalCase (`Router`, `HttpError`, `ApiError`) và hai hàm tắt chọn phần tử `$`, `$$`. Tên biến và hàm dài ít nhất 3 ký tự; chỉ `i`, `j`, `k`, `e`, `a`, `b` được ngắn hơn. Toàn bộ `js/` đã đổi theo quy tắc này (ví dụ `r` thành `recipe`, `li` thành `listItem`), kiểm tra bằng ESLint `id-length`: 0 vi phạm.
 
 ### Tên file và thư mục
 

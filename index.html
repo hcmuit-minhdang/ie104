@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Anton&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="/css/components/header.css">
     <link rel="stylesheet" href="/css/components/footer.css">
@@ -52,7 +52,7 @@
                         <details>
 
                             <summary>Công thức <img class="site-header__arrow"
-                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="">
                             </summary>
 
                             <ul>
@@ -67,7 +67,7 @@
                         <details>
 
                             <summary>Về chúng tôi <img class="site-header__arrow"
-                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="">
                             </summary>
 
                             <ul>
@@ -135,29 +135,29 @@
     </header>
     <main>
         <h1 class="sr-only">NomNom - công thức nấu ăn từ nguyên liệu trong tủ lạnh</h1>
-        <section class="hero-section">
+        <section class="hero__section">
             <div class="fridge-filter-container">
                 <p id="fridge-filter-description">CÔNG THỨC THEO NGUYÊN LIỆU TỪ TỦ LẠNH CỦA BẠN</p>
                 <a href="/pages/fridge.html" class="fridge-filter-link" aria-haspopup="dialog">BỘ LỌC NGUYÊN LIỆU</a>
             </div>
-            <div class="banner-container">
-                <div class="banner-track" id="track">
-                    <div class="slide slide-1"></div>
-                    <div class="slide slide-2"></div>
-                    <div class="slide slide-3"></div>
+            <div class="banner__container">
+                <div class="banner__track" id="track">
+                    <div class="slide slide--first"></div>
+                    <div class="slide slide--second"></div>
+                    <div class="slide slide--third"></div>
                 </div>
 
                 <div class="controls">
-                    <button id="up-button"><img src="/images/icons/up-arrow-white.svg" alt=""></button>
-                    <button id="down-button"><img src="/images/icons/down-arrow-white.svg" alt=""></button>
+                    <button id="up-button" type="button" aria-label="Banner trước"><img src="/images/icons/up-arrow-white.svg" alt=""></button>
+                    <button id="down-button" type="button" aria-label="Banner sau"><img src="/images/icons/down-arrow-white.svg" alt=""></button>
                 </div>
             </div>
         </section>
         <div class="search-container">
             <p id="search-label">TÌM KIẾM</p>
             <form id="search-form" action="/pages/search.html" method="get">
-                <input type="text" name="q" placeholder="Tìm kiếm công thức..." />
-                <button type="submit"><img src="/images/icons/search-icon-thick.svg" alt="Search"></button>
+                <input type="text" name="q" placeholder="Tìm kiếm công thức..." aria-label="Tìm kiếm công thức" />
+                <button type="submit" aria-label="Tìm"><img src="/images/icons/search-icon-thick.svg" alt=""></button>
             </form>
         </div>
         <section class="category-section">
@@ -192,9 +192,9 @@
                                     <a class="user-name"></a>
                                     <div class="lower-card">
                                         <div class="image-container">
-                                            <img src="/images/cookbook-white.png" alt="Cookbook-bg"
-                                                class="cookbook-icon-bg" />
-                                            <img src="/images/cookbook.png" alt="Cookbook" class="cookbook-icon" />
+                                            <img src="/images/cookbook-white.png" alt=""
+                                                class="cookbook-backdrop" />
+                                            <img src="/images/cookbook.png" alt="" class="cookbook-icon" />
                                         </div>
                                         <span class="most-recipes-description">#1 Đóng góp nhiều công thức nhất (<a></a>)</span>
                                     </div>
@@ -206,7 +206,7 @@
                                 <div class="word-container">
                                     <a class="user-name"></a>
                                     <div class="lower-card">
-                                        <img src="/images/star-white.png" alt="Star" class="star-icon" />
+                                        <img src="/images/star-white.png" alt="" class="star-icon" />
                                         <span class="most-reviews-description">#1 Đóng góp nhiều đánh giá nhất (<a></a>)</span>
                                     </div>
                                 </div>
@@ -217,16 +217,16 @@
                                 <div class="word-container">
                                     <a class="user-name"></a>
                                     <div class="lower-card">
-                                        <img src="/images/heart-yellowbg.png" alt="Heart" class="heart-icon" />
+                                        <img src="/images/heart-yellowbg.png" alt="" class="heart-icon" />
                                         <span class="most-liked-recipe-description">#1 Công thức được yêu thích nhất (<a href="/pages/category.html" data-top-recipe></a>)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </section>
-                    <section class="cta-sign-up">
+                    <section class="cta__sign-up">
                         <p>BẠN MUỐN ĐĂNG TẢI CÔNG THỨC?</p>
-                        <button class="cta-sign-up-button" type="button" data-auth-open="signup">ĐĂNG KÝ NGAY!</button>
+                        <button class="cta__sign-up-button" type="button" data-auth-open="signup">ĐĂNG KÝ NGAY!</button>
                         <p class="support-log-in-text">Đã có tài khoản? <a href="#" data-auth-open="login">Đăng nhập ngay!</a></p>                    </section>
                 </aside>
             </div>
@@ -234,12 +234,12 @@
         <section class="price-comparison-section">
             <p id="price-comparison-label">SO SÁNH GIÁ CẢ</p>
             <div class="price-comparison-banner">
-                <div class="price-comparison-banner-left">
+                <div class="price-comparison-banner__left">
                     <p id="pcb-question">THIẾU NGUYÊN LIỆU?</p>
                     <p id="pcb-text">So sánh giá cả ngay giữa các đại lý, cửa hàng quen thuộc như Co.op Food, Bách Hóa
                         Xanh,.. tại đây</p>
                 </div>
-                <div class="price-comparison-banner-right">
+                <div class="price-comparison-banner__right">
                     <div class="pcb-description-container">
                         <p id="pcb-description-large">TIẾT KIỆM HƠN NGAY VỚI TỪNG NGUYÊN LIỆU</p>
                         <p id="pcb-description-small">ĐỐI TÁC UY TÍN, SIÊU THỊ THÂN QUEN</p>
@@ -251,11 +251,11 @@
             </div>
         </section>
         <section class="new-community-recipe">
-            <div class="title new-community-recipe-title">
+            <div class="title new-community-recipe__title">
                 <p id="new-community-recipe-label">CÔNG THỨC MỚI TỪ CỘNG ĐỒNG!</p>
-                <div class="line class new-community-recipe-line"></div>
+                <div class="line class new-community-recipe__line"></div>
             </div>
-            <div class="new-community-recipe-container">
+            <div class="new-community-recipe__container">
                 <p class="home-loading">Đang tải công thức...</p>
             </div>
             <a href="/pages/category.html?sort=new" class="recipe-more-button view-more-button">Xem Thêm</a>
@@ -315,11 +315,11 @@
                     </svg>
                 </h2>
                 <nav class="site-footer__links">
-                    <a href="#"><img src="/images/icons/footer-facebook.svg" alt="Logo-Facebook">Facebook</a>
-                    <a href="#"><img src="/images/icons/footer-instagram.svg"
-                            alt="Logo-Instagram">Instagram</a>
-                    <a href="#"><img src="/images/icons/footer-youtube.svg" alt="Logo-Youtube">Youtube</a>
-                    <a href="#"><img src="/images/icons/footer-tiktok.svg" alt="Logo-Tiktok">Tiktok</a>
+                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-facebook.svg" alt="">Facebook</a>
+                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-instagram.svg"
+                            alt="">Instagram</a>
+                    <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-youtube.svg" alt="">Youtube</a>
+                    <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer"><img src="/images/icons/footer-tiktok.svg" alt="">Tiktok</a>
                 </nav>
             </div>
         </div>

@@ -61,7 +61,7 @@
     }
     const parts = [];
     if (tokens.length) parts.push("ingredients=" + encodeURIComponent(tokens.join(",")).replace(/%3A/gi, ":").replace(/%2C/gi, ","));
-    tagNames.forEach(function (g) { parts.push(g + "=" + encodeURIComponent(tags[g].join(","))); });
+    tagNames.forEach(function (tagName) { parts.push(tagName + "=" + encodeURIComponent(tags[tagName].join(","))); });
     window.location.href = "/pages/fridge-results.html?" + parts.join("&");
   });
 })();

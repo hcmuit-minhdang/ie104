@@ -170,7 +170,7 @@ button {
 }
 
 /* Lưới thẻ cửa hàng: 4 cột như Figma */
-.store-card-container {
+.store-card__container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: stretch;
@@ -190,10 +190,6 @@ button {
     transition: all 0.3s ease;
 }
 
-.store-card-link {
-    text-decoration: none;
-    color: transparent;
-}
 
 .store-card:hover {
     transform: translateY(-4px);
@@ -414,15 +410,15 @@ a.buy-button { display: block; text-align: center; text-decoration: none; }
 .store-card .ingredient-name { text-decoration: none; }
 @media (max-width: 600px) {
     .comparison-label { font-size: 1.5rem; white-space: normal; }
-    .store-card-container { padding: 0; }
+    .store-card__container { padding: 0; }
 }
 
 /* Lưới thẻ cửa hàng: 2 cột trên máy tính bảng, 1 cột trên điện thoại */
 @media (max-width: 1000px) {
-    .store-card-container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .store-card__container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 480px) {
-    .store-card-container { grid-template-columns: 1fr; }
+    .store-card__container { grid-template-columns: 1fr; }
 }
 
 /* Ô thay thế khi sản phẩm chưa có ảnh */

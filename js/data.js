@@ -16,20 +16,20 @@
   ApiError.prototype = Object.create(Error.prototype);
   NomNom.ApiError = ApiError;
 
-  function qs(params) {
+  function buildQueryString(params) {
     const out = [];
     Object.keys(params || {}).forEach(function (k) {
-      const v = params[k];
-      if (v === undefined || v === null || v === "") return;
-      out.push(encodeURIComponent(k) + "=" + encodeURIComponent(Array.isArray(v) ? v.join(",") : v));
+      const value = params[k];
+      if (value === undefined || value === null || value === "") return;
+      out.push(encodeURIComponent(k) + "=" + encodeURIComponent(Array.isArray(value) ? value.join(",") : value));
     });
     return out.length ? "?" + out.join("&") : "";
   }
-  NomNom.qs = qs;
+  NomNom.qs = buildQueryString;
 
   /* Gọi vào "kho dữ liệu" (store.js), không có mạng/máy chủ. Lỗi (status >= 400) ném ApiError. */
   function request(method, path, body, params) {
-    return window.NomNomStore.run(method, path + qs(params), body).then(function (res) {
+    return window.NomNomStore.run(method, path + buildQueryString(params), body).then(function (res) {
       const data = res.data;
       if (res.status >= 400) throw new ApiError(res.status, (data && data.error) || "Có lỗi xảy ra (" + res.status + ")", data && data.field);
       return data;
@@ -45,24 +45,24 @@
   };
 
   /* ---- tiện ích hiển thị ---- */
-  NomNom.esc = function (s) {
-    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  NomNom.esc = function (text) {
+    return String(text == null ? "" : text).replace(/[&<>"']/g, function (char) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char];
     });
   };
-  NomNom.money = function (n) {
-    n = Number(n) || 0;
-    return n.toLocaleString("vi-VN") + "đ";
+  NomNom.money = function (amount) {
+    amount = Number(amount) || 0;
+    return amount.toLocaleString("vi-VN") + "đ";
   };
-  NomNom.minutes = function (n) {
-    n = Number(n) || 0;
-    if (n < 60) return n + " phút";
-    const h = Math.floor(n / 60), m = n % 60;
-    return h + " giờ" + (m ? " " + m + " phút" : "");
+  NomNom.minutes = function (totalMinutes) {
+    totalMinutes = Number(totalMinutes) || 0;
+    if (totalMinutes < 60) return totalMinutes + " phút";
+    const hours = Math.floor(totalMinutes / 60), remainingMinutes = totalMinutes % 60;
+    return hours + " giờ" + (remainingMinutes ? " " + remainingMinutes + " phút" : "");
   };
-  NomNom.stars = function (n) {
-    n = Math.round(Number(n) || 0);
-    return "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n);
+  NomNom.stars = function (starCount) {
+    starCount = Math.round(Number(starCount) || 0);
+    return "★★★★★".slice(0, starCount) + "☆☆☆☆☆".slice(0, 5 - starCount);
   };
-  NomNom.recipeUrl = function (id) { return "/pages/recipe.html?id=" + encodeURIComponent(id); };
+  NomNom.recipeUrl = function (recipeId) { return "/pages/recipe.html?id=" + encodeURIComponent(recipeId); };
 })();

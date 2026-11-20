@@ -13,19 +13,19 @@ const FILES = {"ingredients.json":"[\r\n  {\r\n    \"id\": \"gao-tam\",\r\n    \
 
 /* ---- shim cho vài API của Node mà route còn dùng ---- */
 const shims = {
-  crypto: { randomBytes: function (n) {
-    const a = crypto.getRandomValues(new Uint8Array(n));
+  crypto: { randomBytes: function (byteCount) {
+    const a = crypto.getRandomValues(new Uint8Array(byteCount));
     a.toString = function () { return Array.from(this, function (b) { return b.toString(16).padStart(2, '0'); }).join(''); };
     return a;
   } },
-  fs: { readFileSync: function (p) { const k = String(p).split('/').pop(); if (!(k in FILES)) throw new Error('Thiếu file ' + p); return FILES[k]; } },
-  path: { join: function () { return Array.prototype.join.call(arguments, '/'); }, basename: function (p) { return String(p).split('/').pop(); } }
+  fs: { readFileSync: function (filePath) { const k = String(filePath).split('/').pop(); if (!(k in FILES)) throw new Error('Thiếu file ' + filePath); return FILES[k]; } },
+  path: { join: function () { return Array.prototype.join.call(arguments, '/'); }, basename: function (filePath) { return String(filePath).split('/').pop(); } }
 };
 const Buffer = { from: function (str) {
-  const bin = atob(str), u = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
-  u.toString = function (e, s, t) { return String.fromCharCode.apply(null, Array.prototype.slice.call(this, s || 0, t || this.length)); };
-  return u;
+  const bin = atob(str), bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  bytes.toString = function (e, start, end) { return String.fromCharCode.apply(null, Array.prototype.slice.call(this, start || 0, end || this.length)); };
+  return bytes;
 } };
 
 /* Thu nhỏ ảnh tải lên (tối đa 800px, JPEG) để vừa dung lượng localStorage. */
@@ -34,10 +34,10 @@ function shrinkImage(dataUrl) {
     const img = new Image();
     img.onload = function () {
       try {
-        const s = Math.min(1, 800 / Math.max(img.width, img.height)), c = document.createElement('canvas');
-        c.width = Math.max(1, Math.round(img.width * s)); c.height = Math.max(1, Math.round(img.height * s));
-        const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
-        resolve(c.toDataURL('image/jpeg', 0.75));
+        const scale = Math.min(1, 800 / Math.max(img.width, img.height)), canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(img.width * scale)); canvas.height = Math.max(1, Math.round(img.height * scale));
+        const canvasCtx = canvas.getContext('2d'); canvasCtx.fillStyle = '#fff'; canvasCtx.fillRect(0, 0, canvas.width, canvas.height); canvasCtx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.75));
       } catch (e) { resolve(dataUrl); }
     };
     img.onerror = function () { resolve(dataUrl); };
@@ -47,43 +47,43 @@ function shrinkImage(dataUrl) {
 
 /* ---- trình nạp module kiểu CommonJS ---- */
 const defs = {}, cache = {};
-function def(name, fn) { defs[name] = fn; }
+function def(name, factory) { defs[name] = factory; }
 function resolve(from, req) {
   if (shims[req]) return req;
   const parts = from.split('/').slice(0, -1);
-  req.split('/').forEach(function (p) { if (p === '..') parts.pop(); else if (p !== '.') parts.push(p); });
+  req.split('/').forEach(function (part) { if (part === '..') parts.pop(); else if (part !== '.') parts.push(part); });
   return parts.join('/');
 }
 function load(name) {
   if (shims[name]) return shims[name];
   if (cache[name]) return cache[name].exports;
   if (!defs[name]) throw new Error('Thiếu module ' + name);
-  const m = cache[name] = { exports: {} };
-  defs[name](m, m.exports, function (r) { return load(resolve(name, r)); }, '');
-  return m.exports;
+  const mod = cache[name] = { exports: {} };
+  defs[name](mod, mod.exports, function (relPath) { return load(resolve(name, relPath)); }, '');
+  return mod.exports;
 }
 
 /* ===== lib/text ===== */
 def("lib/text", function (module, exports, require, __dirname) {
 'use strict';
 // Chuẩn hóa tiếng Việt: bỏ dấu, đ -> d, hạ chữ thường.
-function norm(s) {
-  return String(s == null ? '' : s)
+function norm(text) {
+  return String(text == null ? '' : text)
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/đ/g, 'd').replace(/Đ/g, 'd')
     .toLowerCase().replace(/\s+/g, ' ').trim();
 }
-function slugify(s) {
-  return norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+function slugify(text) {
+  return norm(text).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 function hash32(str) { // FNV-1a, deterministic
-  let h = 0x811c9dc5;
-  const s = String(str);
-  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
-  return h >>> 0;
+  let hash = 0x811c9dc5;
+  const text = String(str);
+  for (let i = 0; i < text.length; i++) { hash ^= text.charCodeAt(i); hash = Math.imul(hash, 0x01000193) >>> 0; }
+  return hash >>> 0;
 }
-function formatVnd(n) {
-  return Math.round(Number(n) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
+function formatVnd(amount) {
+  return Math.round(Number(amount) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
 }
 module.exports = { norm, slugify, hash32, formatVnd };
 
@@ -97,42 +97,42 @@ const { HttpError } = require('./http');
 const USERNAME_RE = /^[A-Za-z0-9_.]{3,24}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-function str(v) { return typeof v === 'string' ? v.trim() : ''; }
+function str(value) { return typeof value === 'string' ? value.trim() : ''; }
 
-function checkUsername(v) {
-  const s = str(v);
-  if (!USERNAME_RE.test(s)) throw new HttpError(400, 'Tên đăng nhập gồm 3–24 ký tự: chữ cái, số, dấu chấm hoặc gạch dưới', 'username');
-  return s;
+function checkUsername(value) {
+  const username = str(value);
+  if (!USERNAME_RE.test(username)) throw new HttpError(400, 'Tên đăng nhập gồm 3–24 ký tự: chữ cái, số, dấu chấm hoặc gạch dưới', 'username');
+  return username;
 }
-function checkEmail(v) {
-  const s = str(v).toLowerCase();
-  if (s.length > 120 || !EMAIL_RE.test(s)) throw new HttpError(400, 'Email không hợp lệ', 'email');
-  return s;
+function checkEmail(value) {
+  const email = str(value).toLowerCase();
+  if (email.length > 120 || !EMAIL_RE.test(email)) throw new HttpError(400, 'Email không hợp lệ', 'email');
+  return email;
 }
-function checkPassword(v, field) {
-  if (typeof v !== 'string' || v.length < 6) throw new HttpError(400, 'Mật khẩu phải có ít nhất 6 ký tự', field || 'password');
-  if (v.length > 200) throw new HttpError(400, 'Mật khẩu quá dài', field || 'password');
-  return v;
+function checkPassword(value, field) {
+  if (typeof value !== 'string' || value.length < 6) throw new HttpError(400, 'Mật khẩu phải có ít nhất 6 ký tự', field || 'password');
+  if (value.length > 200) throw new HttpError(400, 'Mật khẩu quá dài', field || 'password');
+  return value;
 }
-function intParam(q, name, def, min, max) {
-  const raw = q[name];
+function intParam(query, name, def, min, max) {
+  const raw = query[name];
   if (raw === undefined || raw === '') return def;
-  const n = Number(raw);
-  if (!Number.isFinite(n)) throw new HttpError(400, 'Tham số "' + name + '" không hợp lệ', name);
-  return Math.min(max, Math.max(min, Math.floor(n)));
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed)) throw new HttpError(400, 'Tham số "' + name + '" không hợp lệ', name);
+  return Math.min(max, Math.max(min, Math.floor(parsed)));
 }
-function numParam(q, name) {
-  const raw = q[name];
+function numParam(query, name) {
+  const raw = query[name];
   if (raw === undefined || raw === '') return null;
-  const n = Number(raw);
-  if (!Number.isFinite(n) || n < 0) throw new HttpError(400, 'Tham số "' + name + '" không hợp lệ', name);
-  return n;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed) || parsed < 0) throw new HttpError(400, 'Tham số "' + name + '" không hợp lệ', name);
+  return parsed;
 }
-function paging(q) {
-  return { page: intParam(q, 'page', 1, 1, 100000), limit: intParam(q, 'limit', 12, 1, 50) };
+function paging(query) {
+  return { page: intParam(query, 'page', 1, 1, 100000), limit: intParam(query, 'limit', 12, 1, 50) };
 }
-function paginate(list, q) {
-  const { page, limit } = paging(q);
+function paginate(list, query) {
+  const { page, limit } = paging(query);
   const total = list.length;
   const pages = Math.max(1, Math.ceil(total / limit));
   return { slice: list.slice((page - 1) * limit, page * limit), total, page, pages };
@@ -149,116 +149,116 @@ const { catalog, nameOf } = require('./catalog');
 
 const INTERNAL = new Set(['authorId', 'main', 'seedRating', 'seedCount', 'legacyId', 'passwordHash']);
 
-function publicUser(u) {
-  return u ? { id: u.id, username: u.username, email: u.email, avatar: u.avatar || null, cover: u.cover || null, createdAt: u.createdAt } : null;
+function publicUser(user) {
+  return user ? { id: user.id, username: user.username, email: user.email, avatar: user.avatar || null, cover: user.cover || null, createdAt: user.createdAt } : null;
 }
 
 // Ngữ cảnh một request: các map tra cứu nhanh.
-function makeCtx(db, user) {
+function makeCtx(database, user) {
   // stats: phần chênh lệch so với điểm mẫu (seedRating/seedCount).
   // Review mẫu có sẵn trong db.json coi như đã nằm trong seedCount: chỉ cộng phần người dùng sửa sao, xóa thì trừ ra;
   // review người dùng tạo mới thì cộng thêm cả sao lẫn lượt.
   const stats = new Map();
-  const seedRv = db.seedReviews || new Map();
-  const add = (id, sum, count) => { const s = stats.get(id) || { sum: 0, count: 0 }; s.sum += sum; s.count += count; stats.set(id, s); };
+  const seedRv = database.seedReviews || new Map();
+  const add = (recipeId, sum, count) => { const entry = stats.get(recipeId) || { sum: 0, count: 0 }; entry.sum += sum; entry.count += count; stats.set(recipeId, entry); };
   const present = new Set();
-  for (const r of db.reviews) {
-    const seed = seedRv.get(r.id);
-    if (seed) { present.add(r.id); add(r.recipeId, r.rating - seed.rating, 0); }
-    else add(r.recipeId, r.rating, 1);
+  for (const review of database.reviews) {
+    const seed = seedRv.get(review.id);
+    if (seed) { present.add(review.id); add(review.recipeId, review.rating - seed.rating, 0); }
+    else add(review.recipeId, review.rating, 1);
   }
-  seedRv.forEach((seed, id) => { if (!present.has(id)) add(seed.recipeId, -seed.rating, -1); });
-  const users = new Map(db.users.map((u) => [u.id, u]));
+  seedRv.forEach((seed, reviewId) => { if (!present.has(reviewId)) add(seed.recipeId, -seed.rating, -1); });
+  const users = new Map(database.users.map((account) => [account.id, account]));
   const recipes = new Map();
-  for (const r of db.recipes) { recipes.set(r.id, r); }
-  for (const r of db.recipes) if (r.legacyId && !recipes.has(r.legacyId)) recipes.set(r.legacyId, r);
+  for (const recipe of database.recipes) { recipes.set(recipe.id, recipe); }
+  for (const recipe of database.recipes) if (recipe.legacyId && !recipes.has(recipe.legacyId)) recipes.set(recipe.legacyId, recipe);
   let savedSet = null;
-  if (user) savedSet = new Set(db.saved.filter((s) => s.userId === user.id).map((s) => s.recipeId));
-  return { db, user, stats, users, recipes, savedSet };
+  if (user) savedSet = new Set(database.saved.filter((entry) => entry.userId === user.id).map((entry) => entry.recipeId));
+  return { db: database, user, stats, users, recipes, savedSet };
 }
 
-function ratingOf(c, rec) {
+function ratingOf(context, rec) {
   // Trung bình gộp: (điểm mẫu * lượt mẫu + tổng sao review mới) / (lượt mẫu + số review mới)
-  const s = c.stats.get(rec.id) || { sum: 0, count: 0 };
+  const stat = context.stats.get(rec.id) || { sum: 0, count: 0 };
   const baseCount = rec.seedCount || 0;
-  const count = Math.max(0, baseCount + s.count);
+  const count = Math.max(0, baseCount + stat.count);
   if (!count) return { rating: 0, ratingCount: 0 };
-  const total = (rec.seedRating || 0) * baseCount + s.sum;
+  const total = (rec.seedRating || 0) * baseCount + stat.sum;
   return { rating: Math.max(0, Math.min(5, Math.round((total / count) * 10) / 10)), ratingCount: count };
 }
-function authorOf(c, rec) {
-  const u = rec.authorId && c.users.get(rec.authorId);
-  return u ? { id: u.id, username: u.username, avatar: u.avatar || null } : null;
+function authorOf(context, rec) {
+  const author = rec.authorId && context.users.get(rec.authorId);
+  return author ? { id: author.id, username: author.username, avatar: author.avatar || null } : null;
 }
-function cardOf(c, rec) {
-  const r = ratingOf(c, rec);
+function cardOf(context, rec) {
+  const rating = ratingOf(context, rec);
   const card = {
     id: rec.id, name: rec.name, image: rec.image, time: rec.time, price: rec.price, category: rec.category,
-    rating: r.rating, ratingCount: r.ratingCount, author: authorOf(c, rec)
+    rating: rating.rating, ratingCount: rating.ratingCount, author: authorOf(context, rec)
   };
-  if (c.user) card.saved = c.savedSet.has(rec.id);
+  if (context.user) card.saved = context.savedSet.has(rec.id);
   return card;
 }
 
 const searchCache = new WeakMap();
 // Chữ thường giữ nguyên dấu (dạng NFC) để so khớp khi người dùng gõ từ khóa có dấu
-function lowerVi(s) { return String(s == null ? '' : s).normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim(); }
+function lowerVi(text) { return String(text == null ? '' : text).normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim(); }
 // Trả về { plain: bản bỏ dấu, accent: bản có dấu } của tên món + danh mục + nhãn + nguyên liệu
 function searchTexts(rec) {
-  let s = searchCache.get(rec);
-  if (!s || s.name !== rec.name) {
+  let texts = searchCache.get(rec);
+  if (!texts || texts.name !== rec.name) {
     const ing = (rec.ingredients || []).map((i) => i.name || nameOf(i.ingredientId)).join(' ');
     const raw = [rec.name, rec.category, rec.subcategory, (rec.tags || []).join(' '), ing].join(' | ');
-    s = { name: rec.name, plain: norm(raw), accent: lowerVi(raw) };
-    searchCache.set(rec, s);
+    texts = { name: rec.name, plain: norm(raw), accent: lowerVi(raw) };
+    searchCache.set(rec, texts);
   }
-  return s;
+  return texts;
 }
 function searchText(rec) { return searchTexts(rec).plain; }
 
-function similarOf(c, rec) {
+function similarOf(context, rec) {
   const out = [];
   const seen = new Set([rec.id]);
-  const push = (r) => { if (r && !seen.has(r.id) && out.length < 4) { seen.add(r.id); out.push(r); } };
-  for (const id of rec.similar || []) push(c.recipes.get(typeof id === 'string' ? id : id && id.id));
-  const same = c.db.recipes.filter((r) => r.category === rec.category && !seen.has(r.id));
+  const push = (candidate) => { if (candidate && !seen.has(candidate.id) && out.length < 4) { seen.add(candidate.id); out.push(candidate); } };
+  for (const similarId of rec.similar || []) push(context.recipes.get(typeof similarId === 'string' ? similarId : similarId && similarId.id));
+  const same = context.db.recipes.filter((candidate) => candidate.category === rec.category && !seen.has(candidate.id));
   same.sort((a, b) => hash32(rec.id + a.id) - hash32(rec.id + b.id)).forEach(push);
-  if (out.length < 4) c.db.recipes.filter((r) => !seen.has(r.id)).sort((a, b) => hash32(rec.id + a.id) - hash32(rec.id + b.id)).forEach(push);
-  return out.map((r) => ({ id: r.id, name: r.name, price: formatVnd(r.price) + ' / phần', time: r.time + ' phút', image: r.image }));
+  if (out.length < 4) context.db.recipes.filter((candidate) => !seen.has(candidate.id)).sort((a, b) => hash32(rec.id + a.id) - hash32(rec.id + b.id)).forEach(push);
+  return out.map((recipe) => ({ id: recipe.id, name: recipe.name, price: formatVnd(recipe.price) + ' / phần', time: recipe.time + ' phút', image: recipe.image }));
 }
 
-function detailOf(c, rec) {
+function detailOf(context, rec) {
   const out = {};
   for (const k of Object.keys(rec)) if (!INTERNAL.has(k)) out[k] = rec[k];
-  const r = ratingOf(c, rec);
-  out.rating = r.rating; out.ratingCount = r.ratingCount;
-  out.ratingScore = r.rating; out.reviewCount = r.ratingCount;
-  out.author = authorOf(c, rec);
-  out.similar = similarOf(c, rec);
-  const top = c.db.reviews.filter((x) => x.recipeId === rec.id).sort((a, b) => (b.likedBy || []).length - (a.likedBy || []).length || (a.createdAt < b.createdAt ? 1 : -1))[0];
-  const tu = top && c.users.get(top.userId);
-  out.featuredReview = top ? { rating: top.rating, text: top.text, author: tu ? tu.username : '' } : { rating: 0, text: '', author: '' };
-  if (c.user) out.saved = c.savedSet.has(rec.id);
+  const rating = ratingOf(context, rec);
+  out.rating = rating.rating; out.ratingCount = rating.ratingCount;
+  out.ratingScore = rating.rating; out.reviewCount = rating.ratingCount;
+  out.author = authorOf(context, rec);
+  out.similar = similarOf(context, rec);
+  const top = context.db.reviews.filter((x) => x.recipeId === rec.id).sort((a, b) => (b.likedBy || []).length - (a.likedBy || []).length || (a.createdAt < b.createdAt ? 1 : -1))[0];
+  const topUser = top && context.users.get(top.userId);
+  out.featuredReview = top ? { rating: top.rating, text: top.text, author: topUser ? topUser.username : '' } : { rating: 0, text: '', author: '' };
+  if (context.user) out.saved = context.savedSet.has(rec.id);
   return out;
 }
 
-function reviewOf(c, rv) {
-  const u = c.users.get(rv.userId);
-  const rec = c.recipes.get(rv.recipeId);
+function reviewOf(context, review) {
+  const reviewer = context.users.get(review.userId);
+  const rec = context.recipes.get(review.recipeId);
   const out = {
-    id: rv.id, recipeId: rv.recipeId, recipeName: rec ? rec.name : '',
-    user: u ? { id: u.id, username: u.username, avatar: u.avatar || null } : { id: null, username: 'Người dùng đã xóa', avatar: null },
-    rating: rv.rating, text: rv.text, createdAt: rv.createdAt, likes: (rv.likedBy || []).length
+    id: review.id, recipeId: review.recipeId, recipeName: rec ? rec.name : '',
+    user: reviewer ? { id: reviewer.id, username: reviewer.username, avatar: reviewer.avatar || null } : { id: null, username: 'Người dùng đã xóa', avatar: null },
+    rating: review.rating, text: review.text, createdAt: review.createdAt, likes: (review.likedBy || []).length
   };
-  if (c.user) out.liked = (rv.likedBy || []).includes(c.user.id);
+  if (context.user) out.liked = (review.likedBy || []).includes(context.user.id);
   return out;
 }
 
-function categoriesOf(db) {
-  const m = new Map();
-  for (const r of db.recipes) m.set(r.category, (m.get(r.category) || 0) + 1);
+function categoriesOf(database) {
+  const counts = new Map();
+  for (const recipe of database.recipes) counts.set(recipe.category, (counts.get(recipe.category) || 0) + 1);
   const { slugify } = require('./text');
-  return Array.from(m.entries()).map(([name, count]) => ({ id: slugify(name), name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'vi'));
+  return Array.from(counts.entries()).map(([name, count]) => ({ id: slugify(name), name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'vi'));
 }
 
 module.exports = { publicUser, makeCtx, ratingOf, cardOf, detailOf, reviewOf, searchText, searchTexts, lowerVi, categoriesOf, catalog };
@@ -272,25 +272,25 @@ class Router {
   constructor() { this.routes = []; }
   add(method, pattern, handler, opts) {
     const keys = [];
-    const re = new RegExp('^' + pattern.replace(/:([a-zA-Z]+)/g, (_, k) => { keys.push(k); return '([^/]+)'; }) + '/?$');
-    this.routes.push({ method, re, keys, handler, opts: opts || {} });
+    const matcher = new RegExp('^' + pattern.replace(/:([a-zA-Z]+)/g, (whole, k) => { keys.push(k); return '([^/]+)'; }) + '/?$');
+    this.routes.push({ method, re: matcher, keys, handler, opts: opts || {} });
   }
-  get(p, h, o) { this.add('GET', p, h, o); }
-  post(p, h, o) { this.add('POST', p, h, o); }
-  put(p, h, o) { this.add('PUT', p, h, o); }
-  patch(p, h, o) { this.add('PATCH', p, h, o); }
-  delete(p, h, o) { this.add('DELETE', p, h, o); }
+  get(pattern, handler, options) { this.add('GET', pattern, handler, options); }
+  post(pattern, handler, options) { this.add('POST', pattern, handler, options); }
+  put(pattern, handler, options) { this.add('PUT', pattern, handler, options); }
+  patch(pattern, handler, options) { this.add('PATCH', pattern, handler, options); }
+  delete(pattern, handler, options) { this.add('DELETE', pattern, handler, options); }
   match(method, pathname) {
     const methods = [];
-    for (const r of this.routes) {
-      const m = r.re.exec(pathname);
-      if (!m) continue;
-      if (r.method !== method) { methods.push(r.method); continue; }
+    for (const route of this.routes) {
+      const matched = route.re.exec(pathname);
+      if (!matched) continue;
+      if (route.method !== method) { methods.push(route.method); continue; }
       const params = {};
-      for (let i = 0; i < r.keys.length; i++) {
-        try { params[r.keys[i]] = decodeURIComponent(m[i + 1]); } catch (e) { return { badRequest: true }; }
+      for (let i = 0; i < route.keys.length; i++) {
+        try { params[route.keys[i]] = decodeURIComponent(matched[i + 1]); } catch (e) { return { badRequest: true }; }
       }
-      return { route: r, params };
+      return { route: route, params };
     }
     return methods.length ? { methods } : null;
   }
@@ -302,7 +302,7 @@ module.exports = { Router };
 /* ===== lib/catalog ===== */
 def("lib/catalog", function (module, exports, require, __dirname) {
 'use strict';
-const fs = require('fs');
+const fileSystem = require('fs');
 const path = require('path');
 const { norm, slugify } = require('./text');
 
@@ -420,46 +420,46 @@ const SYNONYMS = {
 };
 
 function load() {
-  const items = JSON.parse(fs.readFileSync(path.join(SEED_DIR, 'ingredients.json'), 'utf8'));
-  const units = JSON.parse(fs.readFileSync(path.join(SEED_DIR, 'units.json'), 'utf8'));
+  const items = JSON.parse(fileSystem.readFileSync(path.join(SEED_DIR, 'ingredients.json'), 'utf8'));
+  const units = JSON.parse(fileSystem.readFileSync(path.join(SEED_DIR, 'units.json'), 'utf8'));
   const byId = new Map();
-  for (const it of items.concat(EXTRA, EXTRA2)) if (!byId.has(it.id)) byId.set(it.id, it);
+  for (const ingredient of items.concat(EXTRA, EXTRA2)) if (!byId.has(ingredient.id)) byId.set(ingredient.id, ingredient);
   const aliasMap = new Map();
-  for (const it of byId.values()) {
-    aliasMap.set(it.id, it.id);
-    aliasMap.set(norm(it.name), it.id);
+  for (const ingredient of byId.values()) {
+    aliasMap.set(ingredient.id, ingredient.id);
+    aliasMap.set(norm(ingredient.name), ingredient.id);
   }
-  for (const it of byId.values()) for (const a of it.aliases || []) if (!aliasMap.has(norm(a))) aliasMap.set(norm(a), it.id);
+  for (const ingredient of byId.values()) for (const a of ingredient.aliases || []) if (!aliasMap.has(norm(a))) aliasMap.set(norm(a), ingredient.id);
   return { items: Array.from(byId.values()), units, byId, aliasMap };
 }
 const catalog = load();
 
 // Đưa một chuỗi (id, tên, "nhom:id") về id nguyên liệu chuẩn.
 function canonId(token) {
-  let t = String(token || '').trim();
-  if (t.indexOf(':') > 0) t = t.slice(t.indexOf(':') + 1);
-  const n = norm(t);
-  if (!n) return '';
-  const slug = n.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  let cleaned = String(token || '').trim();
+  if (cleaned.indexOf(':') > 0) cleaned = cleaned.slice(cleaned.indexOf(':') + 1);
+  const normalized = norm(cleaned);
+  if (!normalized) return '';
+  const slug = normalized.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   if (catalog.byId.has(slug)) return slug;
   if (SYNONYMS[slug]) return SYNONYMS[slug];
-  if (catalog.aliasMap.has(n)) return catalog.aliasMap.get(n);
+  if (catalog.aliasMap.has(normalized)) return catalog.aliasMap.get(normalized);
   return slug;
 }
-function nameOf(id) {
-  const it = catalog.byId.get(id);
-  return it ? it.name : id;
+function nameOf(ingredientId) {
+  const ingredient = catalog.byId.get(ingredientId);
+  return ingredient ? ingredient.name : ingredientId;
 }
 // Tìm nguyên liệu theo tên (cho so sánh giá): khớp chính xác rồi khớp chứa.
 function findByName(text, exact) {
-  const n = norm(text);
-  if (!n) return null;
-  const direct = catalog.aliasMap.get(n) || catalog.aliasMap.get(n.replace(/ /g, '-'));
+  const normalized = norm(text);
+  if (!normalized) return null;
+  const direct = catalog.aliasMap.get(normalized) || catalog.aliasMap.get(normalized.replace(/ /g, '-'));
   if (direct) return catalog.byId.get(direct);
   if (exact) return null;
-  for (const it of catalog.byId.values()) {
-    if (norm(it.name).includes(n) || n.includes(norm(it.name))) return it;
-    for (const a of it.aliases || []) { const na = norm(a); if (na.length > 2 && (na === n || n.includes(na))) return it; }
+  for (const ingredient of catalog.byId.values()) {
+    if (norm(ingredient.name).includes(normalized) || normalized.includes(norm(ingredient.name))) return ingredient;
+    for (const a of ingredient.aliases || []) { const aliasNorm = norm(a); if (aliasNorm.length > 2 && (aliasNorm === normalized || normalized.includes(aliasNorm))) return ingredient; }
   }
   return null;
 }
@@ -471,11 +471,11 @@ module.exports = { catalog, canonId, nameOf, findByName, slugify, SEED_DIR };
 def("routes/recipes", function (module, exports, require, __dirname) {
 'use strict';
 const crypto = require('crypto');
-const fs = require('fs');
+const fileSystem = require('fs');
 const path = require('path');
 const { HttpError } = require('../lib/http');
-const V = require('../lib/validate');
-const M = require('../lib/model');
+const validateLib = require('../lib/validate');
+const modelLib = require('../lib/model');
 const { norm, slugify } = require('../lib/text');
 const { findByName, catalog } = require('../lib/catalog');
 
@@ -490,36 +490,36 @@ function hasWord(text, word) {
   return !!word && new RegExp('(^|[^\\p{L}\\p{N}])' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^\\p{L}\\p{N}])', 'u').test(text);
 }
 
-function cleanStr(v, max, field, required) {
-  const s = typeof v === 'string' ? v.trim() : (typeof v === 'number' ? String(v) : '');
-  if (!s) { if (required) throw new HttpError(400, 'Thiếu thông tin bắt buộc', field); return ''; }
-  if (s.length > max) throw new HttpError(400, 'Nội dung quá dài (tối đa ' + max + ' ký tự)', field);
-  return s;
+function cleanStr(value, max, field, required) {
+  const text = typeof value === 'string' ? value.trim() : (typeof value === 'number' ? String(value) : '');
+  if (!text) { if (required) throw new HttpError(400, 'Thiếu thông tin bắt buộc', field); return ''; }
+  if (text.length > max) throw new HttpError(400, 'Nội dung quá dài (tối đa ' + max + ' ký tự)', field);
+  return text;
 }
-function checkImage(v, field) {
-  if (v === undefined || v === null || v === '') return '';
-  if (typeof v !== 'string' || !IMG_RE.test(v) || v.includes('..')) throw new HttpError(400, 'Đường dẫn ảnh không hợp lệ', field);
-  return v;
+function checkImage(value, field) {
+  if (value === undefined || value === null || value === '') return '';
+  if (typeof value !== 'string' || !IMG_RE.test(value) || value.includes('..')) throw new HttpError(400, 'Đường dẫn ảnh không hợp lệ', field);
+  return value;
 }
-function numField(v, field, def, min, max) {
-  if (v === undefined || v === null || v === '') return def;
-  const n = Number(v);
-  if (!Number.isFinite(n) || n < min || n > max) throw new HttpError(400, 'Giá trị "' + field + '" không hợp lệ', field);
-  return n;
+function numField(value, field, def, min, max) {
+  if (value === undefined || value === null || value === '') return def;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < min || parsed > max) throw new HttpError(400, 'Giá trị "' + field + '" không hợp lệ', field);
+  return parsed;
 }
 
 const NUTRI_KEYS = ['servings', 'calories', 'carbs', 'protein', 'fat', 'sodium', 'fiber'];
-function cleanNutrition(n) {
+function cleanNutrition(nutrition) {
   const out = { servings: 1 };
-  if (n && typeof n === 'object' && !Array.isArray(n)) for (const k of NUTRI_KEYS) {
-    const v = n[k];
-    if (typeof v === 'number' && Number.isFinite(v)) out[k] = v;
-    else if (typeof v === 'string' && v.trim() && v.length <= 40) out[k] = v.trim();
+  if (nutrition && typeof nutrition === 'object' && !Array.isArray(nutrition)) for (const k of NUTRI_KEYS) {
+    const value = nutrition[k];
+    if (typeof value === 'number' && Number.isFinite(value)) out[k] = value;
+    else if (typeof value === 'string' && value.trim() && value.length <= 40) out[k] = value.trim();
   }
   return out;
 }
 
-function buildRecipe(b, userId, db) {
+function buildRecipe(b, userId, database) {
   const name = cleanStr(b.name || b.title, 120, 'name', true);
   if (name.length < 3) throw new HttpError(400, 'Tên món cần ít nhất 3 ký tự', 'name');
   const description = cleanStr(b.description, 5000, 'description');
@@ -528,57 +528,57 @@ function buildRecipe(b, userId, db) {
   const servings = numField(b.servings !== undefined ? b.servings : b.baseServings, 'servings', 2, 1, 100);
   let category = (typeof b.category === 'string' ? b.category.trim() : '').slice(0, 60) || 'Món khác';
   { // slug/id danh mục -> tên danh mục đã có
-    const nc = norm(category), sc = slugify(category);
-    const hit = db.recipes.find((r) => norm(r.category) === nc || slugify(r.category) === sc);
+    const normCategory = norm(category), slugCategory = slugify(category);
+    const hit = database.recipes.find((recipe) => norm(recipe.category) === normCategory || slugify(recipe.category) === slugCategory);
     if (hit) category = hit.category;
   }
   if (!Array.isArray(b.ingredients) || !b.ingredients.length) throw new HttpError(400, 'Cần ít nhất một nguyên liệu', 'ingredients');
   if (b.ingredients.length > 100) throw new HttpError(400, 'Quá nhiều nguyên liệu', 'ingredients');
   const ingredients = b.ingredients.map((x) => {
     if (!x || typeof x !== 'object') throw new HttpError(400, 'Nguyên liệu không hợp lệ', 'ingredients');
-    const nm = cleanStr(x.name, 80, 'ingredients', true);
+    const ingName = cleanStr(x.name, 80, 'ingredients', true);
     const qty = x.quantity !== undefined ? x.quantity : x.qty;
-    const q = qty === undefined || qty === '' || qty === null ? '' : (Number.isFinite(Number(qty)) ? Number(qty) : cleanStr(qty, 20, 'ingredients'));
-    const known = findByName(nm, true);
+    const quantity = qty === undefined || qty === '' || qty === null ? '' : (Number.isFinite(Number(qty)) ? Number(qty) : cleanStr(qty, 20, 'ingredients'));
+    const known = findByName(ingName, true);
     const cid = typeof x.ingredientId === 'string' && catalog.byId.has(x.ingredientId) ? x.ingredientId : null;
-    const out = { ingredientId: cid || (known ? known.id : (slugify(nm) || 'nguyen-lieu')), name: nm, qty: q, unit: cleanStr(x.unit, 20, 'ingredients') };
+    const out = { ingredientId: cid || (known ? known.id : (slugify(ingName) || 'nguyen-lieu')), name: ingName, qty: quantity, unit: cleanStr(x.unit, 20, 'ingredients') };
     const note = cleanStr(x.note, 120, 'ingredients'); if (note) out.note = note;
     return out;
   });
   if (!Array.isArray(b.steps) || !b.steps.length) throw new HttpError(400, 'Cần ít nhất một bước thực hiện', 'steps');
   if (b.steps.length > 60) throw new HttpError(400, 'Quá nhiều bước', 'steps');
-  const steps = b.steps.map((s) => {
-    const o = typeof s === 'string' ? { text: s } : s;
-    if (!o || typeof o !== 'object') throw new HttpError(400, 'Bước thực hiện không hợp lệ', 'steps');
-    const raw = Array.isArray(o.text) ? o.text.join('\n') : o.text;
+  const steps = b.steps.map((step) => {
+    const stepData = typeof step === 'string' ? { text: step } : step;
+    if (!stepData || typeof stepData !== 'object') throw new HttpError(400, 'Bước thực hiện không hợp lệ', 'steps');
+    const raw = Array.isArray(stepData.text) ? stepData.text.join('\n') : stepData.text;
     const text = cleanStr(raw, 3000, 'steps', true);
     const imgs = [];
-    if (o.image) imgs.push(checkImage(o.image, 'steps'));
-    if (Array.isArray(o.images)) for (const im of o.images.slice(0, 6)) imgs.push(checkImage(im, 'steps'));
-    return { text: text.split(/\n+/).map((t) => t.trim()).filter(Boolean), images: Array.from(new Set(imgs.filter(Boolean))) };
+    if (stepData.image) imgs.push(checkImage(stepData.image, 'steps'));
+    if (Array.isArray(stepData.images)) for (const stepImage of stepData.images.slice(0, 6)) imgs.push(checkImage(stepImage, 'steps'));
+    return { text: text.split(/\n+/).map((line) => line.trim()).filter(Boolean), images: Array.from(new Set(imgs.filter(Boolean))) };
   });
   const gallery = [image];
-  for (const arr of [b.gallery, b.images]) if (Array.isArray(arr)) for (const g of arr.slice(0, 8)) { const x = checkImage(g, 'gallery'); if (x && !gallery.includes(x)) gallery.push(x); }
+  for (const arr of [b.gallery, b.images]) if (Array.isArray(arr)) for (const galleryImage of arr.slice(0, 8)) { const x = checkImage(galleryImage, 'gallery'); if (x && !gallery.includes(x)) gallery.push(x); }
   const price = numField(b.price, 'price', numField(b.costTotal, 'costTotal', 0, 0, 1e9) / servings, 0, 1e8);
   const rec = {}; // chỉ nhận các trường trong danh sách cho phép (không giữ trường lạ)
-  let id = slugify(name) || 'cong-thuc';
-  const taken = new Set(db.recipes.map((r) => r.id));
-  id = id.slice(0, 60) + '-' + crypto.randomBytes(3).toString('hex');
-  while (taken.has(id)) id = id.slice(0, 60) + '-' + crypto.randomBytes(3).toString('hex');
+  let recipeId = slugify(name) || 'cong-thuc';
+  const taken = new Set(database.recipes.map((recipe) => recipe.id));
+  recipeId = recipeId.slice(0, 60) + '-' + crypto.randomBytes(3).toString('hex');
+  while (taken.has(recipeId)) recipeId = recipeId.slice(0, 60) + '-' + crypto.randomBytes(3).toString('hex');
   const prep = Math.max(1, Math.round(time * 0.3));
-  const d = new Date();
+  const now = new Date();
   const prepIn = b.prepTime !== undefined && b.prepTime !== null && b.prepTime !== '' ? numField(b.prepTime, 'prepTime', 0, 0, 1440) : null;
   const cookIn = b.cookTime !== undefined && b.cookTime !== null && b.cookTime !== '' ? numField(b.cookTime, 'cookTime', 0, 0, 1440) : null;
-  const quickIn = Array.isArray(b.quickSteps) && b.quickSteps.length ? b.quickSteps.slice(0, 60).map((q) => cleanStr(q, 1000, 'quickSteps')).filter(Boolean) : null;
-  const tags = Array.isArray(b.tags) ? b.tags.filter((t) => typeof t === 'string').slice(0, 10).map((t) => t.slice(0, 40)) : [category];
+  const quickIn = Array.isArray(b.quickSteps) && b.quickSteps.length ? b.quickSteps.slice(0, 60).map((quickStep) => cleanStr(quickStep, 1000, 'quickSteps')).filter(Boolean) : null;
+  const tags = Array.isArray(b.tags) ? b.tags.filter((tag) => typeof tag === 'string').slice(0, 10).map((tag) => tag.slice(0, 40)) : [category];
   return Object.assign(rec, {
-    id, name, title: name, category, categoryGroup: 'Công thức cộng đồng', subcategory: '',
+    id: recipeId, name, title: name, category, categoryGroup: 'Công thức cộng đồng', subcategory: '',
     description, summary: ((typeof b.summary === 'string' ? b.summary.trim() : '') || description).slice(0, 500), image, gallery, price: Math.round(price), time,
     prepTime: prepIn !== null ? prepIn : Math.min(prep, time), cookTime: cookIn !== null ? cookIn : Math.max(0, time - prep), baseServings: servings, costTotal: Math.round(price * servings),
-    ingredients, quickSteps: quickIn && quickIn.length ? quickIn : steps.map((s) => s.text.join(' ')), steps,
+    ingredients, quickSteps: quickIn && quickIn.length ? quickIn : steps.map((step) => step.text.join(' ')), steps,
     nutrition: cleanNutrition(b.nutrition),
-    similar: [], tags, uploaded: String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear(),
-    authorId: userId, createdAt: d.toISOString(), seedRating: 0, seedCount: 0, main: ingredients.map((i) => i.ingredientId).slice(0, 6)
+    similar: [], tags, uploaded: String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear(),
+    authorId: userId, createdAt: now.toISOString(), seedRating: 0, seedCount: 0, main: ingredients.map((i) => i.ingredientId).slice(0, 6)
   });
 }
 
@@ -589,59 +589,59 @@ const MAGIC = {
 };
 
 module.exports = function (app) {
-  const r = app.router;
+  const appRouter = app.router;
   function writeLimit(ctx) {
     const wait = app.writeLimiter.hit(ctx.user ? 'u:' + ctx.user.id : 'ip:' + ctx.ip);
     if (wait) { const e = new HttpError(429, 'Bạn thao tác quá nhanh. Vui lòng thử lại sau ' + wait + ' giây.'); e.headers = { 'Retry-After': String(wait) }; throw e; }
   }
   app.writeLimit = writeLimit;
 
-  r.get('/api/recipes', (ctx) => {
-    const q = ctx.query;
-    const c = M.makeCtx(ctx.db, ctx.user);
-    const maxTime = V.numParam(q, 'maxTime');
-    const maxPrice = V.numParam(q, 'maxPrice');
-    const sort = q.sort === undefined || q.sort === '' ? null : q.sort;
+  appRouter.get('/api/recipes', (ctx) => {
+    const query = ctx.query;
+    const context = modelLib.makeCtx(ctx.db, ctx.user);
+    const maxTime = validateLib.numParam(query, 'maxTime');
+    const maxPrice = validateLib.numParam(query, 'maxPrice');
+    const sort = query.sort === undefined || query.sort === '' ? null : query.sort;
     if (sort && !SORTS.has(sort)) throw new HttpError(400, 'Giá trị sort không hợp lệ (rating|time|price|new)', 'sort');
     // Mỗi từ khóa giữ hai bản: có dấu (a) và bỏ dấu (p). Từ gõ có dấu chỉ khớp bản có dấu ("bò" không khớp "bơ", "bông"),
     // từ gõ không dấu khớp không phân biệt dấu như cũ.
-    const fullA = M.lowerVi(q.q || '');
-    const terms = fullA.split(' ').map((a) => ({ a, p: norm(a) })).filter((t) => t.p).slice(0, 8);
-    terms.forEach((t) => { t.accent = t.a !== t.p; });
-    const fullP = terms.map((t) => t.p).join(' ');
-    const cat = q.category ? norm(q.category) : '';
+    const fullA = modelLib.lowerVi(query.q || '');
+    const terms = fullA.split(' ').map((a) => ({ a, p: norm(a) })).filter((term) => term.p).slice(0, 8);
+    terms.forEach((term) => { term.accent = term.a !== term.p; });
+    const fullP = terms.map((term) => term.p).join(' ');
+    const cat = query.category ? norm(query.category) : '';
     // Bộ lọc theo nhóm (Đạm, Tinh bột, ...): trong một nhóm chỉ cần khớp MỘT nhãn, giữa các nhóm phải khớp TẤT CẢ.
     const groups = TAG_GROUPS
-      .map((g) => String(q[g] || '').split(',').map((t) => norm(t)).filter(Boolean).slice(0, 12))
-      .filter((g) => g.length);
+      .map((group) => String(query[group] || '').split(',').map((token) => norm(token)).filter(Boolean).slice(0, 12))
+      .filter((group) => group.length);
     const list = ctx.db.recipes.filter((rec) => {
       if (cat && norm(rec.category) !== cat && slugify(rec.category) !== cat) return false;
       if (groups.length) {
-        const have = new Set((rec.tags || []).map((t) => norm(t)));
-        for (const g of groups) if (!g.some((t) => have.has(t))) return false;
+        const have = new Set((rec.tags || []).map((tag) => norm(tag)));
+        for (const group of groups) if (!group.some((tag) => have.has(tag))) return false;
       }
       if (maxTime !== null && rec.time > maxTime) return false;
       if (maxPrice !== null && rec.price > maxPrice) return false;
       if (terms.length) {
-        const s = M.searchTexts(rec);
-        for (const t of terms) if (t.accent ? !s.accent.includes(t.a) : !s.plain.includes(t.p)) return false;
+        const texts = modelLib.searchTexts(rec);
+        for (const term of terms) if (term.accent ? !texts.accent.includes(term.a) : !texts.plain.includes(term.p)) return false;
       }
       return true;
     });
-    const rate = new Map(list.map((rec) => [rec.id, M.ratingOf(c, rec)]));
+    const rate = new Map(list.map((rec) => [rec.id, modelLib.ratingOf(context, rec)]));
     // Độ liên quan (số nhỏ = liên quan hơn): khớp đúng cụm có dấu > khớp nguyên từ không dấu > chỉ chứa chuỗi; tên món xếp trước phần còn lại
     const rel = new Map();
     if (terms.length) {
-      const tier = (a, p) => {
+      const tier = (a, plain) => {
         if (hasWord(a, fullA)) return 0;
-        if (hasWord(p, fullP)) return 1;
-        if (terms.every((t) => hasWord(p, t.p))) return 2;
-        return terms.every((t) => p.includes(t.p)) ? 3 : 9;
+        if (hasWord(plain, fullP)) return 1;
+        if (terms.every((term) => hasWord(plain, term.p))) return 2;
+        return terms.every((term) => plain.includes(term.p)) ? 3 : 9;
       };
       for (const rec of list) {
-        const s = M.searchTexts(rec);
-        const nt = tier(M.lowerVi(rec.name), norm(rec.name)), tt = tier(s.accent, s.plain);
-        rel.set(rec.id, nt < 3 ? nt : tt < 3 ? 3 + tt : nt === 3 ? 6 : 7);
+        const texts = modelLib.searchTexts(rec);
+        const nameTier = tier(modelLib.lowerVi(rec.name), norm(rec.name)), textTier = tier(texts.accent, texts.plain);
+        rel.set(rec.id, nameTier < 3 ? nameTier : textTier < 3 ? 3 + textTier : nameTier === 3 ? 6 : 7);
       }
     }
     const byRating = (a, b) => rate.get(b.id).rating - rate.get(a.id).rating || rate.get(b.id).ratingCount - rate.get(a.id).ratingCount;
@@ -653,30 +653,30 @@ module.exports = function (app) {
       if (!sort && terms.length) return rel.get(a.id) - rel.get(b.id) || byRating(a, b) || tie(a, b);
       return byRating(a, b) || tie(a, b);
     });
-    const p = V.paginate(list, q);
-    return { items: p.slice.map((rec) => Object.assign(M.cardOf(c, rec), { tags: rec.tags || [] })), total: p.total, page: p.page, pages: p.pages };
+    const page = validateLib.paginate(list, query);
+    return { items: page.slice.map((rec) => Object.assign(modelLib.cardOf(context, rec), { tags: rec.tags || [] })), total: page.total, page: page.page, pages: page.pages };
   });
 
-  r.get('/api/categories', (ctx) => ({ items: M.categoriesOf(ctx.db) }));
+  appRouter.get('/api/categories', (ctx) => ({ items: modelLib.categoriesOf(ctx.db) }));
 
-  r.get('/api/recipes/:id', (ctx) => {
-    const c = M.makeCtx(ctx.db, ctx.user);
-    const rec = c.recipes.get(ctx.params.id);
+  appRouter.get('/api/recipes/:id', (ctx) => {
+    const context = modelLib.makeCtx(ctx.db, ctx.user);
+    const rec = context.recipes.get(ctx.params.id);
     if (!rec) throw new HttpError(404, 'Không tìm thấy công thức');
     // ?history=0: chỉ đọc dữ liệu (ví dụ form sửa ở trang tài khoản), không ghi vào Lịch sử xem
     if (ctx.user && ctx.query.history !== '0') {
-      const h = ctx.db.history;
+      const history = ctx.db.history;
       const uid = ctx.user.id;
-      for (let i = h.length - 1; i >= 0; i--) if (h[i].userId === uid && h[i].recipeId === rec.id) h.splice(i, 1);
-      h.push({ userId: uid, recipeId: rec.id, at: new Date().toISOString() });
-      const mine = h.filter((x) => x.userId === uid);
-      if (mine.length > 200) { const drop = new Set(mine.slice(0, mine.length - 200)); ctx.db.history = h.filter((x) => !drop.has(x)); }
+      for (let i = history.length - 1; i >= 0; i--) if (history[i].userId === uid && history[i].recipeId === rec.id) history.splice(i, 1);
+      history.push({ userId: uid, recipeId: rec.id, at: new Date().toISOString() });
+      const mine = history.filter((x) => x.userId === uid);
+      if (mine.length > 200) { const drop = new Set(mine.slice(0, mine.length - 200)); ctx.db.history = history.filter((x) => !drop.has(x)); }
       try { ctx.store.saveSoon(); } catch (e) { /* lịch sử xem không quan trọng: bộ nhớ đầy thì vẫn cho xem công thức */ }
     }
-    return M.detailOf(c, rec);
+    return modelLib.detailOf(context, rec);
   });
 
-  r.post('/api/recipes', async (ctx) => {
+  appRouter.post('/api/recipes', async (ctx) => {
     const user = ctx.requireUser();
     writeLimit(ctx);
     const b = await ctx.body(1024 * 1024);
@@ -688,7 +688,7 @@ module.exports = function (app) {
   });
 
   // Cập nhật nhanh các thông tin chính của công thức do chính mình đăng
-  r.patch('/api/recipes/:id', async (ctx) => {
+  appRouter.patch('/api/recipes/:id', async (ctx) => {
     const user = ctx.requireUser();
     const rec = ctx.db.recipes.find((x) => x.id === ctx.params.id);
     if (!rec) throw new HttpError(404, 'Không tìm thấy công thức');
@@ -697,64 +697,64 @@ module.exports = function (app) {
     // Kiểm tra hết rồi mới ghi: dữ liệu sai thì không sửa gì cả
     const upd = {};
     if (b.name !== undefined) {
-      const n = cleanStr(b.name, 120, 'name', true);
-      if (n.length < 3) throw new HttpError(400, 'Tên món cần ít nhất 3 ký tự', 'name');
-      upd.name = n; if (rec.title !== undefined) upd.title = n;
+      const name = cleanStr(b.name, 120, 'name', true);
+      if (name.length < 3) throw new HttpError(400, 'Tên món cần ít nhất 3 ký tự', 'name');
+      upd.name = name; if (rec.title !== undefined) upd.title = name;
     }
     if (b.description !== undefined) { upd.description = cleanStr(b.description, 5000, 'description'); if (rec.summary !== undefined) upd.summary = upd.description; }
     if (b.time !== undefined) {
-      const t = Math.round(numField(b.time, 'time', rec.time || 30, 1, 1440));
+      const minutes = Math.round(numField(b.time, 'time', rec.time || 30, 1, 1440));
       const old = rec.time || 0, oldPrep = Number(rec.prepTime) || 0, oldCook = Number(rec.cookTime) || 0;
       const autoPrep = (x) => Math.min(Math.max(1, Math.round(x * 0.3)), x);
-      upd.time = t;
+      upd.time = minutes;
       if (!oldPrep && !oldCook || (oldPrep === autoPrep(old) && oldCook === Math.max(0, old - oldPrep))) {
         // thời gian sơ chế/nấu do hệ thống tự chia (30% / 70%): chia lại theo tổng mới
-        upd.prepTime = autoPrep(t); upd.cookTime = Math.max(0, t - upd.prepTime);
+        upd.prepTime = autoPrep(minutes); upd.cookTime = Math.max(0, minutes - upd.prepTime);
       } else {
         // người dùng đã nhập riêng: giữ thời gian sơ chế, phần còn lại là thời gian nấu
-        upd.prepTime = Math.min(oldPrep, t); upd.cookTime = t - upd.prepTime;
+        upd.prepTime = Math.min(oldPrep, minutes); upd.cookTime = minutes - upd.prepTime;
       }
     }
     if (b.servings !== undefined) {
-      const sv = Math.round(numField(b.servings, 'servings', rec.baseServings || rec.servings || 2, 1, 100));
-      upd.servings = sv; upd.baseServings = sv;
+      const servings = Math.round(numField(b.servings, 'servings', rec.baseServings || rec.servings || 2, 1, 100));
+      upd.servings = servings; upd.baseServings = servings;
       // giá theo phần (price) giữ nguyên như trên thẻ món; tổng chi phí tính lại = price * khẩu phần (trang chi tiết tính như vậy)
-      upd.costTotal = Math.round((Number(rec.price) || 0) * sv);
+      upd.costTotal = Math.round((Number(rec.price) || 0) * servings);
     }
     Object.assign(rec, upd);
     if (baseIds.has(rec.id)) { // công thức có sẵn trong db.json: nhớ phần đã sửa để còn nguyên sau khi tải lại
-      db.seedEdits = db.seedEdits || {};
-      db.seedEdits[rec.id] = Object.assign(db.seedEdits[rec.id] || {}, upd);
+      database.seedEdits = database.seedEdits || {};
+      database.seedEdits[rec.id] = Object.assign(database.seedEdits[rec.id] || {}, upd);
     }
     ctx.store.save();
     return { ok: true };
   });
 
-  r.delete('/api/recipes/:id', (ctx) => {
+  appRouter.delete('/api/recipes/:id', (ctx) => {
     const user = ctx.requireUser();
-    const db = ctx.db;
-    const i = db.recipes.findIndex((x) => x.id === ctx.params.id);
+    const database = ctx.db;
+    const i = database.recipes.findIndex((x) => x.id === ctx.params.id);
     if (i < 0) throw new HttpError(404, 'Không tìm thấy công thức');
-    const rec = db.recipes[i];
+    const rec = database.recipes[i];
     if (rec.authorId !== user.id) throw new HttpError(403, 'Bạn chỉ có thể xóa công thức do chính mình đăng');
-    db.recipes.splice(i, 1);
-    db.saved = db.saved.filter((x) => x.recipeId !== rec.id);
-    db.reviews = db.reviews.filter((x) => x.recipeId !== rec.id);
-    db.history = db.history.filter((x) => x.recipeId !== rec.id);
+    database.recipes.splice(i, 1);
+    database.saved = database.saved.filter((x) => x.recipeId !== rec.id);
+    database.reviews = database.reviews.filter((x) => x.recipeId !== rec.id);
+    database.history = database.history.filter((x) => x.recipeId !== rec.id);
     ctx.store.save();
     return { ok: true };
   });
 
-  r.post('/api/uploads', async (ctx) => {
+  appRouter.post('/api/uploads', async (ctx) => {
     const upUser = ctx.requireUser();
     writeLimit(ctx);
     const b = await ctx.body(4.5 * 1024 * 1024);
-    const m = typeof b.dataUrl === 'string' && /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/=\s]+)$/.exec(b.dataUrl);
-    if (!m) throw new HttpError(400, 'Ảnh không hợp lệ (chỉ nhận PNG, JPEG hoặc WebP dạng data URL)', 'dataUrl');
-    const buf = Buffer.from(m[2].replace(/\s+/g, ''), 'base64');
+    const match = typeof b.dataUrl === 'string' && /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/=\s]+)$/.exec(b.dataUrl);
+    if (!match) throw new HttpError(400, 'Ảnh không hợp lệ (chỉ nhận PNG, JPEG hoặc WebP dạng data URL)', 'dataUrl');
+    const buf = Buffer.from(match[2].replace(/\s+/g, ''), 'base64');
     if (!buf.length) throw new HttpError(400, 'Ảnh rỗng', 'dataUrl');
     if (buf.length > 3 * 1024 * 1024) throw new HttpError(413, 'Ảnh quá lớn (tối đa 3 MB)', 'dataUrl');
-    if (!MAGIC[m[1]](buf)) throw new HttpError(400, 'Nội dung ảnh không khớp định dạng khai báo', 'dataUrl');
+    if (!MAGIC[match[1]](buf)) throw new HttpError(400, 'Nội dung ảnh không khớp định dạng khai báo', 'dataUrl');
     const file = crypto.randomBytes(12).toString('hex');
     const url = await shrinkImage(b.dataUrl);
     return { url };
@@ -768,8 +768,8 @@ def("routes/auth", function (module, exports, require, __dirname) {
 'use strict';
 const crypto = require('crypto');
 const { HttpError } = require('../lib/http');
-const V = require('../lib/validate');
-const S = require('../lib/session');
+const validateLib = require('../lib/validate');
+const sessionLib = require('../lib/session');
 const { hashPassword, verifyPassword, fakeVerify } = require('../lib/hash');
 const { publicUser } = require('../lib/model');
 
@@ -779,73 +779,73 @@ function rateCheck(ctx, ident) {
   const wait = Math.max(ctx.app.ipLimiter.hit(ctx.ip), ctx.app.limiter.hit(key));
   if (wait) { const e = new HttpError(429, 'Bạn thử quá nhiều lần. Vui lòng thử lại sau ' + wait + ' giây.'); e.headers = { 'Retry-After': String(wait) }; throw e; }
 }
-function lc(s) { return String(s).toLowerCase(); }
+function lowerCase(text) { return String(text).toLowerCase(); }
 
 // Xóa mọi dữ liệu gắn với một người dùng (dùng khi xóa tài khoản)
-function purgeUser(db, uid) {
-  db.sessions = db.sessions.filter((s) => s.userId !== uid);
-  db.saved = db.saved.filter((s) => s.userId !== uid);
-  db.history = db.history.filter((s) => s.userId !== uid);
-  db.reviews = db.reviews.filter((r) => r.userId !== uid);
-  for (const r of db.reviews) if (r.likedBy) r.likedBy = r.likedBy.filter((x) => x !== uid);
-  for (const rec of db.recipes) if (rec.authorId === uid) rec.authorId = null;
-  db.users = db.users.filter((u) => u.id !== uid);
+function purgeUser(database, uid) {
+  database.sessions = database.sessions.filter((entry) => entry.userId !== uid);
+  database.saved = database.saved.filter((entry) => entry.userId !== uid);
+  database.history = database.history.filter((entry) => entry.userId !== uid);
+  database.reviews = database.reviews.filter((review) => review.userId !== uid);
+  for (const review of database.reviews) if (review.likedBy) review.likedBy = review.likedBy.filter((x) => x !== uid);
+  for (const rec of database.recipes) if (rec.authorId === uid) rec.authorId = null;
+  database.users = database.users.filter((account) => account.id !== uid);
 }
 
 module.exports = function (app) {
-  const r = app.router;
+  const appRouter = app.router;
 
-  r.post('/api/auth/register', async (ctx) => {
+  appRouter.post('/api/auth/register', async (ctx) => {
     if (ctx.app.cfg.demoOnly) throw new HttpError(403, 'Bản demo trực tuyến tạm đóng đăng ký. Hãy đăng nhập bằng tài khoản demo (demo / demo123).');
     const b = await ctx.body();
     rateCheck(ctx, typeof b.username === 'string' ? b.username : '');
-    const username = V.checkUsername(b.username);
-    const email = V.checkEmail(b.email);
-    const password = V.checkPassword(b.password);
-    const db = ctx.db;
-    if (db.users.some((u) => lc(u.username) === lc(username))) throw new HttpError(409, 'Tên đăng nhập đã được sử dụng', 'username');
-    if (db.users.some((u) => lc(u.email) === email)) throw new HttpError(409, 'Email đã được sử dụng', 'email');
+    const username = validateLib.checkUsername(b.username);
+    const email = validateLib.checkEmail(b.email);
+    const password = validateLib.checkPassword(b.password);
+    const database = ctx.db;
+    if (database.users.some((account) => lowerCase(account.username) === lowerCase(username))) throw new HttpError(409, 'Tên đăng nhập đã được sử dụng', 'username');
+    if (database.users.some((account) => lowerCase(account.email) === email)) throw new HttpError(409, 'Email đã được sử dụng', 'email');
     const passwordHash = await hashPassword(password);
     // kiểm tra lại sau await (tránh đua)
-    if (db.users.some((u) => lc(u.username) === lc(username))) throw new HttpError(409, 'Tên đăng nhập đã được sử dụng', 'username');
-    if (db.users.some((u) => lc(u.email) === email)) throw new HttpError(409, 'Email đã được sử dụng', 'email');
+    if (database.users.some((account) => lowerCase(account.username) === lowerCase(username))) throw new HttpError(409, 'Tên đăng nhập đã được sử dụng', 'username');
+    if (database.users.some((account) => lowerCase(account.email) === email)) throw new HttpError(409, 'Email đã được sử dụng', 'email');
     const user = { id: 'u_' + crypto.randomBytes(6).toString('hex'), username, email, avatar: null, passwordHash, createdAt: new Date().toISOString() };
-    db.users.push(user);
-    const sid = S.createSession(db, user.id);
+    database.users.push(user);
+    const sid = sessionLib.createSession(database, user.id);
     ctx.store.save();
-    ctx.setCookie(S.cookieHeader(sid, secure(ctx.req)));
+    ctx.setCookie(sessionLib.cookieHeader(sid, secure(ctx.req)));
     ctx.status = 201;
     return { user: publicUser(user) };
   });
 
-  r.post('/api/auth/login', async (ctx) => {
+  appRouter.post('/api/auth/login', async (ctx) => {
     const b = await ctx.body();
     rateCheck(ctx, typeof b.identifier === 'string' ? b.identifier : '');
-    const ident = V.str(b.identifier);
-    const pw = typeof b.password === 'string' ? b.password : '';
-    if (!ident || !pw) throw new HttpError(400, 'Vui lòng nhập tên đăng nhập/email và mật khẩu');
-    if (ident.length > 120 || pw.length > 200) throw new HttpError(401, 'Thông tin đăng nhập không đúng');
-    const li = lc(ident);
-    const user = ctx.db.users.find((u) => lc(u.username) === li || lc(u.email) === li);
-    if (!user) { await fakeVerify(pw); throw new HttpError(401, 'Tên đăng nhập/email hoặc mật khẩu không đúng'); }
-    if (!(await verifyPassword(pw, user.passwordHash))) throw new HttpError(401, 'Tên đăng nhập/email hoặc mật khẩu không đúng');
-    if (ctx.sid) S.destroySession(ctx.db, ctx.sid);
-    S.purgeExpired(ctx.db);
-    const sid = S.createSession(ctx.db, user.id);
+    const ident = validateLib.str(b.identifier);
+    const password = typeof b.password === 'string' ? b.password : '';
+    if (!ident || !password) throw new HttpError(400, 'Vui lòng nhập tên đăng nhập/email và mật khẩu');
+    if (ident.length > 120 || password.length > 200) throw new HttpError(401, 'Thông tin đăng nhập không đúng');
+    const identLower = lowerCase(ident);
+    const user = ctx.db.users.find((account) => lowerCase(account.username) === identLower || lowerCase(account.email) === identLower);
+    if (!user) { await fakeVerify(password); throw new HttpError(401, 'Tên đăng nhập/email hoặc mật khẩu không đúng'); }
+    if (!(await verifyPassword(password, user.passwordHash))) throw new HttpError(401, 'Tên đăng nhập/email hoặc mật khẩu không đúng');
+    if (ctx.sid) sessionLib.destroySession(ctx.db, ctx.sid);
+    sessionLib.purgeExpired(ctx.db);
+    const sid = sessionLib.createSession(ctx.db, user.id);
     ctx.store.save();
-    ctx.setCookie(S.cookieHeader(sid, secure(ctx.req)));
+    ctx.setCookie(sessionLib.cookieHeader(sid, secure(ctx.req)));
     return { user: publicUser(user) };
   });
 
-  r.post('/api/auth/logout', async (ctx) => {
-    if (ctx.sid) { S.destroySession(ctx.db, ctx.sid); ctx.store.save(); }
-    ctx.setCookie(S.clearCookieHeader());
+  appRouter.post('/api/auth/logout', async (ctx) => {
+    if (ctx.sid) { sessionLib.destroySession(ctx.db, ctx.sid); ctx.store.save(); }
+    ctx.setCookie(sessionLib.clearCookieHeader());
     return { ok: true };
   });
 
-  r.get('/api/me', (ctx) => ({ user: publicUser(ctx.user) }));
+  appRouter.get('/api/me', (ctx) => ({ user: publicUser(ctx.user) }));
 
-  r.patch('/api/me', async (ctx) => {
+  appRouter.patch('/api/me', async (ctx) => {
     const user = ctx.requireUser();
     const b = await ctx.body();
     // Đổi email / tên đăng nhập / mật khẩu cần nhập mật khẩu hiện tại; đổi ảnh đại diện hoặc ảnh bìa thì không
@@ -855,14 +855,14 @@ module.exports = function (app) {
     }
     const upd = {};
     if (b.username !== undefined) {
-      upd.username = V.checkUsername(b.username);
-      if (ctx.db.users.some((u) => u.id !== user.id && lc(u.username) === lc(upd.username))) throw new HttpError(409, 'Tên đăng nhập đã được sử dụng', 'username');
+      upd.username = validateLib.checkUsername(b.username);
+      if (ctx.db.users.some((account) => account.id !== user.id && lowerCase(account.username) === lowerCase(upd.username))) throw new HttpError(409, 'Tên đăng nhập đã được sử dụng', 'username');
     }
     if (b.email !== undefined) {
-      upd.email = V.checkEmail(b.email);
-      if (ctx.db.users.some((u) => u.id !== user.id && lc(u.email) === upd.email)) throw new HttpError(409, 'Email đã được sử dụng', 'email');
+      upd.email = validateLib.checkEmail(b.email);
+      if (ctx.db.users.some((account) => account.id !== user.id && lowerCase(account.email) === upd.email)) throw new HttpError(409, 'Email đã được sử dụng', 'email');
     }
-    if (b.newPassword !== undefined) { V.checkPassword(b.newPassword, 'newPassword'); upd.passwordHash = await hashPassword(b.newPassword); }
+    if (b.newPassword !== undefined) { validateLib.checkPassword(b.newPassword, 'newPassword'); upd.passwordHash = await hashPassword(b.newPassword); }
     if (b.avatar !== undefined) {
       if (b.avatar !== null && !(typeof b.avatar === 'string' && b.avatar.length <= 600000 && ((/^\/images\/[\w\-./]{1,200}$/.test(b.avatar) && !b.avatar.includes('..')) || /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(b.avatar)))) throw new HttpError(400, 'Ảnh đại diện không hợp lệ', 'avatar');
       upd.avatar = b.avatar;
@@ -872,19 +872,19 @@ module.exports = function (app) {
       upd.cover = b.cover;
     }
     Object.assign(user, upd);
-    if (upd.passwordHash) S.revokeOthers(ctx.db, user.id, ctx.sid);
+    if (upd.passwordHash) sessionLib.revokeOthers(ctx.db, user.id, ctx.sid);
     ctx.store.save();
     return { user: publicUser(user) };
   });
 
-  r.delete('/api/me', async (ctx) => {
+  appRouter.delete('/api/me', async (ctx) => {
     const user = ctx.requireUser();
     const b = await ctx.body();
     if (typeof b.password !== 'string' || !b.password) throw new HttpError(400, 'Vui lòng nhập mật khẩu để xác nhận', 'password');
     if (!(await verifyPassword(b.password, user.passwordHash))) throw new HttpError(403, 'Mật khẩu không đúng', 'password');
     purgeUser(ctx.db, user.id);
     ctx.store.save();
-    ctx.setCookie(S.clearCookieHeader());
+    ctx.setCookie(sessionLib.clearCookieHeader());
     return { ok: true };
   });
 };
@@ -895,78 +895,78 @@ module.exports = function (app) {
 def("routes/me", function (module, exports, require, __dirname) {
 'use strict';
 const { HttpError } = require('../lib/http');
-const V = require('../lib/validate');
-const M = require('../lib/model');
+const validateLib = require('../lib/validate');
+const modelLib = require('../lib/model');
 
 module.exports = function (app) {
-  const r = app.router;
+  const appRouter = app.router;
 
-  function savedList(c) {
-    return c.db.saved.filter((s) => s.userId === c.user.id).sort((a, b) => (a.at < b.at ? 1 : -1))
-      .map((s) => c.recipes.get(s.recipeId)).filter(Boolean);
+  function savedList(context) {
+    return context.db.saved.filter((entry) => entry.userId === context.user.id).sort((a, b) => (a.at < b.at ? 1 : -1))
+      .map((entry) => context.recipes.get(entry.recipeId)).filter(Boolean);
   }
-  function uploadedList(c) {
-    return c.db.recipes.filter((x) => x.authorId === c.user.id).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  function uploadedList(context) {
+    return context.db.recipes.filter((x) => x.authorId === context.user.id).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   }
-  function historyList(c) {
-    return c.db.history.filter((h) => h.userId === c.user.id).sort((a, b) => (a.at < b.at ? 1 : -1))
-      .map((h) => ({ rec: c.recipes.get(h.recipeId), at: h.at })).filter((x) => x.rec);
+  function historyList(context) {
+    return context.db.history.filter((entry) => entry.userId === context.user.id).sort((a, b) => (a.at < b.at ? 1 : -1))
+      .map((entry) => ({ rec: context.recipes.get(entry.recipeId), at: entry.at })).filter((x) => x.rec);
   }
-  function reviewList(c) {
-    return c.db.reviews.filter((x) => x.userId === c.user.id).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  function reviewList(context) {
+    return context.db.reviews.filter((x) => x.userId === context.user.id).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   }
-  function ctxOf(ctx) { ctx.requireUser(); return M.makeCtx(ctx.db, ctx.user); }
+  function ctxOf(ctx) { ctx.requireUser(); return modelLib.makeCtx(ctx.db, ctx.user); }
 
-  r.get('/api/me/saved', (ctx) => {
-    const c = ctxOf(ctx);
-    const p = V.paginate(savedList(c), ctx.query);
-    return { items: p.slice.map((x) => M.cardOf(c, x)), total: p.total, page: p.page, pages: p.pages };
+  appRouter.get('/api/me/saved', (ctx) => {
+    const context = ctxOf(ctx);
+    const page = validateLib.paginate(savedList(context), ctx.query);
+    return { items: page.slice.map((x) => modelLib.cardOf(context, x)), total: page.total, page: page.page, pages: page.pages };
   });
-  r.get('/api/me/uploaded', (ctx) => {
-    const c = ctxOf(ctx);
-    const p = V.paginate(uploadedList(c), ctx.query);
-    return { items: p.slice.map((x) => M.cardOf(c, x)), total: p.total, page: p.page, pages: p.pages };
+  appRouter.get('/api/me/uploaded', (ctx) => {
+    const context = ctxOf(ctx);
+    const page = validateLib.paginate(uploadedList(context), ctx.query);
+    return { items: page.slice.map((x) => modelLib.cardOf(context, x)), total: page.total, page: page.page, pages: page.pages };
   });
-  r.get('/api/me/history', (ctx) => {
-    const c = ctxOf(ctx);
-    const p = V.paginate(historyList(c), ctx.query);
-    return { items: p.slice.map((x) => Object.assign(M.cardOf(c, x.rec), { viewedAt: x.at })), total: p.total, page: p.page, pages: p.pages };
+  appRouter.get('/api/me/history', (ctx) => {
+    const context = ctxOf(ctx);
+    const page = validateLib.paginate(historyList(context), ctx.query);
+    return { items: page.slice.map((x) => Object.assign(modelLib.cardOf(context, x.rec), { viewedAt: x.at })), total: page.total, page: page.page, pages: page.pages };
   });
-  r.delete('/api/me/history', (ctx) => {
+  appRouter.delete('/api/me/history', (ctx) => {
     const user = ctx.requireUser();
-    ctx.db.history = ctx.db.history.filter((h) => h.userId !== user.id);
+    ctx.db.history = ctx.db.history.filter((entry) => entry.userId !== user.id);
     ctx.store.save();
     return { ok: true };
   });
-  r.get('/api/me/reviews', (ctx) => {
-    const c = ctxOf(ctx);
-    return { items: reviewList(c).map((x) => M.reviewOf(c, x)) };
+  appRouter.get('/api/me/reviews', (ctx) => {
+    const context = ctxOf(ctx);
+    return { items: reviewList(context).map((x) => modelLib.reviewOf(context, x)) };
   });
-  r.get('/api/me/overview', (ctx) => {
-    const c = ctxOf(ctx);
-    const saved = savedList(c), up = uploadedList(c), hist = historyList(c), rv = reviewList(c);
+  appRouter.get('/api/me/overview', (ctx) => {
+    const context = ctxOf(ctx);
+    const saved = savedList(context), uploaded = uploadedList(context), hist = historyList(context), reviews = reviewList(context);
     return {
-      counts: { saved: saved.length, uploaded: up.length, reviews: rv.length, history: hist.length },
-      recentSaved: saved.slice(0, 4).map((x) => M.cardOf(c, x)),
-      recentUploaded: up.slice(0, 4).map((x) => M.cardOf(c, x)),
-      recentReviews: rv.slice(0, 2).map((x) => M.reviewOf(c, x))
+      counts: { saved: saved.length, uploaded: uploaded.length, reviews: reviews.length, history: hist.length },
+      recentSaved: saved.slice(0, 4).map((x) => modelLib.cardOf(context, x)),
+      recentUploaded: uploaded.slice(0, 4).map((x) => modelLib.cardOf(context, x)),
+      recentReviews: reviews.slice(0, 2).map((x) => modelLib.reviewOf(context, x))
     };
   });
 
-  function setSaved(ctx, on) {
+  function setSaved(ctx, shouldSave) {
     const user = ctx.requireUser();
-    const c = M.makeCtx(ctx.db, user);
-    const rec = c.recipes.get(ctx.params.id);
+    const context = modelLib.makeCtx(ctx.db, user);
+    const rec = context.recipes.get(ctx.params.id);
     if (!rec) throw new HttpError(404, 'Không tìm thấy công thức');
-    const db = ctx.db;
-    const has = db.saved.some((s) => s.userId === user.id && s.recipeId === rec.id);
-    if (on && !has) db.saved.push({ userId: user.id, recipeId: rec.id, at: new Date().toISOString() });
-    if (!on && has) db.saved = db.saved.filter((s) => !(s.userId === user.id && s.recipeId === rec.id));
-    if (on !== has) ctx.store.save();
-    return { saved: on };
+    const database = ctx.db;
+    const has = database.saved.some((entry) => entry.userId === user.id && entry.recipeId === rec.id);
+    if (shouldSave && !has) database.saved.push({ userId: user.id, recipeId: rec.id, at: new Date().toISOString() });
+    if (!shouldSave && has) database.saved = database.saved.filter((entry) => !(entry.userId === user.id && entry.recipeId === rec.id));
+    if (shouldSave !== has) ctx.store.save();
+    return { saved: shouldSave };
   }
-  r.put('/api/recipes/:id/save', (ctx) => setSaved(ctx, true));
-  r.delete('/api/recipes/:id/save', (ctx) => setSaved(ctx, false));
+  appRouter.put('/api/recipes/:id/save', (ctx) => setSaved(ctx, true));
+  appRouter.delete('/api/recipes/:id/save', (ctx) => setSaved(ctx, false));
 };
 
 });
@@ -976,58 +976,58 @@ def("routes/reviews", function (module, exports, require, __dirname) {
 'use strict';
 const crypto = require('crypto');
 const { HttpError } = require('../lib/http');
-const M = require('../lib/model');
+const modelLib = require('../lib/model');
 
 module.exports = function (app) {
-  const r = app.router;
+  const appRouter = app.router;
 
-  r.get('/api/recipes/:id/reviews', (ctx) => {
-    const c = M.makeCtx(ctx.db, ctx.user);
-    const rec = c.recipes.get(ctx.params.id);
+  appRouter.get('/api/recipes/:id/reviews', (ctx) => {
+    const context = modelLib.makeCtx(ctx.db, ctx.user);
+    const rec = context.recipes.get(ctx.params.id);
     if (!rec) throw new HttpError(404, 'Không tìm thấy công thức');
     const list = ctx.db.reviews.filter((x) => x.recipeId === rec.id).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
     // average/count: điểm gộp (điểm mẫu + review mới), khớp với thẻ món và trang chi tiết
-    const rt = M.ratingOf(c, rec);
-    return { items: list.map((x) => M.reviewOf(c, x)), average: rt.rating, count: rt.ratingCount };
+    const rating = modelLib.ratingOf(context, rec);
+    return { items: list.map((x) => modelLib.reviewOf(context, x)), average: rating.rating, count: rating.ratingCount };
   });
 
-  r.post('/api/recipes/:id/reviews', async (ctx) => {
+  appRouter.post('/api/recipes/:id/reviews', async (ctx) => {
     const user = ctx.requireUser();
     app.writeLimit(ctx);
     const b = await ctx.body();
-    const c = M.makeCtx(ctx.db, user);
-    const rec = c.recipes.get(ctx.params.id);
+    const context = modelLib.makeCtx(ctx.db, user);
+    const rec = context.recipes.get(ctx.params.id);
     if (!rec) throw new HttpError(404, 'Không tìm thấy công thức');
     const rating = Number(b.rating);
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new HttpError(400, 'Số sao phải từ 1 đến 5', 'rating');
     const text = typeof b.text === 'string' ? b.text.trim() : '';
     if (b.text !== undefined && typeof b.text !== 'string') throw new HttpError(400, 'Nội dung đánh giá không hợp lệ', 'text');
     if (text.length > 2000) throw new HttpError(400, 'Nội dung đánh giá quá dài (tối đa 2000 ký tự)', 'text');
-    let rv = ctx.db.reviews.find((x) => x.recipeId === rec.id && x.userId === user.id);
-    const created = !rv;
-    if (rv) { rv.rating = rating; rv.text = text; rv.updatedAt = new Date().toISOString(); }
+    let review = ctx.db.reviews.find((x) => x.recipeId === rec.id && x.userId === user.id);
+    const created = !review;
+    if (review) { review.rating = rating; review.text = text; review.updatedAt = new Date().toISOString(); }
     else {
-      rv = { id: 'rv_' + crypto.randomBytes(6).toString('hex'), recipeId: rec.id, userId: user.id, rating, text, createdAt: new Date().toISOString(), likedBy: [] };
-      ctx.db.reviews.push(rv);
+      review = { id: 'rv_' + crypto.randomBytes(6).toString('hex'), recipeId: rec.id, userId: user.id, rating, text, createdAt: new Date().toISOString(), likedBy: [] };
+      ctx.db.reviews.push(review);
     }
     ctx.store.save();
     ctx.status = created ? 201 : 200;
-    return { review: M.reviewOf(c, rv) };
+    return { review: modelLib.reviewOf(context, review) };
   });
 
-  r.post('/api/reviews/:id/like', (ctx) => {
+  appRouter.post('/api/reviews/:id/like', (ctx) => {
     const user = ctx.requireUser();
     app.writeLimit(ctx);
-    const rv = ctx.db.reviews.find((x) => x.id === ctx.params.id);
-    if (!rv) throw new HttpError(404, 'Không tìm thấy đánh giá');
-    rv.likedBy = rv.likedBy || [];
-    const i = rv.likedBy.indexOf(user.id);
-    if (i >= 0) rv.likedBy.splice(i, 1); else rv.likedBy.push(user.id);
+    const review = ctx.db.reviews.find((x) => x.id === ctx.params.id);
+    if (!review) throw new HttpError(404, 'Không tìm thấy đánh giá');
+    review.likedBy = review.likedBy || [];
+    const i = review.likedBy.indexOf(user.id);
+    if (i >= 0) review.likedBy.splice(i, 1); else review.likedBy.push(user.id);
     ctx.store.save();
-    return { liked: i < 0, likes: rv.likedBy.length };
+    return { liked: i < 0, likes: review.likedBy.length };
   });
 
-  r.delete('/api/reviews/:id', (ctx) => {
+  appRouter.delete('/api/reviews/:id', (ctx) => {
     const user = ctx.requireUser();
     const i = ctx.db.reviews.findIndex((x) => x.id === ctx.params.id);
     if (i < 0) throw new HttpError(404, 'Không tìm thấy đánh giá');
@@ -1044,8 +1044,8 @@ module.exports = function (app) {
 def("routes/ingredients", function (module, exports, require, __dirname) {
 'use strict';
 const { HttpError } = require('../lib/http');
-const M = require('../lib/model');
-const V = require('../lib/validate');
+const modelLib = require('../lib/model');
+const validateLib = require('../lib/validate');
 const { catalog, canonId, nameOf, findByName } = require('../lib/catalog');
 const { norm, hash32 } = require('../lib/text');
 
@@ -1063,12 +1063,12 @@ const COUNT_PACKS = { // theo đơn vị đếm mặc định của nguyên li�
   'củ': ['túi 500g', 'túi 1kg', 'khay 300g'], 'quả': ['1 quả', 'khay 3 quả', 'túi 1kg'], 'trái': ['1 trái', 'khay 3 trái', 'túi 1kg'],
   'bó': ['1 bó', 'bó 300g', 'gói 500g'], 'nhánh': ['bó 5 cây', 'gói 100g', 'gói 200g'], 'ổ': ['1 ổ', 'túi 3 ổ', 'túi 5 ổ'], 'món': ['hũ 300g', 'hũ 500g']
 };
-function packsOf(it) {
-  if (EGGS.has(it.id)) return ['vỉ 4 quả', 'vỉ 6 quả', 'vỉ 10 quả'];
-  if (HERBS.has(it.id)) return ['bó 100g', 'gói 50g', 'bó 200g'];
-  if (it.dimension === 'count') return COUNT_PACKS[it.defaultUnit] || ['1 ' + (it.defaultUnit || 'cái')];
-  if (it.dimension === 'volume') return ['chai 250ml', 'chai 500ml', 'chai 1 lít'];
-  if (SPICES.has(it.id)) return ['gói 100g', 'gói 200g', 'hũ 500g'];
+function packsOf(ingredient) {
+  if (EGGS.has(ingredient.id)) return ['vỉ 4 quả', 'vỉ 6 quả', 'vỉ 10 quả'];
+  if (HERBS.has(ingredient.id)) return ['bó 100g', 'gói 50g', 'bó 200g'];
+  if (ingredient.dimension === 'count') return COUNT_PACKS[ingredient.defaultUnit] || ['1 ' + (ingredient.defaultUnit || 'cái')];
+  if (ingredient.dimension === 'volume') return ['chai 250ml', 'chai 500ml', 'chai 1 lít'];
+  if (SPICES.has(ingredient.id)) return ['gói 100g', 'gói 200g', 'hũ 500g'];
   return ['khay 300g', 'gói 500g', 'túi 1kg'];
 }
 // Tên sản phẩm cụ thể đã biết (khớp với giá tham khảo bên dưới)
@@ -1241,72 +1241,72 @@ const INGREDIENT_IMAGES = {
 };
 
 function compareOne(name) {
-  const it = findByName(name);
-  if (!it) return { name, id: null, unit: null, price: null, stores: [] };
-  const unit = it.dimension === 'count' ? (it.defaultUnit || 'quả') : (UNIT_LABEL[it.dimension] || '100g');
-  const base = BASE[it.id] || (2000 + (hash32(it.id) % 20) * 500);
-  const stores = STORES.map((s, i) => {
-    const h = hash32(it.id + s.store);
-    let price = Math.round((base * s.k * (0.95 + (h % 11) / 100)) / 10) * 10;
-    if (it.id === 'thit-heo' && i === 0) price = 11069;
-    if (it.id === 'thit-heo' && i === 1) price = 12700;
-    const disc = [0, 10, 15, 20][h % 4];
-    const pack = packsOf(it);
-    const product = (KNOWN[it.id] && KNOWN[it.id][s.store]) || (it.name + ' ' + pack[h % pack.length]);
-    const o = { store: s.store, product, price, unit, url: s.url };
-    if (INGREDIENT_IMAGES[it.id]) o.image = INGREDIENT_IMAGES[it.id];
-    if (disc) { o.oldPrice = Math.round(price / (1 - disc / 100) / 100) * 100; o.discount = disc; }
-    return o;
+  const ingredient = findByName(name);
+  if (!ingredient) return { name, id: null, unit: null, price: null, stores: [] };
+  const unit = ingredient.dimension === 'count' ? (ingredient.defaultUnit || 'quả') : (UNIT_LABEL[ingredient.dimension] || '100g');
+  const base = BASE[ingredient.id] || (2000 + (hash32(ingredient.id) % 20) * 500);
+  const stores = STORES.map((storeInfo, i) => {
+    const seed = hash32(ingredient.id + storeInfo.store);
+    let price = Math.round((base * storeInfo.k * (0.95 + (seed % 11) / 100)) / 10) * 10;
+    if (ingredient.id === 'thit-heo' && i === 0) price = 11069;
+    if (ingredient.id === 'thit-heo' && i === 1) price = 12700;
+    const disc = [0, 10, 15, 20][seed % 4];
+    const pack = packsOf(ingredient);
+    const product = (KNOWN[ingredient.id] && KNOWN[ingredient.id][storeInfo.store]) || (ingredient.name + ' ' + pack[seed % pack.length]);
+    const offer = { store: storeInfo.store, product, price, unit, url: storeInfo.url };
+    if (INGREDIENT_IMAGES[ingredient.id]) offer.image = INGREDIENT_IMAGES[ingredient.id];
+    if (disc) { offer.oldPrice = Math.round(price / (1 - disc / 100) / 100) * 100; offer.discount = disc; }
+    return offer;
   }).sort((a, b) => a.price - b.price);
-  return { name: it.name, id: it.id, unit, price: stores[0].price, stores };
+  return { name: ingredient.name, id: ingredient.id, unit, price: stores[0].price, stores };
 }
 
 module.exports = function (app) {
-  const r = app.router;
+  const appRouter = app.router;
 
   // Chỉ trả danh mục chuẩn (không lẫn tên/đơn vị do người dùng tự nhập)
-  r.get('/api/ingredients', () => ({ items: catalog.items, units: catalog.units }));
+  appRouter.get('/api/ingredients', () => ({ items: catalog.items, units: catalog.units }));
 
-  r.get('/api/ingredients/compare', (ctx) => {
-    const names = String(ctx.query.names || '').split(',').map((s) => s.trim()).filter(Boolean);
+  appRouter.get('/api/ingredients/compare', (ctx) => {
+    const names = String(ctx.query.names || '').split(',').map((name) => name.trim()).filter(Boolean);
     if (!names.length) throw new HttpError(400, 'Vui lòng nhập ít nhất một nguyên liệu (names=a,b,c)', 'names');
     if (names.length > 20) throw new HttpError(400, 'Tối đa 20 nguyên liệu mỗi lần so sánh', 'names');
     return { items: names.map(compareOne) };
   });
 
-  r.get('/api/fridge', (ctx) => {
-    const raw = String(ctx.query.ingredients || '').split(',').map((s) => s.trim()).filter(Boolean).slice(0, 60);
-    const limit = V.intParam(ctx.query, 'limit', 20, 1, 100);
-    const kw = norm(ctx.query.q || '');
-    const selFull = raw.map((t) => ({ group: t.includes(':') ? t.split(':')[0] : '', id: canonId(t) }));
+  appRouter.get('/api/fridge', (ctx) => {
+    const raw = String(ctx.query.ingredients || '').split(',').map((part) => part.trim()).filter(Boolean).slice(0, 60);
+    const limit = validateLib.intParam(ctx.query, 'limit', 20, 1, 100);
+    const keyword = norm(ctx.query.q || '');
+    const selFull = raw.map((token) => ({ group: token.includes(':') ? token.split(':')[0] : '', id: canonId(token) }));
     // Ô "Khác" của một nhóm (token "nhom:khac") chỉ dùng để khớp mục "<nhóm> khác" của công thức, không phải nguyên liệu
-    const selGroups = new Set(selFull.filter((s) => s.group && s.id === 'khac').map((s) => s.group));
-    const selIds = new Set(selFull.filter((s) => s.id !== 'khac').map((s) => s.id));
+    const selGroups = new Set(selFull.filter((entry) => entry.group && entry.id === 'khac').map((entry) => entry.group));
+    const selIds = new Set(selFull.filter((entry) => entry.id !== 'khac').map((entry) => entry.id));
     // Bộ lọc nhãn (Chế độ ăn, Vùng miền, Ngân sách): cùng cơ chế với trang Danh mục, trong nhóm khớp MỘT nhãn, giữa các nhóm khớp TẤT CẢ
     const tagGroups = ['che-do-an', 'vung-mien', 'ngan-sach']
-      .map((g) => String(ctx.query[g] || '').split(',').map((t) => norm(t)).filter(Boolean).slice(0, 12))
-      .filter((g) => g.length);
-    const c = M.makeCtx(ctx.db, ctx.user);
+      .map((group) => String(ctx.query[group] || '').split(',').map((token) => norm(token)).filter(Boolean).slice(0, 12))
+      .filter((group) => group.length);
+    const context = modelLib.makeCtx(ctx.db, ctx.user);
     const out = [];
     for (const rec of ctx.db.recipes) {
-      if (kw && !norm(rec.name).includes(kw)) continue;
+      if (keyword && !norm(rec.name).includes(keyword)) continue;
       if (tagGroups.length) {
-        const have = new Set((rec.tags || []).map((t) => norm(t)));
-        if (tagGroups.some((g) => !g.some((t) => have.has(t)))) continue;
+        const have = new Set((rec.tags || []).map((tag) => norm(tag)));
+        if (tagGroups.some((group) => !group.some((tag) => have.has(tag)))) continue;
       }
       const main = (rec.main && rec.main.length ? rec.main : (rec.ingredients || []).map((i) => i.ingredientId)).slice(0, 8);
       const matched = [], missing = [];
-      for (const m of main) {
+      for (const mainItem of main) {
         let label, hit;
-        if (/:khac$/.test(m)) { const g = m.split(':')[0]; hit = selGroups.has(g); label = (g === 'dam' ? 'Đạm' : g === 'rau-cu' ? 'Rau củ' : g) + ' khác'; }
-        else { hit = selIds.has(m); label = nameOf(m); }
+        if (/:khac$/.test(mainItem)) { const group = mainItem.split(':')[0]; hit = selGroups.has(group); label = (group === 'dam' ? 'Đạm' : group === 'rau-cu' ? 'Rau củ' : group) + ' khác'; }
+        else { hit = selIds.has(mainItem); label = nameOf(mainItem); }
         (hit ? matched : missing).push(label);
       }
       const anySel = selIds.size > 0 || selGroups.size > 0;
       if (anySel && !matched.length) continue;
       const total = matched.length + missing.length;
       const score = total ? Math.round((matched.length / total) * 100) / 100 : 0;
-      out.push({ recipe: M.cardOf(c, rec), matched, missing, score, status: anySel && !missing.length && (matched.length >= 2 || (main.length === 1 && !rec.legacyId)) ? 'du' : 'thieu' });
+      out.push({ recipe: modelLib.cardOf(context, rec), matched, missing, score, status: anySel && !missing.length && (matched.length >= 2 || (main.length === 1 && !rec.legacyId)) ? 'du' : 'thieu' });
     }
     out.sort((a, b) => b.score - a.score || b.matched.length - a.matched.length || b.recipe.rating - a.recipe.rating || (a.recipe.id < b.recipe.id ? -1 : 1));
     return { items: out.slice(0, limit) };
@@ -1320,20 +1320,20 @@ def("routes/misc", function (module, exports, require, __dirname) {
 'use strict';
 const crypto = require('crypto');
 const { HttpError } = require('../lib/http');
-const V = require('../lib/validate');
-const M = require('../lib/model');
+const validateLib = require('../lib/validate');
+const modelLib = require('../lib/model');
 
 module.exports = function (app) {
-  const r = app.router;
+  const appRouter = app.router;
 
-  r.post('/api/contact', async (ctx) => {
+  appRouter.post('/api/contact', async (ctx) => {
     const wait = app.contactLimiter.hit(ctx.ip);
     if (wait) { const e = new HttpError(429, 'Bạn gửi quá nhiều tin nhắn. Vui lòng thử lại sau ' + wait + ' giây.'); e.headers = { 'Retry-After': String(wait) }; throw e; }
     const b = await ctx.body();
-    const name = V.str(b.name);
+    const name = validateLib.str(b.name);
     if (!name || name.length > 100) throw new HttpError(400, 'Vui lòng nhập họ tên (tối đa 100 ký tự)', 'name');
-    const email = V.checkEmail(b.email);
-    const message = V.str(b.message);
+    const email = validateLib.checkEmail(b.email);
+    const message = validateLib.str(b.message);
     if (message.length < 5 || message.length > 5000) throw new HttpError(400, 'Nội dung cần từ 5 đến 5000 ký tự', 'message');
     ctx.db.contacts.push({ id: 'ct_' + crypto.randomBytes(5).toString('hex'), name, email, message, createdAt: new Date().toISOString() });
     if (ctx.db.contacts.length > 2000) ctx.db.contacts.shift();
@@ -1344,30 +1344,30 @@ module.exports = function (app) {
 
 
   // Bảng vinh danh trang chủ: nhiều công thức nhất / nhiều đánh giá nhất / công thức được lưu nhiều nhất.
-  r.get('/api/leaderboard', (ctx) => {
-    const db = ctx.db;
-    const byId = new Map(db.users.map((u) => [u.id, u]));
+  appRouter.get('/api/leaderboard', (ctx) => {
+    const database = ctx.db;
+    const byId = new Map(database.users.map((account) => [account.id, account]));
     function top(counter) {
       let best = null;
-      counter.forEach((n, id) => {
-        const u = byId.get(id);
-        if (u && (!best || n > best.count)) best = { id: u.id, username: u.username, avatar: u.avatar || null, count: n };
+      counter.forEach((count, userId) => {
+        const account = byId.get(userId);
+        if (account && (!best || count > best.count)) best = { id: account.id, username: account.username, avatar: account.avatar || null, count: count };
       });
       return best;
     }
     const uploads = new Map(), reviews = new Map(), saves = new Map();
-    db.recipes.forEach((x) => { if (x.authorId) uploads.set(x.authorId, (uploads.get(x.authorId) || 0) + 1); });
-    db.reviews.forEach((x) => { reviews.set(x.userId, (reviews.get(x.userId) || 0) + 1); });
-    db.saved.forEach((x) => { saves.set(x.recipeId, (saves.get(x.recipeId) || 0) + 1); });
+    database.recipes.forEach((x) => { if (x.authorId) uploads.set(x.authorId, (uploads.get(x.authorId) || 0) + 1); });
+    database.reviews.forEach((x) => { reviews.set(x.userId, (reviews.get(x.userId) || 0) + 1); });
+    database.saved.forEach((x) => { saves.set(x.recipeId, (saves.get(x.recipeId) || 0) + 1); });
     let bestRecipe = null;
-    saves.forEach((n, id) => {
-      const rec = db.recipes.find((x) => x.id === id);
-      if (rec && (!bestRecipe || n > bestRecipe.saves)) bestRecipe = { id: rec.id, name: rec.name, saves: n, author: rec.authorId && byId.get(rec.authorId) ? { id: rec.authorId, username: byId.get(rec.authorId).username } : null };
+    saves.forEach((count, userId) => {
+      const rec = database.recipes.find((x) => x.id === userId);
+      if (rec && (!bestRecipe || count > bestRecipe.saves)) bestRecipe = { id: rec.id, name: rec.name, saves: count, author: rec.authorId && byId.get(rec.authorId) ? { id: rec.authorId, username: byId.get(rec.authorId).username } : null };
     });
     return { mostRecipes: top(uploads), mostReviews: top(reviews), mostSaved: bestRecipe };
   });
 
-  r.get('/api/health', (ctx) => { const o = { ok: true, recipes: ctx.db.recipes.length }; if (ctx.app.cfg.demoOnly) o.demoOnly = true; return o; });
+  appRouter.get('/api/health', (ctx) => { const health = { ok: true, recipes: ctx.db.recipes.length }; if (ctx.app.cfg.demoOnly) health.demoOnly = true; return health; });
 };
 
 });
@@ -1386,19 +1386,19 @@ def("lib/hash", function (module, exports, require, __dirname) {
 // Băm mật khẩu bằng PBKDF2-SHA256 (Web Crypto) kèm salt ngẫu nhiên. Định dạng: p1$<salt hex>$<hash hex>
 const enc = new TextEncoder();
 const hex = (buf) => Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, '0')).join('');
-const unhex = (h) => new Uint8Array((h.match(/../g) || []).map((x) => parseInt(x, 16)));
-async function derive(pw, saltBytes) {
-  const key = await crypto.subtle.importKey('raw', enc.encode(String(pw)), 'PBKDF2', false, ['deriveBits']);
+const unhex = (hexText) => new Uint8Array((hexText.match(/../g) || []).map((x) => parseInt(x, 16)));
+async function derive(password, saltBytes) {
+  const key = await crypto.subtle.importKey('raw', enc.encode(String(password)), 'PBKDF2', false, ['deriveBits']);
   return hex(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: saltBytes, iterations: 100000 }, key, 256));
 }
-async function hashPassword(pw) {
+async function hashPassword(password) {
   const salt = crypto.getRandomValues(new Uint8Array(16));
-  return 'p1$' + hex(salt) + '$' + await derive(pw, salt);
+  return 'p1$' + hex(salt) + '$' + await derive(password, salt);
 }
-async function verifyPassword(pw, stored) {
-  const p = String(stored || '').split('$');
-  if (p.length !== 3 || p[0] !== 'p1') return false;
-  return (await derive(pw, unhex(p[1]))) === p[2];
+async function verifyPassword(password, stored) {
+  const parts = String(stored || '').split('$');
+  if (parts.length !== 3 || parts[0] !== 'p1') return false;
+  return (await derive(password, unhex(parts[1]))) === parts[2];
 }
 async function fakeVerify() { /* không cần: không có máy chủ để dò thời gian phản hồi */ }
 module.exports = { hashPassword, verifyPassword, fakeVerify };
@@ -1411,19 +1411,19 @@ def("lib/session", function (module, exports, require, __dirname) {
 // Phiên đăng nhập lưu trong localStorage của trình duyệt (không có cookie hay máy chủ).
 const MAX_AGE = 30 * 24 * 3600;
 const rnd = () => Array.from(crypto.getRandomValues(new Uint8Array(24)), (b) => b.toString(16).padStart(2, '0')).join('');
-function createSession(db, userId) {
+function createSession(database, userId) {
   const sid = rnd(), now = Date.now();
-  db.sessions.push({ id: sid, userId, createdAt: now, expiresAt: now + MAX_AGE * 1000 });
+  database.sessions.push({ id: sid, userId, createdAt: now, expiresAt: now + MAX_AGE * 1000 });
   return sid;
 }
-function findSession(db, sid) {
+function findSession(database, sid) {
   if (!sid) return null;
-  const s = db.sessions.find((x) => x.id === sid);
-  return s && s.expiresAt >= Date.now() ? s : null;
+  const entry = database.sessions.find((x) => x.id === sid);
+  return entry && entry.expiresAt >= Date.now() ? entry : null;
 }
-function destroySession(db, sid) { db.sessions = db.sessions.filter((x) => x.id !== sid); }
-function revokeOthers(db, userId, keepSid) { db.sessions = db.sessions.filter((s) => s.userId !== userId || s.id === keepSid); }
-function purgeExpired(db) { const n = Date.now(); db.sessions = db.sessions.filter((x) => x.expiresAt >= n); }
+function destroySession(database, sid) { database.sessions = database.sessions.filter((x) => x.id !== sid); }
+function revokeOthers(database, userId, keepSid) { database.sessions = database.sessions.filter((entry) => entry.userId !== userId || entry.id === keepSid); }
+function purgeExpired(database) { const now = Date.now(); database.sessions = database.sessions.filter((x) => x.expiresAt >= now); }
 const cookieHeader = (sid) => 'SET:' + sid;
 const clearCookieHeader = () => 'CLEAR';
 module.exports = { MAX_AGE, createSession, findSession, destroySession, purgeExpired, revokeOthers, cookieHeader, clearCookieHeader };
@@ -1431,9 +1431,9 @@ module.exports = { MAX_AGE, createSession, findSession, destroySession, purgeExp
 });
 
 /* ===== Chạy: dùng fetch đọc /data/db.json một lần, rồi xử lý mọi yêu cầu ngay trong trình duyệt (không gọi mạng nào khác) ===== */
-const HttpError = load('lib/http').HttpError, Router = load('lib/router').Router, S = load('lib/session');
+const HttpError = load('lib/http').HttpError, Router = load('lib/router').Router, sessionLib = load('lib/session');
 const NOLIMIT = { hit: function () { return 0; } };
-let router = new Router(), db = null, baseIds = null, baseRecipes = null, ready = null;
+let router = new Router(), database = null, baseIds = null, baseRecipes = null, ready = null;
 const app = {
   cfg: { demoOnly: false },
   router: router, limiter: NOLIMIT, ipLimiter: NOLIMIT, writeLimiter: NOLIMIT, contactLimiter: NOLIMIT
@@ -1441,16 +1441,16 @@ const app = {
 const store = { data: null, save: persist, saveSoon: persist };
 
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-function lsSet(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+function lsSet(k, value) { try { if (value === null) localStorage.removeItem(k); else localStorage.setItem(k, value); return true; } catch (e) { return false; } }
 
 function persist() {
-  const st = {};
-  COLLECTIONS.forEach(function (k) { st[k] = db[k] || []; });
-  st.userRecipes = db.recipes.filter(function (r) { return !baseIds.has(r.id); });
-  const have = new Set(db.recipes.map(function (r) { return r.id; }));
-  st.deletedSeed = Array.from(baseIds).filter(function (id) { return !have.has(id); });
-  st.seedEdits = db.seedEdits || {};
-  if (!lsSet(KEY, JSON.stringify(st))) throw new HttpError(507, 'Bộ nhớ của trình duyệt đã đầy hoặc bị chặn nên chưa lưu được. Hãy xóa bớt công thức hoặc ảnh rồi thử lại.');
+  const state = {};
+  COLLECTIONS.forEach(function (k) { state[k] = database[k] || []; });
+  state.userRecipes = database.recipes.filter(function (recipe) { return !baseIds.has(recipe.id); });
+  const have = new Set(database.recipes.map(function (recipe) { return recipe.id; }));
+  state.deletedSeed = Array.from(baseIds).filter(function (recipeId) { return !have.has(recipeId); });
+  state.seedEdits = database.seedEdits || {};
+  if (!lsSet(KEY, JSON.stringify(state))) throw new HttpError(507, 'Bộ nhớ của trình duyệt đã đầy hoặc bị chặn nên chưa lưu được. Hãy xóa bớt công thức hoặc ảnh rồi thử lại.');
 }
 
 let baseText = null;
@@ -1458,66 +1458,66 @@ let baseText = null;
 /* Dựng lại db từ db.json gốc + phần người dùng đã lưu trong localStorage. */
 function loadState() {
   const base = JSON.parse(baseText);
-  db = base;
+  database = base;
   baseRecipes = base.recipes.slice();
-  baseIds = new Set(baseRecipes.map(function (r) { return r.id; }));
+  baseIds = new Set(baseRecipes.map(function (recipe) { return recipe.id; }));
   /* review mẫu gốc: đã tính trong seedRating/seedCount, dùng để không cộng trùng khi tính điểm (không lưu vào localStorage) */
-  db.seedReviews = new Map((base.reviews || []).map(function (r) { return [r.id, { recipeId: r.recipeId, rating: r.rating }]; }));
-  let raw = lsGet(KEY), st = null;
+  database.seedReviews = new Map((base.reviews || []).map(function (recipe) { return [recipe.id, { recipeId: recipe.recipeId, rating: recipe.rating }]; }));
+  let raw = lsGet(KEY), stored = null;
   /* dữ liệu lưu từ phiên bản trước còn đường dẫn /assets/..., đổi sang cấu trúc thư mục mới */
   if (raw) raw = raw.replace(/\/assets\/icons\//g, '/images/icons/').replace(/\/assets\/images\//g, '/images/').replace(/\/assets\/fonts\//g, '/fonts/');
-  try { st = raw ? JSON.parse(raw) : null; } catch (e) { st = null; }
-  if (st) {
-    COLLECTIONS.forEach(function (k) { db[k] = Array.isArray(st[k]) ? st[k] : []; });
-    const del = new Set(st.deletedSeed || []);
-    db.recipes = baseRecipes.filter(function (r) { return !del.has(r.id); }).concat(st.userRecipes || []);
-    db.seedEdits = st.seedEdits && typeof st.seedEdits === 'object' ? st.seedEdits : {};
-    db.recipes.forEach(function (r) { if (db.seedEdits[r.id]) Object.assign(r, db.seedEdits[r.id]); });
+  try { stored = raw ? JSON.parse(raw) : null; } catch (e) { stored = null; }
+  if (stored) {
+    COLLECTIONS.forEach(function (k) { database[k] = Array.isArray(stored[k]) ? stored[k] : []; });
+    const del = new Set(stored.deletedSeed || []);
+    database.recipes = baseRecipes.filter(function (recipe) { return !del.has(recipe.id); }).concat(stored.userRecipes || []);
+    database.seedEdits = stored.seedEdits && typeof stored.seedEdits === 'object' ? stored.seedEdits : {};
+    database.recipes.forEach(function (recipe) { if (database.seedEdits[recipe.id]) Object.assign(recipe, database.seedEdits[recipe.id]); });
   }
-  COLLECTIONS.forEach(function (k) { if (!Array.isArray(db[k])) db[k] = []; });
-  store.data = db;
+  COLLECTIONS.forEach(function (k) { if (!Array.isArray(database[k])) database[k] = []; });
+  store.data = database;
 }
 
 function init() {
-  return origFetch('/data/db.json').then(function (r) {
-    if (!r.ok) throw new Error('Không tải được /data/db.json (' + r.status + ')');
-    return r.text();
+  return origFetch('/data/db.json').then(function (response) {
+    if (!response.ok) throw new Error('Không tải được /data/db.json (' + response.status + ')');
+    return response.text();
   }).then(function (text) {
     baseText = text;
     loadState();
-    ['auth', 'recipes', 'me', 'reviews', 'ingredients', 'misc'].forEach(function (n) { load('routes/' + n)(app); });
+    ['auth', 'recipes', 'me', 'reviews', 'ingredients', 'misc'].forEach(function (routeName) { load('routes/' + routeName)(app); });
   });
 }
 
 function json(status, obj) { return { status: status, data: obj }; }
 
 async function handle(url, method, bodyText) {
-  const u = new URL(url, location.origin);
-  const m = router.match(method, u.pathname);
-  if (!m) throw new HttpError(404, 'Không tìm thấy API này');
-  if (m.badRequest) throw new HttpError(400, 'Đường dẫn không hợp lệ');
-  if (m.methods) throw new HttpError(405, 'Phương thức không được hỗ trợ');
+  const parsedUrl = new URL(url, location.origin);
+  const matched = router.match(method, parsedUrl.pathname);
+  if (!matched) throw new HttpError(404, 'Không tìm thấy API này');
+  if (matched.badRequest) throw new HttpError(400, 'Đường dẫn không hợp lệ');
+  if (matched.methods) throw new HttpError(405, 'Phương thức không được hỗ trợ');
   const sid = lsGet(SID_KEY);
-  const sess = S.findSession(db, sid);
-  const user = sess ? db.users.find(function (x) { return x.id === sess.userId; }) || null : null;
+  const sess = sessionLib.findSession(database, sid);
+  const user = sess ? database.users.find(function (x) { return x.id === sess.userId; }) || null : null;
   const query = {};
-  u.searchParams.forEach(function (v, k) { if (!(k in query)) query[k] = v; });
+  parsedUrl.searchParams.forEach(function (value, k) { if (!(k in query)) query[k] = value; });
   const ctx = {
-    req: { headers: {} }, url: u, query: query, params: m.params, app: app, db: db, store: store,
+    req: { headers: {} }, url: parsedUrl, query: query, params: matched.params, app: app, db: database, store: store,
     user: user, sid: sid, status: 200, headers: {}, ip: 'local',
     body: async function () {
-      let v;
-      try { v = bodyText ? JSON.parse(bodyText) : {}; } catch (e) { throw new HttpError(400, 'Dữ liệu JSON không hợp lệ'); }
-      if (v === null || typeof v !== 'object' || Array.isArray(v)) throw new HttpError(400, 'Dữ liệu gửi lên phải là một đối tượng JSON');
-      return v;
+      let parsed;
+      try { parsed = bodyText ? JSON.parse(bodyText) : {}; } catch (e) { throw new HttpError(400, 'Dữ liệu JSON không hợp lệ'); }
+      if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) throw new HttpError(400, 'Dữ liệu gửi lên phải là một đối tượng JSON');
+      return parsed;
     },
-    setCookie: function (v) { this.headers['Set-Cookie'] = v; },
+    setCookie: function (cookie) { this.headers['Set-Cookie'] = cookie; },
     requireUser: function () { if (!this.user) throw new HttpError(401, 'Bạn cần đăng nhập để thực hiện thao tác này'); return this.user; }
   };
   let out;
-  try { out = await m.route.handler(ctx); } catch (e) { if (e instanceof HttpError && e.status === 507) loadState(); throw e; }
-  const c = ctx.headers['Set-Cookie'];
-  if (c) { if (c === 'CLEAR') lsSet(SID_KEY, null); else if (c.indexOf('SET:') === 0) lsSet(SID_KEY, c.slice(4)); }
+  try { out = await matched.route.handler(ctx); } catch (e) { if (e instanceof HttpError && e.status === 507) loadState(); throw e; }
+  const cookie = ctx.headers['Set-Cookie'];
+  if (cookie) { if (cookie === 'CLEAR') lsSet(SID_KEY, null); else if (cookie.indexOf('SET:') === 0) lsSet(SID_KEY, cookie.slice(4)); }
   return json(ctx.status, out === undefined ? { ok: true } : out);
 }
 
