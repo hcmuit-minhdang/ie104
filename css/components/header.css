@@ -7,6 +7,14 @@
     font-display: swap;
 }
 
+/* Nút và ô nhập mặc định dùng font hệ thống (Arial); cho kế thừa Inter của trang để không bị lệch font. */
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
 .site-header {
     --site-header-height: 76px;
     background-color: white;
