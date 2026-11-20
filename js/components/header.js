@@ -209,7 +209,7 @@
     const navTargets = {
         guide: "/about.html#huong-dan",
         faq: "/about.html#faq",
-        contact: "/about.html#lien-he"
+        contact: "/about.html#gop-y"
     };
     document.addEventListener("nomnom:navigation-request", event => {
         const target = event.detail && event.detail.target;
@@ -237,7 +237,7 @@
         "về nomnom": "/about.html",
         "hướng dẫn sử dụng": "/about.html#huong-dan",
         "câu hỏi thường gặp": "/about.html#faq",
-        "liên hệ": "/about.html#lien-he"
+        "liên hệ": "/about.html#gop-y"
     };
     const socials = { facebook: "https://www.facebook.com/", instagram: "https://www.instagram.com/",
         youtube: "https://www.youtube.com/", tiktok: "https://www.tiktok.com/" };

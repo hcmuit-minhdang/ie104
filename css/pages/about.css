@@ -129,14 +129,7 @@ body::before {
 .contact-status.is-err{color:#b42318}
 
 /* liên hệ */
-.contact-card{display:flex;flex-direction:column;gap:20px;padding:28px;max-width:640px}
-.contact-list{list-style:none;display:flex;flex-direction:column;gap:12px}
-.contact-list li{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline}
 .contact-label{min-width:130px;font-weight:700}
-.contact-list a{text-decoration: none;text-underline-offset:3px}
-.contact-social{display:flex;flex-wrap:wrap;gap:12px 24px}
-.contact-social a{display:inline-flex;align-items:center;gap:8px;font-weight:600}
-.contact-social img{flex:none}
 /* nút "Khám phá công thức →": chữ và mũi tên luôn nằm trên một dòng */
 .hero .btn-yellow{width:auto;min-width:min(336px,100%);max-width:100%;padding:20px 28px;white-space:nowrap;font-size:clamp(18px,2.1vw,28px)}
 
