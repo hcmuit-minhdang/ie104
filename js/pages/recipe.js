@@ -126,7 +126,7 @@ function normalizeRecipe(raw, recipeId) {
     const num = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
     const title = raw.title || raw.name || "Công thức";
     const baseServings = Math.max(1, num(raw.baseServings || raw.servings) || 1);
-    let prepTime = num(raw.prepTime);
+    const prepTime = num(raw.prepTime);
     let cookTime = num(raw.cookTime);
     if (!prepTime && !cookTime && raw.time) cookTime = num(raw.time);
     // Giá theo phần (price) là số gốc, giống thẻ món; tổng chi phí = price * khẩu phần (chỉ dùng costTotal khi không có price)

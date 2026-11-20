@@ -2,10 +2,10 @@
    bấm tên nhóm để mở/đóng danh sách ô chọn. Việc gửi bộ lọc do script của từng trang xử lý. */
 (function () {
   "use strict";
-  document.querySelectorAll(".filter-trigger-btn").forEach(function (btn) {
+  document.querySelectorAll(".filter-group__trigger").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      var group = btn.parentElement;
-      var open = !group.classList.contains("is-open");
+      const group = btn.parentElement;
+      const open = !group.classList.contains("is-open");
       group.classList.toggle("is-open", open);
       btn.setAttribute("aria-expanded", open ? "true" : "false");
     });

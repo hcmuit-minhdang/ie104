@@ -6,24 +6,24 @@
    Phần module bên dưới được ghép từ các route/model đã kiểm thử của phiên bản có máy chủ trước đây. */
 (function () {
 'use strict';
-var origFetch = window.fetch.bind(window); // chỉ dùng để đọc file tĩnh /data/db.json
-var KEY = 'nomnom:state:v2', SID_KEY = 'nomnom:sid';
-var COLLECTIONS = ['users', 'sessions', 'saved', 'reviews', 'history', 'contacts', 'uploads'];
-var FILES = {"ingredients.json":"[\r\n  {\r\n    \"id\": \"gao-tam\",\r\n    \"name\": \"Gạo tấm\",\r\n    \"aliases\": [\"gạo\", \"tấm\", \"gao tam\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"thit-heo\",\r\n    \"name\": \"Thịt heo\",\r\n    \"aliases\": [\"sườn\", \"cốt lết\", \"ba rọi\", \"thit heo\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-cot-dua\",\r\n    \"name\": \"Nước cốt dừa\",\r\n    \"aliases\": [\"cốt dừa\", \"nuoc cot dua\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-cot-chanh\",\r\n    \"name\": \"Nước cốt chanh\",\r\n    \"aliases\": [\"chanh\", \"nuoc cot chanh\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"la-dua\",\r\n    \"name\": \"Lá dứa\",\r\n    \"aliases\": [\"la dua\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"trung-vit\",\r\n    \"name\": \"Trứng vịt\",\r\n    \"aliases\": [\"trứng\", \"trung vit\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"toi-bam\",\r\n    \"name\": \"Tỏi băm\",\r\n    \"aliases\": [\"tỏi\", \"toi bam\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"hanh-tim\",\r\n    \"name\": \"Hành tím\",\r\n    \"aliases\": [\"hành\", \"hanh tim\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"hanh-la\",\r\n    \"name\": \"Hành lá\",\r\n    \"aliases\": [\"hanh la\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"bó\", \"nhánh\"],\r\n    \"defaultUnit\": \"bó\"\r\n  },\r\n  {\r\n    \"id\": \"dua-chua\",\r\n    \"name\": \"Dưa chua\",\r\n    \"aliases\": [\"đồ chua\", \"dua chua\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"món\"],\r\n    \"defaultUnit\": \"món\"\r\n  },\r\n  {\r\n    \"id\": \"hoa-hoi\",\r\n    \"name\": \"Hoa hồi\",\r\n    \"aliases\": [\"hồi\", \"hoa hoi\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"nhánh\"],\r\n    \"defaultUnit\": \"nhánh\"\r\n  },\r\n  {\r\n    \"id\": \"dau-hao\",\r\n    \"name\": \"Dầu hào\",\r\n    \"aliases\": [\"dau hao\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"dau-an\",\r\n    \"name\": \"Dầu ăn\",\r\n    \"aliases\": [\"dau an\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"muoi\",\r\n    \"name\": \"Muối\",\r\n    \"aliases\": [\"muoi\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-mam\",\r\n    \"name\": \"Nước mắm\",\r\n    \"aliases\": [\"mắm\", \"nuoc mam\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-tuong\",\r\n    \"name\": \"Nước tương\",\r\n    \"aliases\": [\"tương\", \"nuoc tuong\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"bot-ngot\",\r\n    \"name\": \"Bột ngọt\",\r\n    \"aliases\": [\"mì chính\", \"bot ngot\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"duong-cat\",\r\n    \"name\": \"Đường cát\",\r\n    \"aliases\": [\"đường\", \"duong cat\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"mat-ong\",\r\n    \"name\": \"Mật ong\",\r\n    \"aliases\": [\"mat ong\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"ngu-vi-huong\",\r\n    \"name\": \"Ngũ vị hương\",\r\n    \"aliases\": [\"ngu vi huong\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-dua\",\r\n    \"name\": \"Nước dừa\",\r\n    \"aliases\": [\"nuoc dua\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"ot\",\r\n    \"name\": \"Ớt\",\r\n    \"aliases\": [\"ớt\", \"ot\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"trái\", \"quả\"],\r\n    \"defaultUnit\": \"trái\"\r\n  },\r\n  {\r\n    \"id\": \"banh-mi\",\r\n    \"name\": \"Bánh mì\",\r\n    \"aliases\": [\"bánh mì\", \"banh mi\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"ổ\"],\r\n    \"defaultUnit\": \"ổ\"\r\n  },\r\n  {\r\n    \"id\": \"dua-leo\",\r\n    \"name\": \"Dưa leo\",\r\n    \"aliases\": [\"dưa chuột\", \"dua leo\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"rau-thom\",\r\n    \"name\": \"Rau thơm\",\r\n    \"aliases\": [\"ngò\", \"rau mùi\", \"rau thom\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"pa-te\",\r\n    \"name\": \"Pa-tê\",\r\n    \"aliases\": [\"pate\", \"pa te\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"tuong-ot\",\r\n    \"name\": \"Tương ớt\",\r\n    \"aliases\": [\"tuong ot\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"bun-tuoi\",\r\n    \"name\": \"Bún tươi\",\r\n    \"aliases\": [\"bún\", \"bun tuoi\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"banh-pho\",\r\n    \"name\": \"Bánh phở\",\r\n    \"aliases\": [\"phở\", \"banh pho\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"thit-bo\",\r\n    \"name\": \"Thịt bò\",\r\n    \"aliases\": [\"bò\", \"thit bo\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"thit-ga\",\r\n    \"name\": \"Thịt gà\",\r\n    \"aliases\": [\"gà\", \"thit ga\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"xuong-ong\",\r\n    \"name\": \"Xương ống\",\r\n    \"aliases\": [\"xương\", \"xuong ong\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"tom-kho\",\r\n    \"name\": \"Tôm khô\",\r\n    \"aliases\": [\"tom kho\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"tom-tuoi\",\r\n    \"name\": \"Tôm tươi\",\r\n    \"aliases\": [\"tôm\", \"tom tuoi\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"ca-chua\",\r\n    \"name\": \"Cà chua\",\r\n    \"aliases\": [\"ca chua\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"sa\",\r\n    \"name\": \"Sả\",\r\n    \"aliases\": [\"sả cây\", \"sa\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"nhánh\"],\r\n    \"defaultUnit\": \"nhánh\"\r\n  },\r\n  {\r\n    \"id\": \"gung\",\r\n    \"name\": \"Gừng\",\r\n    \"aliases\": [\"gung\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"rieng\",\r\n    \"name\": \"Riềng\",\r\n    \"aliases\": [\"củ riềng\", \"rieng\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"mam-tom\",\r\n    \"name\": \"Mắm tôm\",\r\n    \"aliases\": [\"mam tom\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"que\",\r\n    \"name\": \"Quế\",\r\n    \"aliases\": [\"quế thanh\", \"que\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"nhánh\"],\r\n    \"defaultUnit\": \"nhánh\"\r\n  },\r\n  {\r\n    \"id\": \"thao-qua\",\r\n    \"name\": \"Thảo quả\",\r\n    \"aliases\": [\"thao qua\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"tieu\",\r\n    \"name\": \"Tiêu\",\r\n    \"aliases\": [\"hạt tiêu\", \"tiêu sọ\", \"tieu\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"chanh\",\r\n    \"name\": \"Chanh\",\r\n    \"aliases\": [\"chanh tươi\", \"chanh\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"nam-rom\",\r\n    \"name\": \"Nấm rơm\",\r\n    \"aliases\": [\"nam rom\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nam-huong\",\r\n    \"name\": \"Nấm hương\",\r\n    \"aliases\": [\"nấm đông cô\", \"nam huong\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"hanh-tay\",\r\n    \"name\": \"Hành tây\",\r\n    \"aliases\": [\"hanh tay\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"khoai-tay\",\r\n    \"name\": \"Khoai tây\",\r\n    \"aliases\": [\"khoai tay\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"ca-rot\",\r\n    \"name\": \"Cà rốt\",\r\n    \"aliases\": [\"ca rot\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"dau-hu\",\r\n    \"name\": \"Đậu hũ\",\r\n    \"aliases\": [\"đậu phụ\", \"dau hu\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-dung\",\r\n    \"name\": \"Nước dùng\",\r\n    \"aliases\": [\"nước lèo\", \"nuoc dung\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"ruou-trang\",\r\n    \"name\": \"Rượu trắng\",\r\n    \"aliases\": [\"rượu\", \"ruou trang\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"hat-nem\",\r\n    \"name\": \"Hạt nêm\",\r\n    \"aliases\": [\"bột nêm\", \"hat nem\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"rau-muong\",\r\n    \"name\": \"Rau muống\",\r\n    \"aliases\": [\"rau muong\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"bó\"],\r\n    \"defaultUnit\": \"bó\"\r\n  },\r\n  {\r\n    \"id\": \"ca-tim\",\r\n    \"name\": \"Cà tím\",\r\n    \"aliases\": [\"ca tim\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"sua-dac\",\r\n    \"name\": \"Sữa đặc\",\r\n    \"aliases\": [\"sua dac\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"giam\",\r\n    \"name\": \"Giấm\",\r\n    \"aliases\": [\"dấm\", \"giam\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"tuong-den\",\r\n    \"name\": \"Tương đen\",\r\n    \"aliases\": [\"tương ăn phở\", \"tuong den\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  }\r\n]\r\n","units.json":"{\r\n  \"g\": { \"label\": \"g\", \"dimension\": \"mass\", \"toBase\": 1, \"compact\": true },\r\n  \"kg\": { \"label\": \"kg\", \"dimension\": \"mass\", \"toBase\": 1000, \"compact\": true },\r\n  \"ml\": { \"label\": \"ml\", \"dimension\": \"volume\", \"toBase\": 1, \"compact\": true },\r\n  \"lít\": { \"label\": \"lít\", \"dimension\": \"volume\", \"toBase\": 1000, \"compact\": true },\r\n  \"muỗng cà phê\": { \"label\": \"muỗng cà phê\", \"dimension\": \"volume\", \"toBase\": 5 },\r\n  \"muỗng canh\": { \"label\": \"muỗng canh\", \"dimension\": \"volume\", \"toBase\": 15 },\r\n  \"quả\": { \"label\": \"quả\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"trái\": { \"label\": \"trái\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"củ\": { \"label\": \"củ\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"nhánh\": { \"label\": \"nhánh\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"tép\": { \"label\": \"tép\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"bó\": { \"label\": \"bó\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"món\": { \"label\": \"món\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"ổ\": { \"label\": \"ổ\", \"dimension\": \"count\", \"toBase\": 1 }\r\n}\r\n"};
+const origFetch = window.fetch.bind(window); // chỉ dùng để đọc file tĩnh /data/db.json
+const KEY = 'nomnom:state:v2', SID_KEY = 'nomnom:sid';
+const COLLECTIONS = ['users', 'sessions', 'saved', 'reviews', 'history', 'contacts', 'uploads'];
+const FILES = {"ingredients.json":"[\r\n  {\r\n    \"id\": \"gao-tam\",\r\n    \"name\": \"Gạo tấm\",\r\n    \"aliases\": [\"gạo\", \"tấm\", \"gao tam\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"thit-heo\",\r\n    \"name\": \"Thịt heo\",\r\n    \"aliases\": [\"sườn\", \"cốt lết\", \"ba rọi\", \"thit heo\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-cot-dua\",\r\n    \"name\": \"Nước cốt dừa\",\r\n    \"aliases\": [\"cốt dừa\", \"nuoc cot dua\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-cot-chanh\",\r\n    \"name\": \"Nước cốt chanh\",\r\n    \"aliases\": [\"chanh\", \"nuoc cot chanh\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"la-dua\",\r\n    \"name\": \"Lá dứa\",\r\n    \"aliases\": [\"la dua\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"trung-vit\",\r\n    \"name\": \"Trứng vịt\",\r\n    \"aliases\": [\"trứng\", \"trung vit\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"toi-bam\",\r\n    \"name\": \"Tỏi băm\",\r\n    \"aliases\": [\"tỏi\", \"toi bam\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"hanh-tim\",\r\n    \"name\": \"Hành tím\",\r\n    \"aliases\": [\"hành\", \"hanh tim\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"hanh-la\",\r\n    \"name\": \"Hành lá\",\r\n    \"aliases\": [\"hanh la\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"bó\", \"nhánh\"],\r\n    \"defaultUnit\": \"bó\"\r\n  },\r\n  {\r\n    \"id\": \"dua-chua\",\r\n    \"name\": \"Dưa chua\",\r\n    \"aliases\": [\"đồ chua\", \"dua chua\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"món\"],\r\n    \"defaultUnit\": \"món\"\r\n  },\r\n  {\r\n    \"id\": \"hoa-hoi\",\r\n    \"name\": \"Hoa hồi\",\r\n    \"aliases\": [\"hồi\", \"hoa hoi\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"nhánh\"],\r\n    \"defaultUnit\": \"nhánh\"\r\n  },\r\n  {\r\n    \"id\": \"dau-hao\",\r\n    \"name\": \"Dầu hào\",\r\n    \"aliases\": [\"dau hao\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"dau-an\",\r\n    \"name\": \"Dầu ăn\",\r\n    \"aliases\": [\"dau an\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"muoi\",\r\n    \"name\": \"Muối\",\r\n    \"aliases\": [\"muoi\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-mam\",\r\n    \"name\": \"Nước mắm\",\r\n    \"aliases\": [\"mắm\", \"nuoc mam\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-tuong\",\r\n    \"name\": \"Nước tương\",\r\n    \"aliases\": [\"tương\", \"nuoc tuong\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"bot-ngot\",\r\n    \"name\": \"Bột ngọt\",\r\n    \"aliases\": [\"mì chính\", \"bot ngot\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"duong-cat\",\r\n    \"name\": \"Đường cát\",\r\n    \"aliases\": [\"đường\", \"duong cat\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"mat-ong\",\r\n    \"name\": \"Mật ong\",\r\n    \"aliases\": [\"mat ong\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"ngu-vi-huong\",\r\n    \"name\": \"Ngũ vị hương\",\r\n    \"aliases\": [\"ngu vi huong\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-dua\",\r\n    \"name\": \"Nước dừa\",\r\n    \"aliases\": [\"nuoc dua\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"ot\",\r\n    \"name\": \"Ớt\",\r\n    \"aliases\": [\"ớt\", \"ot\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"trái\", \"quả\"],\r\n    \"defaultUnit\": \"trái\"\r\n  },\r\n  {\r\n    \"id\": \"banh-mi\",\r\n    \"name\": \"Bánh mì\",\r\n    \"aliases\": [\"bánh mì\", \"banh mi\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"ổ\"],\r\n    \"defaultUnit\": \"ổ\"\r\n  },\r\n  {\r\n    \"id\": \"dua-leo\",\r\n    \"name\": \"Dưa leo\",\r\n    \"aliases\": [\"dưa chuột\", \"dua leo\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"rau-thom\",\r\n    \"name\": \"Rau thơm\",\r\n    \"aliases\": [\"ngò\", \"rau mùi\", \"rau thom\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"pa-te\",\r\n    \"name\": \"Pa-tê\",\r\n    \"aliases\": [\"pate\", \"pa te\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"tuong-ot\",\r\n    \"name\": \"Tương ớt\",\r\n    \"aliases\": [\"tuong ot\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"bun-tuoi\",\r\n    \"name\": \"Bún tươi\",\r\n    \"aliases\": [\"bún\", \"bun tuoi\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"banh-pho\",\r\n    \"name\": \"Bánh phở\",\r\n    \"aliases\": [\"phở\", \"banh pho\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"thit-bo\",\r\n    \"name\": \"Thịt bò\",\r\n    \"aliases\": [\"bò\", \"thit bo\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"thit-ga\",\r\n    \"name\": \"Thịt gà\",\r\n    \"aliases\": [\"gà\", \"thit ga\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"xuong-ong\",\r\n    \"name\": \"Xương ống\",\r\n    \"aliases\": [\"xương\", \"xuong ong\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"tom-kho\",\r\n    \"name\": \"Tôm khô\",\r\n    \"aliases\": [\"tom kho\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"tom-tuoi\",\r\n    \"name\": \"Tôm tươi\",\r\n    \"aliases\": [\"tôm\", \"tom tuoi\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"ca-chua\",\r\n    \"name\": \"Cà chua\",\r\n    \"aliases\": [\"ca chua\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"sa\",\r\n    \"name\": \"Sả\",\r\n    \"aliases\": [\"sả cây\", \"sa\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"nhánh\"],\r\n    \"defaultUnit\": \"nhánh\"\r\n  },\r\n  {\r\n    \"id\": \"gung\",\r\n    \"name\": \"Gừng\",\r\n    \"aliases\": [\"gung\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"rieng\",\r\n    \"name\": \"Riềng\",\r\n    \"aliases\": [\"củ riềng\", \"rieng\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"mam-tom\",\r\n    \"name\": \"Mắm tôm\",\r\n    \"aliases\": [\"mam tom\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"que\",\r\n    \"name\": \"Quế\",\r\n    \"aliases\": [\"quế thanh\", \"que\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"nhánh\"],\r\n    \"defaultUnit\": \"nhánh\"\r\n  },\r\n  {\r\n    \"id\": \"thao-qua\",\r\n    \"name\": \"Thảo quả\",\r\n    \"aliases\": [\"thao qua\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"tieu\",\r\n    \"name\": \"Tiêu\",\r\n    \"aliases\": [\"hạt tiêu\", \"tiêu sọ\", \"tieu\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"chanh\",\r\n    \"name\": \"Chanh\",\r\n    \"aliases\": [\"chanh tươi\", \"chanh\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"nam-rom\",\r\n    \"name\": \"Nấm rơm\",\r\n    \"aliases\": [\"nam rom\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nam-huong\",\r\n    \"name\": \"Nấm hương\",\r\n    \"aliases\": [\"nấm đông cô\", \"nam huong\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"hanh-tay\",\r\n    \"name\": \"Hành tây\",\r\n    \"aliases\": [\"hanh tay\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"khoai-tay\",\r\n    \"name\": \"Khoai tây\",\r\n    \"aliases\": [\"khoai tay\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"ca-rot\",\r\n    \"name\": \"Cà rốt\",\r\n    \"aliases\": [\"ca rot\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"củ\"],\r\n    \"defaultUnit\": \"củ\"\r\n  },\r\n  {\r\n    \"id\": \"dau-hu\",\r\n    \"name\": \"Đậu hũ\",\r\n    \"aliases\": [\"đậu phụ\", \"dau hu\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"nuoc-dung\",\r\n    \"name\": \"Nước dùng\",\r\n    \"aliases\": [\"nước lèo\", \"nuoc dung\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"ruou-trang\",\r\n    \"name\": \"Rượu trắng\",\r\n    \"aliases\": [\"rượu\", \"ruou trang\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"hat-nem\",\r\n    \"name\": \"Hạt nêm\",\r\n    \"aliases\": [\"bột nêm\", \"hat nem\"],\r\n    \"dimension\": \"mass\",\r\n    \"defaultUnit\": \"g\"\r\n  },\r\n  {\r\n    \"id\": \"rau-muong\",\r\n    \"name\": \"Rau muống\",\r\n    \"aliases\": [\"rau muong\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"bó\"],\r\n    \"defaultUnit\": \"bó\"\r\n  },\r\n  {\r\n    \"id\": \"ca-tim\",\r\n    \"name\": \"Cà tím\",\r\n    \"aliases\": [\"ca tim\"],\r\n    \"dimension\": \"count\",\r\n    \"units\": [\"quả\", \"trái\"],\r\n    \"defaultUnit\": \"quả\"\r\n  },\r\n  {\r\n    \"id\": \"sua-dac\",\r\n    \"name\": \"Sữa đặc\",\r\n    \"aliases\": [\"sua dac\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"giam\",\r\n    \"name\": \"Giấm\",\r\n    \"aliases\": [\"dấm\", \"giam\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  },\r\n  {\r\n    \"id\": \"tuong-den\",\r\n    \"name\": \"Tương đen\",\r\n    \"aliases\": [\"tương ăn phở\", \"tuong den\"],\r\n    \"dimension\": \"volume\",\r\n    \"defaultUnit\": \"ml\"\r\n  }\r\n]\r\n","units.json":"{\r\n  \"g\": { \"label\": \"g\", \"dimension\": \"mass\", \"toBase\": 1, \"compact\": true },\r\n  \"kg\": { \"label\": \"kg\", \"dimension\": \"mass\", \"toBase\": 1000, \"compact\": true },\r\n  \"ml\": { \"label\": \"ml\", \"dimension\": \"volume\", \"toBase\": 1, \"compact\": true },\r\n  \"lít\": { \"label\": \"lít\", \"dimension\": \"volume\", \"toBase\": 1000, \"compact\": true },\r\n  \"muỗng cà phê\": { \"label\": \"muỗng cà phê\", \"dimension\": \"volume\", \"toBase\": 5 },\r\n  \"muỗng canh\": { \"label\": \"muỗng canh\", \"dimension\": \"volume\", \"toBase\": 15 },\r\n  \"quả\": { \"label\": \"quả\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"trái\": { \"label\": \"trái\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"củ\": { \"label\": \"củ\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"nhánh\": { \"label\": \"nhánh\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"tép\": { \"label\": \"tép\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"bó\": { \"label\": \"bó\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"món\": { \"label\": \"món\", \"dimension\": \"count\", \"toBase\": 1 },\r\n  \"ổ\": { \"label\": \"ổ\", \"dimension\": \"count\", \"toBase\": 1 }\r\n}\r\n"};
 
 /* ---- shim cho vài API của Node mà route còn dùng ---- */
-var shims = {
+const shims = {
   crypto: { randomBytes: function (n) {
-    var a = crypto.getRandomValues(new Uint8Array(n));
+    const a = crypto.getRandomValues(new Uint8Array(n));
     a.toString = function () { return Array.from(this, function (b) { return b.toString(16).padStart(2, '0'); }).join(''); };
     return a;
   } },
-  fs: { readFileSync: function (p) { var k = String(p).split('/').pop(); if (!(k in FILES)) throw new Error('Thiếu file ' + p); return FILES[k]; } },
+  fs: { readFileSync: function (p) { const k = String(p).split('/').pop(); if (!(k in FILES)) throw new Error('Thiếu file ' + p); return FILES[k]; } },
   path: { join: function () { return Array.prototype.join.call(arguments, '/'); }, basename: function (p) { return String(p).split('/').pop(); } }
 };
-var Buffer = { from: function (str) {
-  var bin = atob(str), u = new Uint8Array(bin.length);
-  for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+const Buffer = { from: function (str) {
+  const bin = atob(str), u = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
   u.toString = function (e, s, t) { return String.fromCharCode.apply(null, Array.prototype.slice.call(this, s || 0, t || this.length)); };
   return u;
 } };
@@ -31,12 +31,12 @@ var Buffer = { from: function (str) {
 /* Thu nhỏ ảnh tải lên (tối đa 800px, JPEG) để vừa dung lượng localStorage. */
 function shrinkImage(dataUrl) {
   return new Promise(function (resolve) {
-    var img = new Image();
+    const img = new Image();
     img.onload = function () {
       try {
-        var s = Math.min(1, 800 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+        const s = Math.min(1, 800 / Math.max(img.width, img.height)), c = document.createElement('canvas');
         c.width = Math.max(1, Math.round(img.width * s)); c.height = Math.max(1, Math.round(img.height * s));
-        var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+        const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
         resolve(c.toDataURL('image/jpeg', 0.75));
       } catch (e) { resolve(dataUrl); }
     };
@@ -46,11 +46,11 @@ function shrinkImage(dataUrl) {
 }
 
 /* ---- trình nạp module kiểu CommonJS ---- */
-var defs = {}, cache = {};
+const defs = {}, cache = {};
 function def(name, fn) { defs[name] = fn; }
 function resolve(from, req) {
   if (shims[req]) return req;
-  var parts = from.split('/').slice(0, -1);
+  const parts = from.split('/').slice(0, -1);
   req.split('/').forEach(function (p) { if (p === '..') parts.pop(); else if (p !== '.') parts.push(p); });
   return parts.join('/');
 }
@@ -58,7 +58,7 @@ function load(name) {
   if (shims[name]) return shims[name];
   if (cache[name]) return cache[name].exports;
   if (!defs[name]) throw new Error('Thiếu module ' + name);
-  var m = cache[name] = { exports: {} };
+  const m = cache[name] = { exports: {} };
   defs[name](m, m.exports, function (r) { return load(resolve(name, r)); }, '');
   return m.exports;
 }
@@ -614,7 +614,7 @@ module.exports = function (app) {
     const groups = TAG_GROUPS
       .map((g) => String(q[g] || '').split(',').map((t) => norm(t)).filter(Boolean).slice(0, 12))
       .filter((g) => g.length);
-    let list = ctx.db.recipes.filter((rec) => {
+    const list = ctx.db.recipes.filter((rec) => {
       if (cat && norm(rec.category) !== cat && slugify(rec.category) !== cat) return false;
       if (groups.length) {
         const have = new Set((rec.tags || []).map((t) => norm(t)));
@@ -663,7 +663,8 @@ module.exports = function (app) {
     const c = M.makeCtx(ctx.db, ctx.user);
     const rec = c.recipes.get(ctx.params.id);
     if (!rec) throw new HttpError(404, 'Không tìm thấy công thức');
-    if (ctx.user) {
+    // ?history=0: chỉ đọc dữ liệu (ví dụ form sửa ở trang tài khoản), không ghi vào Lịch sử xem
+    if (ctx.user && ctx.query.history !== '0') {
       const h = ctx.db.history;
       const uid = ctx.user.id;
       for (let i = h.length - 1; i >= 0; i--) if (h[i].userId === uid && h[i].recipeId === rec.id) h.splice(i, 1);
@@ -1003,7 +1004,7 @@ module.exports = function (app) {
     if (b.text !== undefined && typeof b.text !== 'string') throw new HttpError(400, 'Nội dung đánh giá không hợp lệ', 'text');
     if (text.length > 2000) throw new HttpError(400, 'Nội dung đánh giá quá dài (tối đa 2000 ký tự)', 'text');
     let rv = ctx.db.reviews.find((x) => x.recipeId === rec.id && x.userId === user.id);
-    let created = !rv;
+    const created = !rv;
     if (rv) { rv.rating = rating; rv.text = text; rv.updatedAt = new Date().toISOString(); }
     else {
       rv = { id: 'rv_' + crypto.randomBytes(6).toString('hex'), recipeId: rec.id, userId: user.id, rating, text, createdAt: new Date().toISOString(), likedBy: [] };
@@ -1430,45 +1431,45 @@ module.exports = { MAX_AGE, createSession, findSession, destroySession, purgeExp
 });
 
 /* ===== Chạy: dùng fetch đọc /data/db.json một lần, rồi xử lý mọi yêu cầu ngay trong trình duyệt (không gọi mạng nào khác) ===== */
-var HttpError = load('lib/http').HttpError, Router = load('lib/router').Router, S = load('lib/session');
-var NOLIMIT = { hit: function () { return 0; } };
-var router = new Router(), db = null, baseIds = null, baseRecipes = null, ready = null;
-var app = {
+const HttpError = load('lib/http').HttpError, Router = load('lib/router').Router, S = load('lib/session');
+const NOLIMIT = { hit: function () { return 0; } };
+let router = new Router(), db = null, baseIds = null, baseRecipes = null, ready = null;
+const app = {
   cfg: { demoOnly: false },
   router: router, limiter: NOLIMIT, ipLimiter: NOLIMIT, writeLimiter: NOLIMIT, contactLimiter: NOLIMIT
 };
-var store = { data: null, save: persist, saveSoon: persist };
+const store = { data: null, save: persist, saveSoon: persist };
 
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); return true; } catch (e) { return false; } }
 
 function persist() {
-  var st = {};
+  const st = {};
   COLLECTIONS.forEach(function (k) { st[k] = db[k] || []; });
   st.userRecipes = db.recipes.filter(function (r) { return !baseIds.has(r.id); });
-  var have = new Set(db.recipes.map(function (r) { return r.id; }));
+  const have = new Set(db.recipes.map(function (r) { return r.id; }));
   st.deletedSeed = Array.from(baseIds).filter(function (id) { return !have.has(id); });
   st.seedEdits = db.seedEdits || {};
   if (!lsSet(KEY, JSON.stringify(st))) throw new HttpError(507, 'Bộ nhớ của trình duyệt đã đầy hoặc bị chặn nên chưa lưu được. Hãy xóa bớt công thức hoặc ảnh rồi thử lại.');
 }
 
-var baseText = null;
+let baseText = null;
 
 /* Dựng lại db từ db.json gốc + phần người dùng đã lưu trong localStorage. */
 function loadState() {
-  var base = JSON.parse(baseText);
+  const base = JSON.parse(baseText);
   db = base;
   baseRecipes = base.recipes.slice();
   baseIds = new Set(baseRecipes.map(function (r) { return r.id; }));
   /* review mẫu gốc: đã tính trong seedRating/seedCount, dùng để không cộng trùng khi tính điểm (không lưu vào localStorage) */
   db.seedReviews = new Map((base.reviews || []).map(function (r) { return [r.id, { recipeId: r.recipeId, rating: r.rating }]; }));
-  var raw = lsGet(KEY), st = null;
+  let raw = lsGet(KEY), st = null;
   /* dữ liệu lưu từ phiên bản trước còn đường dẫn /assets/..., đổi sang cấu trúc thư mục mới */
   if (raw) raw = raw.replace(/\/assets\/icons\//g, '/images/icons/').replace(/\/assets\/images\//g, '/images/').replace(/\/assets\/fonts\//g, '/fonts/');
   try { st = raw ? JSON.parse(raw) : null; } catch (e) { st = null; }
   if (st) {
     COLLECTIONS.forEach(function (k) { db[k] = Array.isArray(st[k]) ? st[k] : []; });
-    var del = new Set(st.deletedSeed || []);
+    const del = new Set(st.deletedSeed || []);
     db.recipes = baseRecipes.filter(function (r) { return !del.has(r.id); }).concat(st.userRecipes || []);
     db.seedEdits = st.seedEdits && typeof st.seedEdits === 'object' ? st.seedEdits : {};
     db.recipes.forEach(function (r) { if (db.seedEdits[r.id]) Object.assign(r, db.seedEdits[r.id]); });
@@ -1491,21 +1492,21 @@ function init() {
 function json(status, obj) { return { status: status, data: obj }; }
 
 async function handle(url, method, bodyText) {
-  var u = new URL(url, location.origin);
-  var m = router.match(method, u.pathname);
+  const u = new URL(url, location.origin);
+  const m = router.match(method, u.pathname);
   if (!m) throw new HttpError(404, 'Không tìm thấy API này');
   if (m.badRequest) throw new HttpError(400, 'Đường dẫn không hợp lệ');
   if (m.methods) throw new HttpError(405, 'Phương thức không được hỗ trợ');
-  var sid = lsGet(SID_KEY);
-  var sess = S.findSession(db, sid);
-  var user = sess ? db.users.find(function (x) { return x.id === sess.userId; }) || null : null;
-  var query = {};
+  const sid = lsGet(SID_KEY);
+  const sess = S.findSession(db, sid);
+  const user = sess ? db.users.find(function (x) { return x.id === sess.userId; }) || null : null;
+  const query = {};
   u.searchParams.forEach(function (v, k) { if (!(k in query)) query[k] = v; });
-  var ctx = {
+  const ctx = {
     req: { headers: {} }, url: u, query: query, params: m.params, app: app, db: db, store: store,
     user: user, sid: sid, status: 200, headers: {}, ip: 'local',
     body: async function () {
-      var v;
+      let v;
       try { v = bodyText ? JSON.parse(bodyText) : {}; } catch (e) { throw new HttpError(400, 'Dữ liệu JSON không hợp lệ'); }
       if (v === null || typeof v !== 'object' || Array.isArray(v)) throw new HttpError(400, 'Dữ liệu gửi lên phải là một đối tượng JSON');
       return v;
@@ -1513,9 +1514,9 @@ async function handle(url, method, bodyText) {
     setCookie: function (v) { this.headers['Set-Cookie'] = v; },
     requireUser: function () { if (!this.user) throw new HttpError(401, 'Bạn cần đăng nhập để thực hiện thao tác này'); return this.user; }
   };
-  var out;
+  let out;
   try { out = await m.route.handler(ctx); } catch (e) { if (e instanceof HttpError && e.status === 507) loadState(); throw e; }
-  var c = ctx.headers['Set-Cookie'];
+  const c = ctx.headers['Set-Cookie'];
   if (c) { if (c === 'CLEAR') lsSet(SID_KEY, null); else if (c.indexOf('SET:') === 0) lsSet(SID_KEY, c.slice(4)); }
   return json(ctx.status, out === undefined ? { ok: true } : out);
 }

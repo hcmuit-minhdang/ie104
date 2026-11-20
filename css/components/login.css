@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'NomNomAuthInter';
-    src: url('/fonts/Inter-Variable.ttf');
+    src: url('/fonts/inter-variable.ttf');
     font-weight: 100 900;
     font-display: swap;
 }
@@ -247,30 +247,9 @@
     color: #292929;
     font: 16px/1.6 'NomNomAuthInter', Arial, sans-serif;
 }
-.auth-preview_main {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 48px 24px;
-}
-.auth-preview_actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
-}
-.auth-preview_button {
-    min-height: 44px;
-    padding: 8px 20px;
-    border: 1px solid #292929;
-    background: #fbc41c;
-    color: #292929;
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-}
-.auth-preview_actions a {
-    color: #356f91;
-}
+
+
+
 
 @keyframes site-auth-enter {
     from { opacity: 0; transform: translateY(8px); }

@@ -52,7 +52,7 @@
                         <details>
 
                             <summary>Công thức <img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
                             </summary>
 
                             <ul>
@@ -67,7 +67,7 @@
                         <details>
 
                             <summary>Về chúng tôi <img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
                             </summary>
 
                             <ul>
@@ -86,7 +86,7 @@
                     <div class="site-header__nav-item" data-header-member hidden>
                         <details>
                             <summary>Góc của tôi<img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt=""></summary>
+                                    src="/images/icons/keyboard-arrow-up.svg" alt=""></summary>
                             <ul>
                                 <li><a href="/pages/account/overview.html" data-header-route="overview">Tổng quan</a>
                                 </li>
@@ -111,8 +111,8 @@
                     <details class="site-header__search">
                         <summary aria-controls="site-header__search-bar" aria-label="Mở tìm kiếm">
                             <img class="site-header__search-icon site-header__search-open-icon"
-                                src="/images/icons/Search_Com.svg" alt="Mở thanh tìm kiếm">
-                            <img class="site-header__search-close-icon" src="/images/icons/X.svg"
+                                src="/images/icons/search-com.svg" alt="Mở thanh tìm kiếm">
+                            <img class="site-header__search-close-icon" src="/images/icons/close.svg"
                                 alt="Đóng thanh tìm kiếm">
                             <span class="site-header__search-label">Tìm công thức</span>
                         </summary>
@@ -123,7 +123,7 @@
                                 <input type="search" name="q" placeholder="Tìm kiếm ..." required
                                     aria-label="Từ khóa tìm kiếm">
                                 <button class="site-header__search-submit" type="submit" aria-label="Tìm kiếm">
-                                    <img src="/images/icons/Search_input.svg" alt="">
+                                    <img src="/images/icons/search-input.svg" alt="">
                                 </button>
                             </form>
                         </div>
@@ -142,8 +142,8 @@
         </section>
 
         <!-- CHỌN DANH MỤC (hiện khi vào trang không kèm tham số) -->
-        <section class="cat-picker-section" id="categoryPicker" hidden>
-            <div class="cat-picker" id="catPicker"><p class="grid-message">Đang tải danh mục...</p></div>
+        <section class="cat-picker-section" id="category-picker" hidden>
+            <div class="cat-picker" id="cat-picker"><p class="grid-message">Đang tải danh mục...</p></div>
         </section>
 
         <!-- LAYOUT 2 CỘT -->
@@ -153,72 +153,72 @@
             <aside class="filter-sidebar">
                 
 
-                <h2 class="filter-title">BỘ LỌC</h2>
-                <p class="filter-hint">Chọn nguyên liệu bạn có, rồi bấm nút bên dưới.</p>
+                <h2 class="filter-sidebar__title">BỘ LỌC</h2>
+                <p class="filter-sidebar__hint">Chọn nguyên liệu bạn có, rồi bấm nút bên dưới.</p>
 
                 <!-- 7 nhóm lọc như thiết kế của Phát: bấm tên nhóm để mở; ô chọn là checkbox vuông -->
-                <form id="filterForm">
-                <div class="filter-group-list" id="filterGroups">
-                    <div class="filter-accordion" data-group="dam">
-                        <button type="button" class="filter-trigger-btn" aria-expanded="false">ĐẠM</button>
-                        <div class="filter-panel">
+                <form id="filter-form">
+                <div class="filter-sidebar__groups" id="filter-groups">
+                    <div class="filter-group" data-group="dam">
+                        <button type="button" class="filter-group__trigger" aria-expanded="false">ĐẠM</button>
+                        <div class="filter-group__panel">
                             <label><input type="checkbox" name="dam" value="Thịt bò"><span>Thịt bò</span></label>
                             <label><input type="checkbox" name="dam" value="Thịt gà"><span>Thịt gà</span></label>
                             <label><input type="checkbox" name="dam" value="Thịt heo"><span>Thịt heo</span></label>
                             <label><input type="checkbox" name="dam" value="Hải sản"><span>Hải sản</span></label>
                         </div>
                     </div>
-                    <div class="filter-accordion" data-group="tinh-bot">
-                        <button type="button" class="filter-trigger-btn" aria-expanded="false">TINH BỘT</button>
-                        <div class="filter-panel">
+                    <div class="filter-group" data-group="tinh-bot">
+                        <button type="button" class="filter-group__trigger" aria-expanded="false">TINH BỘT</button>
+                        <div class="filter-group__panel">
                             <label><input type="checkbox" name="tinh-bot" value="Cơm"><span>Cơm</span></label>
                             <label><input type="checkbox" name="tinh-bot" value="Bún / Phở"><span>Bún / Phở</span></label>
                             <label><input type="checkbox" name="tinh-bot" value="Bánh mì"><span>Bánh mì</span></label>
                         </div>
                     </div>
-                    <div class="filter-accordion" data-group="rau-cu">
-                        <button type="button" class="filter-trigger-btn" aria-expanded="false">RAU CỦ &amp; NẤM</button>
-                        <div class="filter-panel">
+                    <div class="filter-group" data-group="rau-cu">
+                        <button type="button" class="filter-group__trigger" aria-expanded="false">RAU CỦ &amp; NẤM</button>
+                        <div class="filter-group__panel">
                             <label><input type="checkbox" name="rau-cu" value="Rau xanh"><span>Rau xanh</span></label>
                             <label><input type="checkbox" name="rau-cu" value="Củ quả"><span>Củ quả</span></label>
                             <label><input type="checkbox" name="rau-cu" value="Nấm"><span>Các loại nấm</span></label>
                         </div>
                     </div>
-                    <div class="filter-accordion" data-group="trai-cay">
-                        <button type="button" class="filter-trigger-btn" aria-expanded="false">TRÁI CÂY</button>
-                        <div class="filter-panel">
+                    <div class="filter-group" data-group="trai-cay">
+                        <button type="button" class="filter-group__trigger" aria-expanded="false">TRÁI CÂY</button>
+                        <div class="filter-group__panel">
                             <label><input type="checkbox" name="trai-cay" value="Trái cây nhiệt đới"><span>Trái cây nhiệt đới</span></label>
                             <label><input type="checkbox" name="trai-cay" value="Tráng miệng"><span>Tráng miệng</span></label>
                         </div>
                     </div>
-                    <div class="filter-accordion" data-group="che-do-an">
-                        <button type="button" class="filter-trigger-btn" aria-expanded="false">CHẾ ĐỘ ĂN</button>
-                        <div class="filter-panel">
+                    <div class="filter-group" data-group="che-do-an">
+                        <button type="button" class="filter-group__trigger" aria-expanded="false">CHẾ ĐỘ ĂN</button>
+                        <div class="filter-group__panel">
                             <label><input type="checkbox" name="che-do-an" value="Thanh đạm"><span>Thanh đạm</span></label>
                             <label><input type="checkbox" name="che-do-an" value="Eat Clean"><span>Eat Clean</span></label>
                             <label><input type="checkbox" name="che-do-an" value="Ăn chay"><span>Ăn chay</span></label>
                         </div>
                     </div>
-                    <div class="filter-accordion" data-group="vung-mien">
-                        <button type="button" class="filter-trigger-btn" aria-expanded="false">VÙNG MIỀN</button>
-                        <div class="filter-panel">
+                    <div class="filter-group" data-group="vung-mien">
+                        <button type="button" class="filter-group__trigger" aria-expanded="false">VÙNG MIỀN</button>
+                        <div class="filter-group__panel">
                             <label><input type="checkbox" name="vung-mien" value="Miền Bắc"><span>Miền Bắc</span></label>
                             <label><input type="checkbox" name="vung-mien" value="Miền Trung"><span>Miền Trung</span></label>
                             <label><input type="checkbox" name="vung-mien" value="Miền Nam"><span>Miền Nam</span></label>
                             <label><input type="checkbox" name="vung-mien" value="Món Á"><span>Món Á / Nhật</span></label>
                         </div>
                     </div>
-                    <div class="filter-accordion" data-group="ngan-sach">
-                        <button type="button" class="filter-trigger-btn" aria-expanded="false">NGÂN SÁCH</button>
-                        <div class="filter-panel">
+                    <div class="filter-group" data-group="ngan-sach">
+                        <button type="button" class="filter-group__trigger" aria-expanded="false">NGÂN SÁCH</button>
+                        <div class="filter-group__panel">
                             <label><input type="checkbox" name="ngan-sach" value="Dưới 50k"><span>Dưới 50.000đ</span></label>
                             <label><input type="checkbox" name="ngan-sach" value="50k - 100k"><span>50.000đ - 100.000đ</span></label>
                             <label><input type="checkbox" name="ngan-sach" value="Trên 100k"><span>Trên 100.000đ</span></label>
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="filter-submit">TÌM CÔNG THỨC PHÙ HỢP</button>
-                <a href="/pages/category.html" class="filter-reset" id="filterReset">Xóa bộ lọc</a>
+                <button type="submit" class="filter-sidebar__submit">TÌM CÔNG THỨC PHÙ HỢP</button>
+                <a href="/pages/category.html" class="filter-sidebar__reset" id="filter-reset">Xóa bộ lọc</a>
                 </form>
             </aside>
 
@@ -226,14 +226,14 @@
             <div class="category-content">
                 <section>
                     <div class="title">
-                        <h2 id="categoryTitle">TẤT CẢ MÓN ĂN</h2>
+                        <h2 id="category-title">TẤT CẢ MÓN ĂN</h2>
                         <span class="line"></span>
                     </div>
 
                     <div class="result-toolbar">
-                        <p class="result-count" id="resultCount" role="status" aria-live="polite">Đang tải...</p>
-                        <label class="sort-box">Sắp xếp
-                            <select id="sortSelect">
+                        <p class="result-toolbar__count" id="result-count" role="status" aria-live="polite">Đang tải...</p>
+                        <label class="result-toolbar__sort">Sắp xếp
+                            <select id="sort-select">
                                 <option value="rating">Đánh giá cao</option>
                                 <option value="new">Mới nhất</option>
                                 <option value="time">Nấu nhanh nhất</option>
@@ -242,12 +242,12 @@
                         </label>
                     </div>
 
-                    <div class="recipes-grid-3" id="recipeGrid" aria-busy="true"></div>
-                    <p class="grid-message" id="gridMessage" hidden></p>
+                    <div class="recipes-grid-3" id="recipe-grid" aria-busy="true"></div>
+                    <p class="grid-message" id="grid-message" hidden></p>
                 </section>
 
                 <!-- PHÂN TRANG -->
-                <nav class="pagination-nav" id="pagination" aria-label="Phân trang"></nav>
+                <nav class="pagination" id="pagination" aria-label="Phân trang"></nav>
             </div>
         </div>
     </main>
@@ -290,9 +290,9 @@
                 </h2>
                 <nav class="site-footer__links">
                     <a href="/about.html">Về NomNom</a>
-                    <a href="/about.html">Hướng dẫn sử dụng</a>
-                    <a href="/about.html">CÂU HỎI THƯỜNG GẶP</a>
-                    <a href="/about.html">Liên hệ</a>
+                    <a href="/about.html#huong-dan">Hướng dẫn sử dụng</a>
+                    <a href="/about.html#faq">CÂU HỎI THƯỜNG GẶP</a>
+                    <a href="/about.html#gop-y">Liên hệ</a>
                 </nav>
             </div>
             <div class="site-footer__contact">
@@ -331,8 +331,7 @@
             <form class="site-auth__form site-login__form" novalidate>
                 <div class="site-auth__field">
                     <label class="site-auth__label" for="site-login__email">Địa chỉ Email</label>
-                    <input class="site-auth__input" id="site-login__email" name="email" type="text" autocomplete="username"
-                        autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required
+                    <input class="site-auth__input" id="site-login__email" name="email" type="text" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required
                         data-required-message="Bạn hãy nhập địa chỉ email." aria-describedby="site-login__email-error">
                     <p class="site-auth__error" id="site-login__email-error" hidden></p>
                 </div>

@@ -1,13 +1,37 @@
-# 🍜 NomNom: Website công thức nấu ăn
+<p align="center">
+  <img src="images/logo.png" alt="NomNom" width="240" />
+</p>
 
-> Đồ án môn **IE104 – Internet và Công nghệ Web** (GV: ThS. Võ Tấn Khoa)
-> Tìm công thức, nấu theo nguyên liệu đang có trong tủ lạnh, so sánh giá nguyên liệu, lưu món yêu thích và chia sẻ công thức của chính bạn.
+<h1 align="center">NomNom: Website công thức nấu ăn</h1>
+
+<p align="center">
+  <em>Tìm công thức, nấu theo nguyên liệu đang có trong tủ lạnh, so sánh giá nguyên liệu và chia sẻ món của chính bạn.</em>
+</p>
+
+---
+
+## 📖 Giới thiệu
+
+NomNom là website công thức nấu ăn giúp bạn trả lời câu hỏi quen thuộc: **"Tủ lạnh của mình đang có gì, hôm nay nấu món gì?"**. Bạn có thể tra cứu hơn 130 công thức, chọn nguyên liệu đang có để được gợi ý món phù hợp, so sánh giá nguyên liệu giữa các cửa hàng, rồi lưu, đánh giá hoặc đăng công thức của riêng mình.
+
+Đây là đồ án môn **IE104 - Internet và Công nghệ Web** (GV: ThS. Võ Tấn Khoa), làm theo nhóm 5 người. Điểm nhấn của sản phẩm:
+
+- **Nấu theo tủ lạnh:** chọn nguyên liệu đang có (hoặc tự nhập) và nhận gợi ý kèm nhãn *Đủ / Chưa đủ nguyên liệu*, phần trăm khớp, nguyên liệu còn thiếu.
+- **So sánh giá nguyên liệu:** xem giá một nguyên liệu ở 6 cửa hàng, sắp từ rẻ đến đắt, có ảnh minh họa cho 154 nguyên liệu.
+- **Cộng đồng:** đăng tải công thức kèm ảnh, lưu món yêu thích, đánh giá sao và bình luận.
+- **Chỉ dùng HTML, CSS và JavaScript thuần:** không framework, không thư viện ngoài, không backend; mọi xử lý chạy ngay trong trình duyệt.
+- **Bố cục theo Figma và co giãn:** hiển thị tốt trên máy tính, máy tính bảng và điện thoại.
+
+## 🔗 Các thông tin liên quan
 
 - 🌐 **Demo trực tuyến:** https://nomnom-taupe.vercel.app
-- 💻 **Mã nguồn:** https://github.com/hcmuit-minhdang/NomNom
+- 💻 **Mã nguồn (bản hoàn chỉnh):** https://github.com/hcmuit-minhdang/ie104
+- 👥 **Repo làm việc nhóm (lịch sử đóng góp theo từng thành viên):** https://github.com/hcmuit-minhdang/NomNom
 - 🎨 **Thiết kế Figma:** https://www.figma.com/design/1XVDA0jnedoKuCL9rYodr7/IE104
 - 🗂️ **Quản lý công việc:** https://app.notion.com/p/IE104-NomNom-41c2218b6ea98086b85be6ce87b3a267?source=copy_link
 - 🎬 **Video báo cáo và demo (YouTube, unlisted):** _(điền link)_
+
+**Mục lục:** [Thành viên](#-thành-viên-nhóm) · [Tính năng](#-tính-năng) · [Hướng dẫn sử dụng](#-hướng-dẫn-sử-dụng-nhanh) · [Công nghệ](#-công-nghệ) · [Chạy trên máy](#-chạy-trên-máy) · [Triển khai](#️-triển-khai) · [Cấu trúc](#-cấu-trúc-thư-mục) · [Quy tắc đặt tên](#-quy-tắc-đặt-tên-và-làm-việc-nhóm) · [Giới hạn](#️-giới-hạn-đã-biết)
 
 ---
 
@@ -52,9 +76,9 @@ Nhóm: **11**
 - **Tìm kiếm:** tìm theo tên món, nguyên liệu, danh mục và nhãn. Gõ không dấu thì tìm không phân biệt dấu (`bo` khớp cả "bò", "bơ"); gõ có dấu thì chỉ nhận món chứa đúng chữ có dấu (`bò` không khớp "bơ", "bông"). Mặc định xếp theo **độ liên quan** (khớp đúng cụm có dấu > khớp nguyên từ > chỉ chứa chuỗi, tên món ưu tiên hơn nguyên liệu), có thể đổi sang điểm, mới nhất, thời gian, giá; lọc theo thời gian nấu và mức giá; phân trang.
 - **Chi tiết công thức:** nguyên liệu (đổi khẩu phần thì tự tính lại lượng nguyên liệu và tổng chi phí), hướng dẫn ngắn gọn và từng bước kèm ảnh, dinh dưỡng, chi phí (tổng và theo phần), công thức tương tự, in công thức, chia sẻ (Facebook, sao chép liên kết), đánh giá sao, bình luận có sắp xếp (mới nhất, cũ nhất, nhiều lượt thích), thích bình luận. Điểm hiển thị là trung bình gộp của điểm mẫu và đánh giá mới.
 - **Công thức theo nguyên liệu tủ lạnh:** chọn nguyên liệu đang có theo nhóm (đạm, tinh bột, rau củ & nấm, trái cây; ô *Khác* cho phép tự nhập nguyên liệu, có gợi ý từ danh mục nguyên liệu), lọc thêm theo chế độ ăn, vùng miền, ngân sách (cùng bộ nhãn với trang Danh mục) và từ khóa; website gợi ý món phù hợp kèm nhãn *Đủ / Chưa đủ nguyên liệu*, phần trăm khớp, nguyên liệu đã có và còn thiếu.
-- **So sánh giá nguyên liệu:** ô tìm nguyên liệu, chọn một nguyên liệu (mỗi lần một nguyên liệu, chọn cái mới sẽ thay cái cũ) để xem giá ở 6 cửa hàng, sắp từ rẻ đến đắt; nút *Mua ngay* mở trang chủ của cửa hàng. Giá là số mô phỏng.
+- **So sánh giá nguyên liệu:** ô tìm nguyên liệu, chọn một nguyên liệu (mỗi lần một nguyên liệu, chọn cái mới sẽ thay cái cũ) để xem giá ở 6 cửa hàng, sắp từ rẻ đến đắt; mỗi nguyên liệu có ảnh minh họa (154/154, nguồn Wikipedia/Wikimedia, ghi công trong [`images/ingredients/CREDITS.md`](images/ingredients/CREDITS.md)); nút *Mua ngay* mở trang chủ của cửa hàng. Giá là số mô phỏng.
 - **Gợi ý bất ngờ** (menu *Công thức* trên header): mở ngẫu nhiên một công thức.
-- **Về chúng tôi** (`about.html`): câu chuyện, hướng dẫn sử dụng, nhóm thực hiện, câu hỏi thường gặp, mục **Góp ý** (biểu mẫu gửi góp ý) và mục **Liên hệ** (số điện thoại, email, mạng xã hội).
+- **Về chúng tôi** (`about.html`): câu chuyện, hướng dẫn sử dụng, nhóm thực hiện, câu hỏi thường gặp, mục **Góp ý** (biểu mẫu gửi góp ý).
 - Trang chính sách: bảo mật, điều khoản sử dụng, hỗ trợ tiếp cận.
 
 **Người dùng đã đăng nhập**
@@ -68,6 +92,18 @@ Nhóm: **11**
 - Bố cục theo thiết kế Figma, dùng Flexbox, CSS Grid và container query (`cqw`) nên co giãn theo màn hình desktop, tablet và điện thoại; tên món dài tự thu nhỏ chữ hoặc xuống 2 dòng.
 - Header cố định, menu dạng ngăn kéo trên điện thoại, popup đăng nhập/đăng ký có hiệu ứng.
 - Phân trang, bộ lọc dùng chung, trạng thái đang tải (khung xương) và thông báo lỗi bằng tiếng Việt.
+
+---
+
+## 🧭 Hướng dẫn sử dụng nhanh
+
+1. **Tìm món:** gõ tên món hoặc nguyên liệu vào ô tìm kiếm trên header, hoặc chọn một nhóm món ở mục *Phân loại phổ biến* trên trang chủ (nút *Xem thêm* mở toàn bộ danh mục) rồi lọc, sắp xếp, chuyển trang.
+2. **Nấu theo tủ lạnh:** vào menu *Công thức* > *Bộ lọc nguyên liệu* (hoặc nút *Bộ lọc nguyên liệu* ở trang chủ), mở từng nhóm và tick nguyên liệu đang có. Muốn thêm nguyên liệu khác thì tick *Khác* rồi gõ tên, chọn gợi ý và nhấn Enter. Bấm **TÌM CÔNG THỨC PHÙ HỢP** để xem món gợi ý.
+3. **So sánh giá:** bấm *So sánh nguyên liệu* trên header, chọn một nguyên liệu (nút *Xem thêm* hiện toàn bộ danh sách) rồi bấm **SO SÁNH GIÁ**.
+4. **Xem công thức:** đổi số khẩu phần để lượng nguyên liệu và chi phí tự tính lại; bấm *In công thức* để in; kéo xuống cuối trang để đánh giá và bình luận.
+5. **Đăng nhập:** bấm *Đăng nhập*, dùng tài khoản `demo` / `demo123` (hoặc tự đăng ký) để lưu món, đánh giá và đăng tải công thức.
+6. **Đăng tải công thức:** bấm *Đăng tải công thức* trên header, điền thông tin, thêm ảnh và các bước rồi đăng. Món đã đăng, đã lưu, đã đánh giá và lịch sử xem nằm trong *Góc của tôi*.
+7. **Góp ý:** mở *Về chúng tôi*, cuộn đến mục **Góp ý** và gửi biểu mẫu.
 
 ---
 
@@ -119,7 +155,7 @@ Rồi mở http://localhost:3000 (Live Server dùng cổng 5500).
 | Tên đăng nhập | `demo` (hoặc email `demo@nomnom.vn`) |
 | Mật khẩu | `demo123` |
 
-Tài khoản này có sẵn 4 công thức đã lưu, 2 công thức đã đăng, 4 đánh giá và lịch sử xem. Bạn cũng có thể tự đăng ký tài khoản mới.
+Tài khoản này có sẵn 5 công thức đã lưu, 2 công thức đã đăng, 4 đánh giá và lịch sử xem. Bạn cũng có thể tự đăng ký tài khoản mới.
 
 ---
 
@@ -134,7 +170,7 @@ Tài khoản này có sẵn 4 công thức đã lưu, 2 công thức đã đăng
 ```text
 NomNom/
 ├─ index.html                # Trang chủ
-├─ about.html                # Về chúng tôi (có mục Góp ý và Liên hệ)
+├─ about.html                # Về chúng tôi (có mục Góp ý)
 ├─ README.md, STRUCTURE.md   # tài liệu
 ├─ package.json              # chỉ có script start, không có dependency
 ├─ vercel.json               # cấu hình triển khai tĩnh
@@ -151,14 +187,50 @@ NomNom/
 │  └─ account/               # Góc của tôi: index, overview, saved, uploaded, reviewed, history
 ├─ css/                      # components/ (header, footer, login, signup, filter, pager, ...), pages/ (mỗi trang một file)
 ├─ js/                       # data.js, store.js, components/ (header, auth, login, signup, filter, ...), pages/ (mỗi trang một file)
+├─ docs/                     # tài liệu phụ (đối chiếu báo cáo)
 ├─ data/db.json              # dữ liệu gốc (công thức, tài khoản demo, lượt lưu/đánh giá/lịch sử mẫu)
-├─ images/                   # hình ảnh (icons/ là các biểu tượng)
+├─ images/                   # hình ảnh (icons/ biểu tượng, ingredients/ ảnh 154 nguyên liệu kèm CREDITS.md, backgrounds/ họa tiết nền)
 └─ fonts/                    # font chữ Inter
 ```
 
-Cấu trúc bám theo hướng dẫn của giảng viên (`css/ js/ images/ index.html about.html README.md .gitignore`). Nhóm chia thêm `pages/` cho các trang còn lại và `data/` cho dữ liệu JSON. Phần **liên hệ** nằm trong trang `about.html` (mục `#lien-he`) nên không có `contact.html` riêng.
+Cấu trúc bám theo hướng dẫn của giảng viên (`css/ js/ images/ index.html about.html README.md .gitignore`). Nhóm chia thêm `pages/` cho các trang còn lại và `data/` cho dữ liệu JSON. Phần **liên hệ và góp ý** nằm trong trang `about.html` (mục `#gop-y`) nên không có `contact.html` riêng.
 
 Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt đối từ gốc site.
+
+---
+
+## 📏 Quy tắc đặt tên và làm việc nhóm
+
+Nhóm theo bộ quy tắc phổ biến của môn học: **BEM cho class CSS** và **camelCase cho JavaScript**.
+
+### Class CSS: BEM
+
+- Viết thường, kebab-case, theo dạng `block__element--modifier`; trạng thái dùng tiền tố `is-` hoặc `has-` (`is-open`, `is-active`).
+- Ví dụ trong code: `site-header__logo`, `filter-group__trigger`, `pagination__link--dots`, `ingredient-picker__pill`, `fridge-dialog__submit`.
+- **Phạm vi đã áp dụng:** header, footer, đăng nhập/đăng ký, trang cá nhân và các thành phần dùng chung (bộ lọc, phân trang, thanh kết quả, khung xương khi tải, hộp thoại tủ lạnh, bộ chọn nguyên liệu). Tính chung khoảng **29%** theo BEM (160/545 tên class xuất hiện trong CSS có `__` hoặc `--`).
+- **Chưa chuyển:** các trang lớn (chi tiết công thức, đăng tải, trang chủ) vẫn dùng tên kebab-case phẳng theo từng trang, ví dụ `recipe-card-full`, `card-section`. Không có class viết hoa hay gạch dưới đơn.
+
+### ID
+
+- Dùng kebab-case: `sort-select`, `recipe-grid`, `filter-form`. Id của khối BEM có thể có dạng `block__element` (`site-login__email`).
+
+### JavaScript
+
+- Biến và hàm viết **camelCase** (`currentPage`, `renderPage()`); hằng số viết `UPPER_SNAKE` (`COLLECTIONS`, `MAX_AGE`).
+- Chỉ dùng **`const` và `let`**, không dùng `var` (toàn bộ `js/` đã chuyển, không còn `var`).
+- Tên hàm bắt đầu bằng động từ (`getX`, `renderX`, `loadX`, `handleX`); biến đúng/sai bắt đầu bằng `is` hoặc `has`.
+- Tên một hai chữ cái (`i`, `e`) chỉ dùng cho biến đếm và hàm gọi lại ngắn. Một số file cũ vẫn còn nhiều tên ngắn (`s`, `p`, `r`), nhóm đang sửa dần.
+
+### Tên file và thư mục
+
+- Chữ thường, kebab-case: `fridge-results.html`, `ingredient-picker.js`, `search-input.svg`.
+- CSS và JS riêng của một trang trùng tên với trang (`recipe.html`, `css/pages/recipe.css`, `js/pages/recipe.js`); phần dùng chung đặt ở `css/components` và `js/components`.
+- Ngoại lệ là các tài liệu theo thông lệ: `README.md`, `STRUCTURE.md`, `images/ingredients/CREDITS.md`, `fonts/OFL.txt`.
+
+### Làm việc nhóm với Git
+
+- Commit viết dạng `loại: mô tả ngắn` (`feat`, `fix`, `style`, `docs`, `refactor`), mô tả rõ nội dung thay đổi.
+- Repo làm việc nhóm có nhánh riêng cho từng thành viên (`Minh`, `Thach`, `Thinh`, `Thu`, `Phat`); mỗi nhánh gộp vào `main` bằng Pull Request. Repo `ie104` là bản ghép hoàn chỉnh cuối cùng.
 
 ---
 
@@ -171,11 +243,12 @@ Quy ước: đường dẫn trong HTML/CSS/JS luôn là đường dẫn tuyệt 
 - Sửa công thức đã đăng chỉ đổi được tên món, mô tả, thời gian và khẩu phần; muốn đổi nguyên liệu, các bước hay ảnh thì xóa và đăng lại.
 - Gợi ý theo tủ lạnh so khớp với tối đa 8 nguyên liệu chính của mỗi món; nguyên liệu tự nhập không có trong danh mục sẽ không khớp được món nào.
 - Chi tiết (nguyên liệu, các bước) của một số công thức mẫu được sinh theo tên món, không phải công thức thật.
-- Giá nguyên liệu ở các cửa hàng là dữ liệu mô phỏng; nút *Mua ngay* chỉ mở trang chủ cửa hàng. Liên kết mạng xã hội ở footer và trang Liên hệ trỏ tới trang chủ chung của mạng xã hội (nhóm chưa có trang riêng).
+- Giá nguyên liệu ở các cửa hàng là dữ liệu mô phỏng; nút *Mua ngay* chỉ mở trang chủ cửa hàng. Liên kết mạng xã hội ở footer trỏ tới trang chủ chung của mạng xã hội (nhóm chưa có trang riêng).
+- Ảnh nguyên liệu ở trang So sánh giá chỉ là ảnh minh họa lấy từ Wikipedia/Wikimedia (cả 6 cửa hàng dùng chung một ảnh), không phải ảnh sản phẩm thật của cửa hàng; một số nguyên liệu dùng ảnh gần nghĩa (ví dụ trứng vịt là ảnh giỏ trứng, bánh tráng là ảnh cuốn).
 - Trang công thức tạo nội dung bằng JavaScript nên thẻ Open Graph (`og:title`, `og:description`) của trang này là chung, không theo từng món.
 
 ---
 
 ## 📄 Giấy phép và ghi nhận
 
-Sản phẩm học tập của nhóm cho môn IE104, không dùng cho mục đích thương mại. Ảnh minh họa món ăn thuộc về chủ sở hữu tương ứng và chỉ dùng để trình bày đồ án.
+Sản phẩm học tập của nhóm cho môn IE104, không dùng cho mục đích thương mại. Ảnh minh họa món ăn thuộc về chủ sở hữu tương ứng và chỉ dùng để trình bày đồ án. Ảnh nguyên liệu lấy từ Wikipedia/Wikimedia Commons theo giấy phép của từng tác giả (tác giả, giấy phép và trang gốc ghi trong [`images/ingredients/CREDITS.md`](images/ingredients/CREDITS.md)).

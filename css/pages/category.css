@@ -346,7 +346,7 @@ a {
     .filter-sidebar {
         position: static;
     }
-    .filter-group-list {
+    .filter-sidebar__groups {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
@@ -366,7 +366,7 @@ a {
 }
 
 @media (max-width: 480px) {
-    .filter-group-list,
+    .filter-sidebar__groups,
     .favorite-recipes-grid,
     .recipes-grid-3 {
         grid-template-columns: 1fr;

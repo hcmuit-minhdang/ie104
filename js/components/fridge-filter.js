@@ -3,13 +3,13 @@
    Bấm TÌM KIẾM -> /pages/fridge-results.html?ingredients=nhom:id,... (cùng định dạng với fridge.js). */
 (function () {
   "use strict";
-  var dialog = document.getElementById("fridge-dialog");
-  var openLink = document.querySelector(".fridge-filter-link");
+  const dialog = document.getElementById("fridge-dialog");
+  const openLink = document.querySelector(".fridge-filter-link");
   if (!dialog || !openLink) return;
 
-  var form = document.getElementById("fridge-form");
-  var error = document.getElementById("fridge-error");
-  var selects = dialog.querySelectorAll(".fridge-select");
+  const form = document.getElementById("fridge-form");
+  const error = document.getElementById("fridge-error");
+  const selects = dialog.querySelectorAll(".fridge-dialog__select");
 
   // Mở overlay thay vì sang trang /pages/fridge.html (link vẫn giữ khi không có JS).
   openLink.addEventListener("click", function (e) {
@@ -41,25 +41,25 @@
   form.addEventListener("change", function () {
     error.hidden = true;
     selects.forEach(function (select) {
-      var count = select.querySelectorAll("input:checked").length;
-      select.querySelector(".fridge-count").textContent = count > 0 ? count : "";
+      const count = select.querySelectorAll("input:checked").length;
+      select.querySelector(".fridge-dialog__count").textContent = count > 0 ? count : "";
     });
   });
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    var tokens = [], tags = {};
+    const tokens = [], tags = {};
     form.querySelectorAll("input[type=checkbox]:checked").forEach(function (box) {
       // Chế độ ăn / Vùng miền / Ngân sách là bộ lọc nhãn: gửi riêng mỗi nhóm một tham số (như fridge.js)
       if (box.hasAttribute("data-tag-filter")) (tags[box.name] = tags[box.name] || []).push(box.value);
       else tokens.push(box.name + ":" + box.value);
     });
-    var tagNames = Object.keys(tags);
+    const tagNames = Object.keys(tags);
     if (tokens.length === 0 && tagNames.length === 0) {
       error.hidden = false;
       return;
     }
-    var parts = [];
+    const parts = [];
     if (tokens.length) parts.push("ingredients=" + encodeURIComponent(tokens.join(",")).replace(/%3A/gi, ":").replace(/%2C/gi, ","));
     tagNames.forEach(function (g) { parts.push(g + "=" + encodeURIComponent(tags[g].join(","))); });
     window.location.href = "/pages/fridge-results.html?" + parts.join("&");

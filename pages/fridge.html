@@ -51,7 +51,7 @@
                         <details>
 
                             <summary>Công thức <img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
                             </summary>
 
                             <ul>
@@ -66,7 +66,7 @@
                         <details>
 
                             <summary>Về chúng tôi <img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
                             </summary>
 
                             <ul>
@@ -85,7 +85,7 @@
                     <div class="site-header__nav-item" data-header-member hidden>
                         <details>
                             <summary>Góc của tôi<img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt=""></summary>
+                                    src="/images/icons/keyboard-arrow-up.svg" alt=""></summary>
                             <ul>
                                 <li><a href="/pages/account/overview.html" data-header-route="overview">Tổng quan</a>
                                 </li>
@@ -110,8 +110,8 @@
                     <details class="site-header__search">
                         <summary aria-controls="site-header__search-bar" aria-label="Mở tìm kiếm">
                             <img class="site-header__search-icon site-header__search-open-icon"
-                                src="/images/icons/Search_Com.svg" alt="Mở thanh tìm kiếm">
-                            <img class="site-header__search-close-icon" src="/images/icons/X.svg"
+                                src="/images/icons/search-com.svg" alt="Mở thanh tìm kiếm">
+                            <img class="site-header__search-close-icon" src="/images/icons/close.svg"
                                 alt="Đóng thanh tìm kiếm">
                             <span class="site-header__search-label">Tìm công thức</span>
                         </summary>
@@ -122,7 +122,7 @@
                                 <input type="search" name="q" placeholder="Tìm kiếm ..." required
                                     aria-label="Từ khóa tìm kiếm">
                                 <button class="site-header__search-submit" type="submit" aria-label="Tìm kiếm">
-                                    <img src="/images/icons/Search_input.svg" alt="">
+                                    <img src="/images/icons/search-input.svg" alt="">
                                 </button>
                             </form>
                         </div>
@@ -143,12 +143,12 @@
         <!-- ===== BỘ LỌC ===== -->
         <section class="filter-sidebar">
           <form action="/pages/fridge-results.html" method="get">
-            <h2 class="filter-title">BỘ LỌC</h2>
-            <p class="filter-hint">Chọn nguyên liệu bạn có (có thể lọc thêm theo chế độ ăn, vùng miền, ngân sách), rồi bấm nút bên dưới.</p>
-            <div class="filter-group-list">
-              <div class="filter-accordion" data-group="dam">
-                <button type="button" class="filter-trigger-btn" aria-expanded="false">ĐẠM</button>
-                <div class="filter-panel">
+            <h2 class="filter-sidebar__title">BỘ LỌC</h2>
+            <p class="filter-sidebar__hint">Chọn nguyên liệu bạn có (có thể lọc thêm theo chế độ ăn, vùng miền, ngân sách), rồi bấm nút bên dưới.</p>
+            <div class="filter-sidebar__groups">
+              <div class="filter-group" data-group="dam">
+                <button type="button" class="filter-group__trigger" aria-expanded="false">ĐẠM</button>
+                <div class="filter-group__panel">
                   <label><input type="checkbox" name="dam" value="thit-bo"><span>Thịt bò</span></label>
                   <label><input type="checkbox" name="dam" value="thit-heo"><span>Thịt heo</span></label>
                   <label><input type="checkbox" name="dam" value="thit-ga"><span>Thịt gà</span></label>
@@ -157,14 +157,14 @@
                   <label><input type="checkbox" name="dam" value="khac"><span>Khác</span></label>
                   <!-- Ô nhập nguyên liệu khác: chỉ hiện khi tick "Khác"; gợi ý gọn lấy từ danh mục nguyên liệu -->
                   <div class="filter-other" data-other-group="dam" hidden>
-                    <input type="text" class="filter-other-input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
-                    <ul class="filter-other-list"></ul>
+                    <input type="text" class="filter-other__input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
+                    <ul class="filter-other__list"></ul>
                   </div>
                 </div>
               </div>
-              <div class="filter-accordion" data-group="tinh-bot">
-                <button type="button" class="filter-trigger-btn" aria-expanded="false">TINH BỘT</button>
-                <div class="filter-panel">
+              <div class="filter-group" data-group="tinh-bot">
+                <button type="button" class="filter-group__trigger" aria-expanded="false">TINH BỘT</button>
+                <div class="filter-group__panel">
                   <label><input type="checkbox" name="tinh-bot" value="gao"><span>Gạo</span></label>
                   <label><input type="checkbox" name="tinh-bot" value="bun"><span>Bún</span></label>
                   <label><input type="checkbox" name="tinh-bot" value="pho"><span>Phở</span></label>
@@ -173,14 +173,14 @@
                   <label><input type="checkbox" name="tinh-bot" value="khac"><span>Khác</span></label>
                   <!-- Ô nhập nguyên liệu khác: chỉ hiện khi tick "Khác"; gợi ý gọn lấy từ danh mục nguyên liệu -->
                   <div class="filter-other" data-other-group="tinh-bot" hidden>
-                    <input type="text" class="filter-other-input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
-                    <ul class="filter-other-list"></ul>
+                    <input type="text" class="filter-other__input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
+                    <ul class="filter-other__list"></ul>
                   </div>
                 </div>
               </div>
-              <div class="filter-accordion" data-group="rau-cu">
-                <button type="button" class="filter-trigger-btn" aria-expanded="false">RAU CỦ &amp; NẤM</button>
-                <div class="filter-panel">
+              <div class="filter-group" data-group="rau-cu">
+                <button type="button" class="filter-group__trigger" aria-expanded="false">RAU CỦ &amp; NẤM</button>
+                <div class="filter-group__panel">
                   <label><input type="checkbox" name="rau-cu" value="ca-chua"><span>Cà chua</span></label>
                   <label><input type="checkbox" name="rau-cu" value="nam-huong"><span>Nấm hương</span></label>
                   <label><input type="checkbox" name="rau-cu" value="xa-lach"><span>Xà lách</span></label>
@@ -190,14 +190,14 @@
                   <label><input type="checkbox" name="rau-cu" value="khac"><span>Khác</span></label>
                   <!-- Ô nhập nguyên liệu khác: chỉ hiện khi tick "Khác"; gợi ý gọn lấy từ danh mục nguyên liệu -->
                   <div class="filter-other" data-other-group="rau-cu" hidden>
-                    <input type="text" class="filter-other-input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
-                    <ul class="filter-other-list"></ul>
+                    <input type="text" class="filter-other__input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
+                    <ul class="filter-other__list"></ul>
                   </div>
                 </div>
               </div>
-              <div class="filter-accordion" data-group="trai-cay">
-                <button type="button" class="filter-trigger-btn" aria-expanded="false">TRÁI CÂY</button>
-                <div class="filter-panel">
+              <div class="filter-group" data-group="trai-cay">
+                <button type="button" class="filter-group__trigger" aria-expanded="false">TRÁI CÂY</button>
+                <div class="filter-group__panel">
                   <label><input type="checkbox" name="trai-cay" value="xoai-xanh"><span>Xoài xanh</span></label>
                   <label><input type="checkbox" name="trai-cay" value="xoai"><span>Xoài chín</span></label>
                   <label><input type="checkbox" name="trai-cay" value="chuoi"><span>Chuối</span></label>
@@ -206,40 +206,40 @@
                   <label><input type="checkbox" name="trai-cay" value="khac"><span>Khác</span></label>
                   <!-- Ô nhập nguyên liệu khác: chỉ hiện khi tick "Khác"; gợi ý gọn lấy từ danh mục nguyên liệu -->
                   <div class="filter-other" data-other-group="trai-cay" hidden>
-                    <input type="text" class="filter-other-input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
-                    <ul class="filter-other-list"></ul>
+                    <input type="text" class="filter-other__input" placeholder="Nhập nguyên liệu, Enter để thêm" aria-label="Nhập nguyên liệu khác" autocomplete="off" maxlength="60">
+                    <ul class="filter-other__list"></ul>
                   </div>
                 </div>
               </div>
-              <div class="filter-accordion" data-group="che-do-an">
-                <button type="button" class="filter-trigger-btn" aria-expanded="false">CHẾ ĐỘ ĂN</button>
-                <div class="filter-panel">
+              <div class="filter-group" data-group="che-do-an">
+                <button type="button" class="filter-group__trigger" aria-expanded="false">CHẾ ĐỘ ĂN</button>
+                <div class="filter-group__panel">
                   <!-- 3 nhóm dưới là bộ lọc nhãn (cùng nhãn với trang Danh mục), không phải nguyên liệu -->
                   <label><input type="checkbox" name="che-do-an" value="Thanh đạm" data-tag-filter><span>Thanh đạm</span></label>
                   <label><input type="checkbox" name="che-do-an" value="Eat Clean" data-tag-filter><span>Eat Clean</span></label>
                   <label><input type="checkbox" name="che-do-an" value="Ăn chay" data-tag-filter><span>Ăn chay</span></label>
                 </div>
               </div>
-              <div class="filter-accordion" data-group="vung-mien">
-                <button type="button" class="filter-trigger-btn" aria-expanded="false">VÙNG MIỀN</button>
-                <div class="filter-panel">
+              <div class="filter-group" data-group="vung-mien">
+                <button type="button" class="filter-group__trigger" aria-expanded="false">VÙNG MIỀN</button>
+                <div class="filter-group__panel">
                   <label><input type="checkbox" name="vung-mien" value="Miền Bắc" data-tag-filter><span>Miền Bắc</span></label>
                   <label><input type="checkbox" name="vung-mien" value="Miền Trung" data-tag-filter><span>Miền Trung</span></label>
                   <label><input type="checkbox" name="vung-mien" value="Miền Nam" data-tag-filter><span>Miền Nam</span></label>
                   <label><input type="checkbox" name="vung-mien" value="Món Á" data-tag-filter><span>Món Á / Nhật</span></label>
                 </div>
               </div>
-              <div class="filter-accordion" data-group="ngan-sach">
-                <button type="button" class="filter-trigger-btn" aria-expanded="false">NGÂN SÁCH</button>
-                <div class="filter-panel">
+              <div class="filter-group" data-group="ngan-sach">
+                <button type="button" class="filter-group__trigger" aria-expanded="false">NGÂN SÁCH</button>
+                <div class="filter-group__panel">
                   <label><input type="checkbox" name="ngan-sach" value="Dưới 50k" data-tag-filter><span>Dưới 50.000đ</span></label>
                   <label><input type="checkbox" name="ngan-sach" value="50k - 100k" data-tag-filter><span>50.000đ - 100.000đ</span></label>
                   <label><input type="checkbox" name="ngan-sach" value="Trên 100k" data-tag-filter><span>Trên 100.000đ</span></label>
                 </div>
               </div>
             </div>
-            <button type="submit" class="filter-submit">TÌM CÔNG THỨC PHÙ HỢP</button>
-            <button type="reset" class="filter-reset">Bỏ chọn tất cả</button>
+            <button type="submit" class="filter-sidebar__submit">TÌM CÔNG THỨC PHÙ HỢP</button>
+            <button type="reset" class="filter-sidebar__reset">Bỏ chọn tất cả</button>
           </form>
         </section>
 
@@ -293,9 +293,9 @@
                 </h2>
                 <nav class="site-footer__links">
                     <a href="/about.html">Về NomNom</a>
-                    <a href="/about.html">Hướng dẫn sử dụng</a>
-                    <a href="/about.html">CÂU HỎI THƯỜNG GẶP</a>
-                    <a href="/about.html">Liên hệ</a>
+                    <a href="/about.html#huong-dan">Hướng dẫn sử dụng</a>
+                    <a href="/about.html#faq">CÂU HỎI THƯỜNG GẶP</a>
+                    <a href="/about.html#gop-y">Liên hệ</a>
                 </nav>
             </div>
             <div class="site-footer__contact">
@@ -334,8 +334,7 @@
             <form class="site-auth__form site-login__form" novalidate>
                 <div class="site-auth__field">
                     <label class="site-auth__label" for="site-login__email">Địa chỉ Email</label>
-                    <input class="site-auth__input" id="site-login__email" name="email" type="text" autocomplete="username"
-                        autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required
+                    <input class="site-auth__input" id="site-login__email" name="email" type="text" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required
                         data-required-message="Bạn hãy nhập địa chỉ email." aria-describedby="site-login__email-error">
                     <p class="site-auth__error" id="site-login__email-error" hidden></p>
                 </div>

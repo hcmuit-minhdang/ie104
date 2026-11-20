@@ -1,9 +1,9 @@
 /* ------------------------------------------------------------------ */
 /* Ingredient picker, component styles                                */
-/*   Mọi selector nằm trong .ip để không đụng CSS của trang.            */
+/*   Mọi selector nằm trong .ingredient-picker để không đụng CSS của trang.            */
 /* ------------------------------------------------------------------ */
 
-.ip {
+.ingredient-picker {
     --ip-ink: #1a1a1a;
     --ip-yellow: #FBC41B;
     --ip-soft: #fffdf5;
@@ -14,19 +14,19 @@
     color: var(--ip-ink);
 }
 
-.ip *,
-.ip *::before,
-.ip *::after {
+.ingredient-picker *,
+.ingredient-picker *::before,
+.ingredient-picker *::after {
     box-sizing: border-box;
 }
 
 /* ---------- Ô tìm kiếm + pills ---------- */
 
-.ip .ip-combobox {
+.ingredient-picker .ingredient-picker__combobox {
     position: relative;
 }
 
-.ip .ip-search {
+.ingredient-picker .ingredient-picker__search {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -39,15 +39,15 @@
     transition: box-shadow 0.15s ease;
 }
 
-.ip .ip-search:focus-within {
+.ingredient-picker .ingredient-picker__search:focus-within {
     box-shadow: 0 6px 0 rgba(26, 26, 26, 0.12);
 }
 
-.ip .ip-pills {
+.ingredient-picker .ingredient-picker__pills {
     display: contents;
 }
 
-.ip .ip-pill {
+.ingredient-picker .ingredient-picker__pill {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -60,7 +60,7 @@
     line-height: 1.2;
 }
 
-.ip .ip-pill-remove {
+.ingredient-picker .ingredient-picker__pill-remove {
     display: grid;
     place-items: center;
     width: 20px;
@@ -75,11 +75,11 @@
     cursor: pointer;
 }
 
-.ip .ip-pill-remove:hover {
+.ingredient-picker .ingredient-picker__pill-remove:hover {
     transform: scale(1.08);
 }
 
-.ip .ip-input {
+.ingredient-picker .ingredient-picker__input {
     flex: 1 1 200px;
     min-width: 140px;
     padding: 8px 4px;
@@ -90,14 +90,14 @@
     font-size: 1rem;
 }
 
-.ip .ip-input::placeholder {
+.ingredient-picker .ingredient-picker__input::placeholder {
     color: var(--ip-muted);
 }
 
 /* ---------- Danh sách gợi ý ---------- */
 
-.ip .ip-suggestions,
-.ip .ip-no-match {
+.ingredient-picker .ingredient-picker__suggestions,
+.ingredient-picker .ingredient-picker__no-match {
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
@@ -110,19 +110,19 @@
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
 
-.ip .ip-suggestions {
+.ingredient-picker .ingredient-picker__suggestions {
     max-height: 284px;
     padding: 4px;
     list-style: none;
     overflow-y: auto;
 }
 
-.ip .ip-no-match {
+.ingredient-picker .ingredient-picker__no-match {
     padding: 14px 16px;
     font-size: 0.95rem;
 }
 
-.ip .ip-option {
+.ingredient-picker .ingredient-picker__option {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -132,15 +132,15 @@
     cursor: pointer;
 }
 
-.ip .ip-option:hover {
+.ingredient-picker .ingredient-picker__option:hover {
     background: var(--ip-yellow);
 }
 
-.ip .ip-option-name {
+.ingredient-picker .ingredient-picker__option-name {
     font-weight: 600;
 }
 
-.ip .ip-option-unit {
+.ingredient-picker .ingredient-picker__option-unit {
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--ip-muted);
@@ -148,14 +148,14 @@
 
 /* ---------- Bảng nguyên liệu đã chọn ---------- */
 
-.ip .ip-sheet {
+.ingredient-picker .ingredient-picker__sheet {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-top: 16px;
 }
 
-.ip .ip-sheet-empty {
+.ingredient-picker .ingredient-picker__sheet-empty {
     margin: 0;
     padding: 16px;
     border: 2px dashed #c9bfa6;
@@ -165,7 +165,7 @@
     text-align: center;
 }
 
-.ip .ip-row {
+.ingredient-picker .ingredient-picker__row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 92px 150px 36px;
     align-items: center;
@@ -176,13 +176,13 @@
     border-radius: 6px;
 }
 
-.ip .ip-name {
+.ingredient-picker .ingredient-picker__name {
     font-weight: 700;
     overflow-wrap: anywhere;
 }
 
-.ip .ip-qty,
-.ip .ip-unit {
+.ingredient-picker .ingredient-picker__qty,
+.ingredient-picker .ingredient-picker__unit {
     width: 100%;
     padding: 8px 10px;
     border: 2px solid var(--ip-line);
@@ -192,14 +192,14 @@
     font-size: 0.95rem;
 }
 
-.ip .ip-qty:focus,
-.ip .ip-unit:focus {
+.ingredient-picker .ingredient-picker__qty:focus,
+.ingredient-picker .ingredient-picker__unit:focus {
     outline: none;
     border-color: var(--ip-ink);
     box-shadow: 0 0 0 3px rgba(251, 196, 27, 0.5);
 }
 
-.ip .ip-remove {
+.ingredient-picker .ingredient-picker__remove {
     display: grid;
     place-items: center;
     width: 34px;
@@ -214,17 +214,17 @@
     cursor: pointer;
 }
 
-.ip .ip-remove:hover {
+.ingredient-picker .ingredient-picker__remove:hover {
     background: var(--ip-ink);
     color: #ffffff;
 }
 
-.ip button:focus-visible {
+.ingredient-picker button:focus-visible {
     outline: 3px solid var(--ip-ink);
     outline-offset: 2px;
 }
 
-.ip .ip-error {
+.ingredient-picker .ingredient-picker__error {
     margin: 0;
     padding: 14px 16px;
     border: 3px solid #b3261e;
@@ -235,11 +235,11 @@
 }
 
 @media (max-width: 620px) {
-    .ip .ip-row {
+    .ingredient-picker .ingredient-picker__row {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 36px;
     }
 
-    .ip .ip-name {
+    .ingredient-picker .ingredient-picker__name {
         grid-column: 1 / -1;
     }
 }

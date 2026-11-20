@@ -48,7 +48,7 @@ export async function createIngredientPicker(root, options = {}) {
   try {
     ({ ingredients, units } = await loadCatalog());
   } catch (error) {
-    root.innerHTML = `<p class="ip-error">Không tải được dữ liệu nguyên liệu. Hãy mở trang qua một web server (không mở trực tiếp bằng file://).</p>`;
+    root.innerHTML = `<p class="ingredient-picker__error">Không tải được dữ liệu nguyên liệu. Hãy mở trang qua một web server (không mở trực tiếp bằng file://).</p>`;
     throw error;
   }
 
@@ -63,20 +63,20 @@ export async function createIngredientPicker(root, options = {}) {
 
   const instanceId = "ip-" + (++instanceCount);
 
-  root.classList.add("ip");
+  root.classList.add("ingredient-picker");
   root.innerHTML =
-    `<div class="ip-combobox">
-      <div class="ip-search">
-        <span class="ip-pills" data-part="pills"></span>
-        <input class="ip-input" data-part="input" type="text"
+    `<div class="ingredient-picker__combobox">
+      <div class="ingredient-picker__search">
+        <span class="ingredient-picker__pills" data-part="pills"></span>
+        <input class="ingredient-picker__input" data-part="input" type="text"
           autocomplete="off" spellcheck="false" placeholder="Tìm nguyên liệu"
           role="combobox" aria-autocomplete="list" aria-expanded="false"
           aria-controls="${instanceId}-list" />
       </div>
-      <ul class="ip-suggestions" data-part="list" id="${instanceId}-list" role="listbox" hidden></ul>
-      <p class="ip-no-match" data-part="no-match" role="status" hidden>Không tìm thấy nguyên liệu</p>
+      <ul class="ingredient-picker__suggestions" data-part="list" id="${instanceId}-list" role="listbox" hidden></ul>
+      <p class="ingredient-picker__no-match" data-part="no-match" role="status" hidden>Không tìm thấy nguyên liệu</p>
     </div>
-    <div class="ip-sheet" data-part="sheet"></div>`;
+    <div class="ingredient-picker__sheet" data-part="sheet"></div>`;
 
   const els = {
     pills: root.querySelector('[data-part="pills"]'),
@@ -121,13 +121,13 @@ export async function createIngredientPicker(root, options = {}) {
   function renderPills() {
     els.pills.innerHTML = items.map((item, index) => {
       const name = escapeHTML(nameOf(item));
-      return `<span class="ip-pill">${name}<button type="button" class="ip-pill-remove" data-remove-index="${index}" aria-label="Xóa ${name}">x</button></span>`;
+      return `<span class="ingredient-picker__pill">${name}<button type="button" class="ingredient-picker__pill-remove" data-remove-index="${index}" aria-label="Xóa ${name}">x</button></span>`;
     }).join("");
   }
 
   function renderRows() {
     if (items.length === 0) {
-      els.sheet.innerHTML = `<p class="ip-sheet-empty">Chưa có nguyên liệu nào</p>`;
+      els.sheet.innerHTML = `<p class="ingredient-picker__sheet-empty">Chưa có nguyên liệu nào</p>`;
       return;
     }
     
@@ -139,11 +139,11 @@ export async function createIngredientPicker(root, options = {}) {
         return `<option value="${escapeHTML(unitId)}"${selected}>${escapeHTML(unitLabel(unitId))}</option>`;
       }).join("");
 
-      return `<div class="ip-row" data-row="${index}">
-          <span class="ip-name">${name}</span>
-          <input class="ip-qty" data-field="qty" type="number" inputmode="decimal" min="0" step="any" placeholder="SL" value="${item.qty ?? ""}" aria-label="Số lượng ${name}" />
-          <select class="ip-unit" data-field="unit" aria-label="Đơn vị của ${name}">${optionsHtml}</select>
-          <button type="button" class="ip-remove" data-action="remove" aria-label="Xóa ${name}">x</button>
+      return `<div class="ingredient-picker__row" data-row="${index}">
+          <span class="ingredient-picker__name">${name}</span>
+          <input class="ingredient-picker__qty" data-field="qty" type="number" inputmode="decimal" min="0" step="any" placeholder="SL" value="${item.qty ?? ""}" aria-label="Số lượng ${name}" />
+          <select class="ingredient-picker__unit" data-field="unit" aria-label="Đơn vị của ${name}">${optionsHtml}</select>
+          <button type="button" class="ingredient-picker__remove" data-action="remove" aria-label="Xóa ${name}">x</button>
         </div>`;
     }).join("");
   }
@@ -165,9 +165,9 @@ export async function createIngredientPicker(root, options = {}) {
     }
 
     els.list.innerHTML = matches.map((ingredient, index) => {
-      return `<li class="ip-option" role="option" data-option="${index}">
-        <span class="ip-option-name">${escapeHTML(ingredient.name)}</span>
-        <span class="ip-option-unit">${escapeHTML(unitLabel(ingredient.defaultUnit))}</span>
+      return `<li class="ingredient-picker__option" role="option" data-option="${index}">
+        <span class="ingredient-picker__option-name">${escapeHTML(ingredient.name)}</span>
+        <span class="ingredient-picker__option-unit">${escapeHTML(unitLabel(ingredient.defaultUnit))}</span>
       </li>`;
     }).join("");
 
@@ -307,7 +307,7 @@ export async function createIngredientPicker(root, options = {}) {
     clear: clear,
     destroy: () => {
       document.removeEventListener("pointerdown", handleOutsidePointerDown);
-      root.classList.remove("ip");
+      root.classList.remove("ingredient-picker");
       root.innerHTML = "";
     }
   };

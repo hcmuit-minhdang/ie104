@@ -3,7 +3,7 @@
 ```text
 NomNom/
 ├─ index.html                # Trang chủ
-├─ about.html                # Về chúng tôi (có mục Góp ý #gop-y và Liên hệ #lien-he)
+├─ about.html                # Về chúng tôi (có mục Góp ý #gop-y)
 ├─ README.md, STRUCTURE.md   # tài liệu
 ├─ package.json              # chỉ có script start, không có dependency
 ├─ vercel.json               # cấu hình triển khai tĩnh
@@ -35,28 +35,9 @@ Quy ước: đường dẫn trong HTML/CSS/JS dùng **đường dẫn tuyệt đ
 
 ## Quy tắc đặt tên và làm việc nhóm
 
-Nhóm thống nhất theo hai báo cáo tham khảo của các khóa trước (MyTicket, Game Store Website): cả hai đều đặt tên CSS theo quy ước rõ ràng, **camelCase cho JavaScript**, CSS chung + CSS riêng từng trang, và quy trình Git theo nhánh.
+Chi tiết nằm trong [README.md](README.md#-quy-tắc-đặt-tên-và-làm-việc-nhóm). Tóm tắt:
 
-**CSS: kebab-case, phần con của component nối bằng `__`** (chữ thường, từ trong một tên nối bằng `-`; mượn cách viết của BEM nhưng không áp dụng cho mọi trang)
-
-| Thành phần | Quy tắc | Ví dụ trong dự án |
-|---|---|---|
-| Khối (component) | tên khối độc lập, kebab-case | `site-header`, `site-footer`, `site-auth`, `profile-banner`, `member` |
-| Phần con | nối tên khối bằng `__` | `site-header__nav-item`, `site-auth__field`, `member__avatar` |
-| Biến thể | nối bằng `--` | `tag--team`, `u-btn--danger` |
-| Trạng thái | tiền tố `is-` | `is-open` |
-
-- Header, footer, đăng nhập, đăng ký (`css/components/`) dùng dạng khối + `__` phần con (`site-header__...`, `site-footer__...`, `site-auth__...`, `site-login__...`, `site-signup__...`); trạng thái mở menu dùng `is-open`.
-- Các trang còn lại (`css/pages/`) đặt tên kebab-case phẳng (`recipe-title`, `filter-panel`...), giữ nguyên để khỏi vỡ giao diện; **thành phần mới** dùng khối + `__` (như `member__avatar`, `member__role`, `profile-banner__bg`).
-- CSS dùng chung nằm trong `css/components/`; mỗi trang một file trong `css/pages/`, chỉ áp dụng cho trang đó.
-
-**JavaScript: camelCase**
-- Biến và hàm: `allItems`, `renderProfile()`, `loadState()`. Hằng số cấp module: `UPPER_SNAKE_CASE` (`PAGE_SIZE`, `KEY`).
-- Mỗi trang một file trong `js/pages/` trùng tên với trang; thành phần dùng chung trong `js/components/`.
-
-**Tệp và thư mục:** chữ thường, nối bằng `-` (`fridge-results.html`, `ingredient-picker.js`).
-
-**Git**
-- Mỗi tính năng hoặc lỗi một nhánh riêng tách từ `main`, không commit trực tiếp lên nhánh chính, gửi Pull Request có mô tả để người phụ trách kiểm tra rồi mới merge.
-- Pull code mới nhất trước khi làm việc.
-- Thông điệp commit ngắn, ghi rõ thay đổi, theo dạng `loại: nội dung` (`feat:`, `fix:`, `style:`, `docs:`, `refactor:`).
+- **CSS:** BEM kebab-case (`block__element--modifier`, trạng thái `is-*`) cho header, footer, đăng nhập/đăng ký, trang cá nhân và các thành phần dùng chung; các trang lớn còn dùng tên kebab-case phẳng.
+- **ID:** kebab-case. **JavaScript:** camelCase, hằng `UPPER_SNAKE`, chỉ dùng `const`/`let`.
+- **Tệp và thư mục:** chữ thường, nối bằng `-`; CSS và JS riêng của trang trùng tên với trang.
+- **Git:** commit dạng `loại: nội dung`; nhánh theo thành viên gộp vào `main` bằng Pull Request.

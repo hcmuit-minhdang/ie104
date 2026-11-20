@@ -3,19 +3,19 @@
 (function () {
   "use strict";
 
-  var FALLBACK_IMG = "/images/account/recipe.png";
-  var PAGE_SIZE = 12;
-  var N = window.NomNom;
-  var esc = N.esc;
+  const FALLBACK_IMG = "/images/account/recipe.png";
+  const PAGE_SIZE = 12;
+  const N = window.NomNom;
+  const esc = N.esc;
 
   function $(sel, root) { return (root || document).querySelector(sel); }
   function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
 
   /* 1. Tab đang chọn */
-  var file = (location.pathname.split("/").pop() || "overview.html").toLowerCase();
+  let file = (location.pathname.split("/").pop() || "overview.html").toLowerCase();
   if (file === "index.html" || file === "") file = "overview.html";
   $$(".user-tabs__tab").forEach(function (tab) {
-    var on = tab.getAttribute("href").split("/").pop().toLowerCase() === file;
+    const on = tab.getAttribute("href").split("/").pop().toLowerCase() === file;
     tab.classList.toggle("is-active", on);
     if (on) tab.setAttribute("aria-current", "page");
     else tab.removeAttribute("aria-current");
@@ -23,9 +23,9 @@
 
   /* ---------- tiện ích ---------- */
   function fmtDate(iso) {
-    var d = new Date(iso);
+    const d = new Date(iso);
     if (isNaN(d)) return "";
-    var p = function (n) { return (n < 10 ? "0" : "") + n; };
+    const p = function (n) { return (n < 10 ? "0" : "") + n; };
     return p(d.getDate()) + "." + p(d.getMonth() + 1) + "." + String(d.getFullYear()).slice(2) +
       " " + p(d.getHours()) + "." + p(d.getMinutes());
   }
@@ -41,7 +41,7 @@
   }
 
   function cardHtml(r, action) {
-    var btn = "";
+    let btn = "";
     if (action === "unsave") {
       btn = '<button type="button" class="recipe-card__act" data-act="unsave" data-id="' + esc(r.id) +
         '" aria-label="Bỏ lưu công thức ' + esc(r.name) + '" title="Bỏ lưu">&#9829;</button>';
@@ -52,12 +52,12 @@
         '" aria-label="Xóa công thức ' + esc(r.name) + '" title="Xóa công thức">&#10005;</button>';
     }
     return '<li class="recipe-card"><a href="' + esc(N.recipeUrl(r.id)) + '"><img loading="lazy" decoding="async" class="recipe-card__img" data-fb src="' +
-      esc(r.image || FALLBACK_IMG) + '" alt="" width="248" height="185" loading="lazy"><span class="recipe-card__name">' +
+      esc(r.image || FALLBACK_IMG) + '" alt="" width="248" height="185"><span class="recipe-card__name">' +
       esc(r.name) + "</span></a>" + btn + "</li>";
   }
 
   function reviewHtml(v, mode) {
-    var delBtn = '<button class="cmt__reply" type="button" data-act="del-review" data-id="' + esc(v.id) + '">Xóa</button>';
+    const delBtn = '<button class="cmt__reply" type="button" data-act="del-review" data-id="' + esc(v.id) + '">Xóa</button>';
     return '<li class="cmt-card" data-review="' + esc(v.id) + '"><article class="cmt">' +
       '<a class="cmt__recipe" href="' + esc(N.recipeUrl(v.recipeId)) + '">' + esc(v.recipeName) + "</a>" +
       '<div class="cmt__meta"><p class="cmt__who"><span>' + esc(v.user && v.user.username) + "</span> " +
@@ -73,34 +73,34 @@
 
   /* ---------- phân trang ---------- */
   function renderPager(pager, total, current, onGo) {
-    var list = $(".pager__list", pager);
+    const list = $(".pager__list", pager);
     pager.hidden = total <= 1;
     list.innerHTML = "";
     if (total <= 1) return;
     function btn(n) {
-      var li = document.createElement("li"), b = document.createElement("button");
+      const li = document.createElement("li"), b = document.createElement("button");
       b.type = "button"; b.className = "pager__btn" + (n === current ? " is-current" : "");
       b.textContent = n; b.dataset.page = n;
       if (n === current) b.setAttribute("aria-current", "page");
       li.appendChild(b); return li;
     }
     function dots() {
-      var li = document.createElement("li");
+      const li = document.createElement("li");
       li.className = "pager__dots"; li.setAttribute("aria-hidden", "true");
       li.innerHTML = "<i></i><i></i><i></i>"; return li;
     }
     function arrow(dir) {
-      var li = document.createElement("li"), b = document.createElement("button");
+      const li = document.createElement("li"), b = document.createElement("button");
       b.type = "button"; b.className = "pager__next"; b.dataset.dir = dir;
-      var img = '<img src="/images/account/page-next.svg" alt="">';
+      const img = '<img src="/images/account/page-next.svg" alt="">';
       b.innerHTML = dir === "next" ? "Trang sau" + img : img.replace("<img", '<img style="transform:rotate(90deg)"') + "Trang trước";
       li.appendChild(b); return li;
     }
-    var set = {};
+    const set = {};
     [1, 2, 3, total, current - 1, current, current + 1].forEach(function (n) {
       if (n >= 1 && n <= total) set[n] = true;
     });
-    var pages = Object.keys(set).map(Number).sort(function (a, b) { return a - b; });
+    const pages = Object.keys(set).map(Number).sort(function (a, b) { return a - b; });
     if (current > 1) list.appendChild(arrow("prev"));
     pages.forEach(function (n, i) {
       if (i > 0 && n - pages[i - 1] > 1) list.appendChild(dots());
@@ -108,7 +108,7 @@
     });
     if (current < total) list.appendChild(arrow("next"));
     list.onclick = function (e) {
-      var t = e.target.closest("button");
+      const t = e.target.closest("button");
       if (!t) return;
       if (t.dataset.page) onGo(parseInt(t.dataset.page, 10));
       else if (t.dataset.dir === "next") onGo(current + 1);
@@ -118,27 +118,27 @@
 
   /* ---------- trang danh sách: saved / uploaded / history ---------- */
   function initList(kind) {
-    var list = $("[data-list]");
-    var pager = $(".pager");
-    var heading = $(".u-heading");
-    var page = 1;
-    var clearBtn = null;
-    var action = kind === "saved" ? "unsave" : kind === "uploaded" ? "delete" : null;
-    var emptyText = {
+    const list = $("[data-list]");
+    const pager = $(".pager");
+    const heading = $(".u-heading");
+    let page = 1;
+    let clearBtn = null;
+    const action = kind === "saved" ? "unsave" : kind === "uploaded" ? "delete" : null;
+    const emptyText = {
       saved: "Bạn chưa lưu công thức nào. Hãy khám phá và nhấn lưu món bạn thích!",
       uploaded: "Bạn chưa đăng tải công thức nào.",
       history: "Lịch sử xem còn trống."
     }[kind];
 
     if (kind === "history") {
-      var bar = document.createElement("div");
+      const bar = document.createElement("div");
       bar.className = "u-toolbar";
       bar.innerHTML = '<button type="button" class="u-btn u-btn--danger" data-act="clear-history">Xóa lịch sử</button>';
       heading.insertAdjacentElement("afterend", bar);
       clearBtn = $("button", bar);
     }
     if (kind === "uploaded") {
-      var bar2 = document.createElement("div");
+      const bar2 = document.createElement("div");
       bar2.className = "u-toolbar";
       bar2.innerHTML = '<a class="u-btn" href="/pages/upload.html">+ Đăng công thức mới</a>';
       heading.insertAdjacentElement("afterend", bar2);
@@ -149,7 +149,7 @@
       list.setAttribute("aria-busy", "true");
       N.data.get("/me/" + kind, { page: page, limit: PAGE_SIZE }).then(function (d) {
         if (d.pages && page > d.pages) { return load(d.pages); }
-        var items = d.items || [];
+        const items = d.items || [];
         if (!items.length) {
           emptyMsg(list, emptyText);
           pager.hidden = true;
@@ -169,9 +169,9 @@
     }
 
     document.addEventListener("click", function (e) {
-      var b = e.target.closest("[data-act]");
+      const b = e.target.closest("[data-act]");
       if (!b) return;
-      var act = b.dataset.act, id = b.dataset.id;
+      const act = b.dataset.act, id = b.dataset.id;
       if (act === "unsave") {
         b.disabled = true;
         N.data.del("/recipes/" + encodeURIComponent(id) + "/save").then(function () { load(page); })
@@ -182,14 +182,14 @@
         N.data.del("/recipes/" + encodeURIComponent(id)).then(function () { load(page); })
           .catch(function (err) { b.disabled = false; alert(err.message); });
       } else if (act === "edit") {
-        N.data.get("/recipes/" + encodeURIComponent(id)).then(function (r) {
+        N.data.get("/recipes/" + encodeURIComponent(id), { history: 0 }).then(function (r) {
           openEditor({ title: "Cập nhật công thức", fields: [
             { name: "name", label: "Tên món", value: r.name || r.title },
             { name: "description", label: "Mô tả", type: "textarea", value: r.description || "" },
             { name: "time", label: "Tổng thời gian (phút)", type: "number", value: r.time || "" },
             { name: "servings", label: "Khẩu phần (người)", type: "number", value: r.baseServings || r.servings || "" }],
             onSubmit: function (v) {
-              var body = { name: v.name.trim(), description: v.description.trim() };
+              const body = { name: v.name.trim(), description: v.description.trim() };
               if (String(v.time).trim() !== "") body.time = Number(v.time);
               if (String(v.servings).trim() !== "") body.servings = Number(v.servings);
               return N.data.patch("/recipes/" + encodeURIComponent(id), body).then(function () { load(page); });
@@ -206,9 +206,9 @@
   /* ---------- đánh giá ---------- */
   function bindReviewActions(list, reload) {
     list.addEventListener("click", function (e) {
-      var b = e.target.closest("[data-act]");
+      const b = e.target.closest("[data-act]");
       if (!b) return;
-      var id = b.dataset.id;
+      const id = b.dataset.id;
       if (b.dataset.act === "like") {
         N.data.post("/reviews/" + encodeURIComponent(id) + "/like").then(function (d) {
           b.setAttribute("aria-pressed", d.liked ? "true" : "false");
@@ -221,10 +221,10 @@
     });
   }
   function initReviewed() {
-    var list = $("[data-list]");
+    const list = $("[data-list]");
     function load() {
       N.data.get("/me/reviews").then(function (d) {
-        var items = d.items || [];
+        const items = d.items || [];
         if (!items.length) emptyMsg(list, "Bạn chưa đánh giá công thức nào.");
         else list.innerHTML = items.map(function (v) { return reviewHtml(v, "full"); }).join("");
       }).catch(function (err) { emptyMsg(list, err.message); });
@@ -235,14 +235,14 @@
 
   /* ---------- tổng quan ---------- */
   function initOverview() {
-    var lists = {};
+    const lists = {};
     $$("[data-list]").forEach(function (ul) {
-      var sec = ul.closest("section");
-      var id = (sec && sec.getAttribute("aria-labelledby")) || "";
+      const sec = ul.closest("section");
+      const id = (sec && sec.getAttribute("aria-labelledby")) || "";
       lists[id.replace("h-", "")] = ul;
     });
     function cards(key, items, text) {
-      var ul = lists[key];
+      const ul = lists[key];
       if (!ul) return;
       if (!items || !items.length) return emptyMsg(ul, text);
       ul.innerHTML = items.map(function (r) { return cardHtml(r, null); }).join("");
@@ -259,9 +259,9 @@
           if (!d.recentReviews || !d.recentReviews.length) emptyMsg(lists.reviews, "Bạn chưa đánh giá công thức nào.");
           else lists.reviews.innerHTML = d.recentReviews.map(function (v) { return reviewHtml(v, "brief"); }).join("");
         }
-        var counts = d.counts || {};
+        const counts = d.counts || {};
         ["saved", "uploaded", "reviews", "history"].forEach(function (k) {
-          var h = $("#h-" + k);
+          const h = $("#h-" + k);
           if (h && counts[k] != null && !h.dataset.counted) {
             h.dataset.counted = "1";
             h.insertAdjacentHTML("beforeend", ' <small class="u-count">(' + esc(counts[k]) + ")</small>");
@@ -277,15 +277,15 @@
   }
 
   function renderProfile(user) {
-    var name = $(".profile-banner__name");
+    const name = $(".profile-banner__name");
     if (name) name.textContent = user.username;
-    var av = $(".avatar__img");
+    const av = $(".avatar__img");
     if (av && user.avatar) av.src = user.avatar;
-    var cv = $(".profile-banner__bg img");
+    const cv = $(".profile-banner__bg img");
     if (cv && user.cover) cv.src = user.cover;
-    var vals = [user.email, user.username, "••••••••"];
+    const vals = [user.email, user.username, "••••••••"];
     $$(".acc-row__value").forEach(function (a, i) {
-      var s = $("span", a);
+      const s = $("span", a);
       if (s && vals[i] != null) s.textContent = vals[i];
     });
   }
@@ -293,28 +293,28 @@
   /* ---------- đổi ảnh đại diện / ảnh bìa ---------- */
   // Đọc file ảnh, thu nhỏ bằng canvas (avatar: vuông 256px, bìa: tối đa 1400px) rồi lưu vào hồ sơ.
   function pickImage(kind) {
-    var input = document.createElement("input");
+    const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/png,image/jpeg,image/webp";
     input.onchange = function () {
-      var file = input.files && input.files[0];
+      const file = input.files && input.files[0];
       if (!file) return;
       if (file.size > 8 * 1024 * 1024) { alert("Ảnh quá lớn (tối đa 8 MB)."); return; }
-      var reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = function () {
-        var img = new Image();
+        const img = new Image();
         img.onload = function () {
-          var c = document.createElement("canvas"), g = c.getContext("2d");
+          const c = document.createElement("canvas"), g = c.getContext("2d");
           if (kind === "avatar") {
-            var side = Math.min(img.width, img.height);
+            const side = Math.min(img.width, img.height);
             c.width = c.height = 256;
             g.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, 256, 256);
           } else {
-            var k = Math.min(1, 1400 / img.width, 600 / img.height);
+            const k = Math.min(1, 1400 / img.width, 600 / img.height);
             c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
             g.drawImage(img, 0, 0, c.width, c.height);
           }
-          var body = {};
+          const body = {};
           body[kind] = c.toDataURL("image/jpeg", 0.82);
           N.data.patch("/me", body).then(function (d) {
             if (d && d.user) { window.NomNomAuth && NomNomAuth.refresh(d.user); renderProfile(d.user); }
@@ -328,15 +328,15 @@
     input.click();
   }
   (function initImagePickers() {
-    var badge = $(".avatar__badge");
+    const badge = $(".avatar__badge");
     if (badge) {
       badge.setAttribute("role", "button"); badge.setAttribute("tabindex", "0"); badge.setAttribute("title", "Đổi ảnh đại diện");
       badge.addEventListener("click", function () { pickImage("avatar"); });
       badge.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickImage("avatar"); } });
     }
-    var banner = $(".profile-banner");
+    const banner = $(".profile-banner");
     if (banner) {
-      var b = document.createElement("button");
+      const b = document.createElement("button");
       b.type = "button"; b.className = "profile-banner__cover-btn"; b.textContent = "Đổi ảnh bìa";
       b.addEventListener("click", function () { pickImage("cover"); });
       banner.appendChild(b);
@@ -344,7 +344,7 @@
   })();
 
   /* ---------- sửa / xóa tài khoản ---------- */
-  var dlg;
+  let dlg;
   function ensureDialog() {
     if (dlg) return dlg;
     dlg = document.createElement("dialog");
@@ -359,8 +359,8 @@
     return dlg;
   }
   function openEditor(opts) {
-    var d = ensureDialog();
-    var form = $("form", d), errEl = $(".acc-dialog__error", d), submit = $("[type=submit]", d);
+    const d = ensureDialog();
+    const form = $("form", d), errEl = $(".acc-dialog__error", d), submit = $("[type=submit]", d);
     $(".acc-dialog__title", d).textContent = opts.title;
     $(".acc-dialog__fields", d).innerHTML = opts.fields.map(function (f) {
       // type "textarea": ô nhiều dòng (vd. Mô tả công thức)
@@ -374,14 +374,14 @@
     errEl.hidden = true;
     form.onsubmit = function (e) {
       e.preventDefault();
-      var data = {};
+      const data = {};
       opts.fields.forEach(function (f) { data[f.name] = form.elements[f.name].value; });
       errEl.hidden = true;
       submit.disabled = true;
       Promise.resolve().then(function () { return opts.onSubmit(data); }).then(function () { d.close(); }).catch(function (err) {
         errEl.textContent = (err && err.message) || "Có lỗi xảy ra.";
         errEl.hidden = false;
-        var inp = err && err.field && form.elements[err.field];
+        const inp = err && err.field && form.elements[err.field];
         if (inp) inp.focus();
       }).then(function () { submit.disabled = false; });
     };
@@ -390,13 +390,13 @@
   }
 
   function initAccountBox() {
-    var A = window.NomNomAuth;
+    const A = window.NomNomAuth;
     function patch(body) {
       return N.data.patch("/me", body).then(function (d) {
         if (d && d.user) { A.refresh(d.user); renderProfile(d.user); }
       });
     }
-    var defs = [
+    const defs = [
       function () {
         openEditor({ title: "Đổi email", fields: [
           { name: "email", label: "Email mới", type: "email", value: A.user.email, ac: "email" },
@@ -425,7 +425,7 @@
       if (!defs[i]) return;
       a.addEventListener("click", function (e) { e.preventDefault(); defs[i](); });
     });
-    var del = $('[data-action="delete-account"]');
+    const del = $('[data-action="delete-account"]');
     if (del) del.addEventListener("click", function (e) {
       e.preventDefault();
       openEditor({ title: "Xóa tài khoản", submit: "Xóa vĩnh viễn", danger: true, fields: [
@@ -438,7 +438,7 @@
 
   /* ---------- khởi động: yêu cầu đăng nhập ---------- */
   function start() {
-    var A = window.NomNomAuth;
+    const A = window.NomNomAuth;
     if (!A) return;
     A.ready.then(function (user) {
       if (!user) {

@@ -1,21 +1,21 @@
 /* NomNom: trang Kết quả tìm kiếm: /pages/search.html?q=&maxTime=&maxPrice=&sort=&page= -> NomNom.data.get("/recipes") */
 (function () {
   "use strict";
-  var LIMIT = 12;
-  var grid = document.getElementById("searchResultsGrid");
-  var msg = document.getElementById("gridMessage");
-  var count = document.getElementById("resultCount");
-  var pager = document.getElementById("pagination");
-  var kw = document.getElementById("search-keyword-text");
-  var form = document.getElementById("searchPageForm");
-  var input = document.getElementById("searchPageInput");
-  var sortSel = document.getElementById("sortSelect");
-  var timeSel = document.getElementById("maxTimeSelect");
-  var priceSel = document.getElementById("maxPriceSelect");
-  var reqId = 0;
+  const LIMIT = 12;
+  const grid = document.getElementById("search-results-grid");
+  const msg = document.getElementById("grid-message");
+  const count = document.getElementById("result-count");
+  const pager = document.getElementById("pagination");
+  const kw = document.getElementById("search-keyword-text");
+  const form = document.getElementById("search-page-form");
+  const input = document.getElementById("search-page-input");
+  const sortSel = document.getElementById("sort-select");
+  const timeSel = document.getElementById("max-time-select");
+  const priceSel = document.getElementById("max-price-select");
+  let reqId = 0;
 
   function readState() {
-    var p = new URLSearchParams(location.search);
+    const p = new URLSearchParams(location.search);
     return {
       q: (p.get("q") || "").trim(),
       sort: p.get("sort") || "", // trống = xếp theo độ liên quan (có từ khóa) hoặc đánh giá (không từ khóa)
@@ -25,14 +25,14 @@
     };
   }
   function urlFor(s) {
-    var out = [];
+    const out = [];
     ["q", "maxTime", "maxPrice"].forEach(function (k) { if (s[k]) out.push(k + "=" + encodeURIComponent(s[k])); });
     if (s.sort) out.push("sort=" + encodeURIComponent(s.sort));
     if (s.page > 1) out.push("page=" + s.page);
     return "/pages/search.html" + (out.length ? "?" + out.join("&") : "");
   }
   function go(s, replace) {
-    var url = urlFor(s);
+    const url = urlFor(s);
     if (replace) history.replaceState(null, "", url); else history.pushState(null, "", url);
     render();
   }
@@ -45,13 +45,13 @@
     msg.textContent = text;
     if (linkHref) {
       msg.appendChild(document.createTextNode(" "));
-      var a = document.createElement("a");
+      const a = document.createElement("a");
       a.href = linkHref;
       a.textContent = linkText;
       msg.appendChild(a);
     }
     if (retry) {
-      var b = document.createElement("button");
+      const b = document.createElement("button");
       b.type = "button";
       b.textContent = "Thử lại";
       b.addEventListener("click", render);
@@ -60,7 +60,7 @@
   }
 
   function render() {
-    var s = readState();
+    const s = readState();
     input.value = s.q;
     kw.textContent = s.q ? s.q : "tất cả công thức";
     // Không dùng dấu ngoặc kép trong tiêu đề tab (một số trình duyệt/khung xem bỏ dấu " làm hiện hai dấu cách)
@@ -68,7 +68,7 @@
     setSelect(sortSel, s.sort);
     setSelect(timeSel, s.maxTime);
     setSelect(priceSel, s.maxPrice);
-    var id = ++reqId;
+    const id = ++reqId;
     msg.hidden = true;
     grid.setAttribute("aria-busy", "true");
     grid.innerHTML = NomNom.skeletonHtml(6);
@@ -106,7 +106,7 @@
   timeSel.addEventListener("change", function () { update({ maxTime: timeSel.value }); });
   priceSel.addEventListener("change", function () { update({ maxPrice: priceSel.value }); });
   pager.addEventListener("click", function (e) {
-    var a = e.target.closest("a[data-page]");
+    const a = e.target.closest("a[data-page]");
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
     update({ page: parseInt(a.dataset.page, 10) });

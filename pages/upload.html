@@ -47,7 +47,7 @@
                         <details>
 
                             <summary>Công thức <img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
                             </summary>
 
                             <ul>
@@ -62,7 +62,7 @@
                         <details>
 
                             <summary>Về chúng tôi <img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
                             </summary>
 
                             <ul>
@@ -81,7 +81,7 @@
                     <div class="site-header__nav-item" data-header-member hidden>
                         <details>
                             <summary>Góc của tôi<img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt=""></summary>
+                                    src="/images/icons/keyboard-arrow-up.svg" alt=""></summary>
                             <ul>
                                 <li><a href="/pages/account/overview.html" data-header-route="overview">Tổng quan</a>
                                 </li>
@@ -106,8 +106,8 @@
                     <details class="site-header__search">
                         <summary aria-controls="site-header__search-bar" aria-label="Mở tìm kiếm">
                             <img class="site-header__search-icon site-header__search-open-icon"
-                                src="/images/icons/Search_Com.svg" alt="Mở thanh tìm kiếm">
-                            <img class="site-header__search-close-icon" src="/images/icons/X.svg"
+                                src="/images/icons/search-com.svg" alt="Mở thanh tìm kiếm">
+                            <img class="site-header__search-close-icon" src="/images/icons/close.svg"
                                 alt="Đóng thanh tìm kiếm">
                             <span class="site-header__search-label">Tìm công thức</span>
                         </summary>
@@ -118,7 +118,7 @@
                                 <input type="search" name="q" placeholder="Tìm kiếm ..." required
                                     aria-label="Từ khóa tìm kiếm">
                                 <button class="site-header__search-submit" type="submit" aria-label="Tìm kiếm">
-                                    <img src="/images/icons/Search_input.svg" alt="">
+                                    <img src="/images/icons/search-input.svg" alt="">
                                 </button>
                             </form>
                         </div>
@@ -151,7 +151,7 @@
 
                         <div id="main-info-section">
                             <div id="main-info">
-                                <h3 id="time">THÔNG TIN CHUNG</h3>
+                                <h3>THÔNG TIN CHUNG</h3>
                                 <div class="input-field">
                                     <label for="name-input">Tên công thức</label>
                                     <input id="name-input" type="text" name="title" maxlength="120" placeholder="Xôi gà, cơm tấm,...">
@@ -172,33 +172,33 @@
                                         <div class="small-input-wrapper">
                                             <input type="number" id="servings-input" class="small-input" value="3" min="1" data-bind-value="baseServings" />
                                             <div class="small-input-buttons">
-                                                <button type="button" class="Btn upBtn" aria-label="Tăng khẩu phần"></button>
-                                                <button type="button" class="Btn downBtn" aria-label="Giảm khẩu phần"></button>
+                                                <button type="button" class="stepper-button stepper-button--up" aria-label="Tăng khẩu phần"></button>
+                                                <button type="button" class="stepper-button stepper-button--down" aria-label="Giảm khẩu phần"></button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div id="time-input">
-                                <h3 id="time">THỜI GIAN</h3>
+                                <h3>THỜI GIAN</h3>
                                 <div class="input-field">
-                                    <label for="prepTime-input" class="small-input-label">Chuẩn bị</label>
+                                    <label for="prep-time-input" class="small-input-label">Chuẩn bị</label>
                                     <div class="small-input-wrapper">
-                                        <input id="prepTime-input" class="small-input" type="number" min="1" name="prepTime" placeholder="30">
+                                        <input id="prep-time-input" class="small-input" type="number" min="1" name="prepTime" placeholder="30">
                                         <div class="small-input-buttons">
-                                            <button type="button" class="Btn upBtn" aria-label="Tăng thời gian chuẩn bị"></button>
-                                            <button type="button" class="Btn downBtn" aria-label="Giảm thời gian chuẩn bị"></button>
+                                            <button type="button" class="stepper-button stepper-button--up" aria-label="Tăng thời gian chuẩn bị"></button>
+                                            <button type="button" class="stepper-button stepper-button--down" aria-label="Giảm thời gian chuẩn bị"></button>
                                         </div>
                                     </div>
                                     <span class="unit-note note">Đơn vị: phút</span>
                                 </div>
                                 <div class="input-field">
-                                    <label for="cookTime-input" class="small-input-label">Nấu</label>
+                                    <label for="cook-time-input" class="small-input-label">Nấu</label>
                                     <div class="small-input-wrapper">
-                                        <input id="cookTime-input" class="small-input" type="number" min="1" name="cookTime" placeholder="30">
+                                        <input id="cook-time-input" class="small-input" type="number" min="1" name="cookTime" placeholder="30">
                                         <div class="small-input-buttons">
-                                            <button type="button" class="Btn upBtn" aria-label="Tăng thời gian nấu"></button>
-                                            <button type="button" class="Btn downBtn" aria-label="Giảm thời gian nấu"></button>
+                                            <button type="button" class="stepper-button stepper-button--up" aria-label="Tăng thời gian nấu"></button>
+                                            <button type="button" class="stepper-button stepper-button--down" aria-label="Giảm thời gian nấu"></button>
                                         </div>
                                     </div>
                                     <span class="unit-note note">Đơn vị: phút</span>
@@ -219,7 +219,7 @@
                         <h4>Hình ảnh</h4>
                             <span class="note" id="image-note">Thêm từ 1 đến 5 hình ảnh món ăn (ảnh đầu tiên là ảnh bìa)</span>
                             <label for="gallery-images" class="image-upload">
-                                <img src="/images/icons/imageFile.svg" alt="" class="image-upload-icon">
+                                <img src="/images/icons/image-file.svg" alt="" class="image-upload-icon">
                                 <span class="image-upload-text">Nhấn vào đây để đăng tải hình ảnh</span>
                             </label>
                             <input type="file" id="gallery-images" name="gallery" accept="image/png,image/jpeg,image/webp" multiple >
@@ -235,7 +235,7 @@
                         <!-- ---------- Nhập nguyên liệu ---------- -->
                         <section class="recipe-description-section" id="nguyen-lieu">
                             <div class="title recipe-description">
-                                <h3 id="ingredients-input-title">NGUYÊN LIỆU</h3>
+                                <h3>NGUYÊN LIỆU</h3>
                                 <div class="line"></div>
                             </div>
                             <div id="ingredient-picker"></div>
@@ -245,7 +245,7 @@
                             <!-- Hướng dẫn ngắn gọn -->
                             <section class="card-section" id="huong-dan-ngan-gon">
                                 <div class="title recipe-description">
-                                    <h3 id="ingredients-input-title">HƯỚNG DẪN NGẮN GỌN</h3>
+                                    <h3>HƯỚNG DẪN NGẮN GỌN</h3>
                                     <div class="line"></div>
                                 </div>
                                 <button type="button" id="add-step-btn">THÊM BƯỚC</button>
@@ -255,7 +255,7 @@
                             <!-- Dinh dưỡng -->
                             <section class="card-section" id="dinh-duong">
                                 <div class="title recipe-description">
-                                    <h3 id="ingredients-input-title">DINH DƯỠNG</h3>
+                                    <h3>DINH DƯỠNG</h3>
                                     <div class="line"></div>
                                 </div>
                                 <p class="nutrition-note note">Thêm thông tin dinh dưỡng nếu có, tìm hiểu thêm chi tiết về thành phần dinh dưỡng món ăn <b><a href="https://www.webmd.com/diet/healthtool-food-calorie-counter">tại đây</a></b></p>
@@ -296,7 +296,7 @@
 
                     <!-- ---------- Hướng dẫn cụ thể ---------- -->
                     <section class="detailed-guide" id="huong-dan-cu-the">
-                        <div class="title detailed-guide-title" id="huong-dan-cu-the">
+                        <div class="title detailed-guide-title">
                             <h2 id="detailed-guide-label" class="detailed-guide-tag">HƯỚNG DẪN CỤ THỂ</h2>
                             <div class="line"></div>
                         </div>
@@ -379,9 +379,9 @@
                 </h2>
                 <nav class="site-footer__links">
                     <a href="/about.html">Về NomNom</a>
-                    <a href="/about.html">Hướng dẫn sử dụng</a>
-                    <a href="/about.html">CÂU HỎI THƯỜNG GẶP</a>
-                    <a href="/about.html">Liên hệ</a>
+                    <a href="/about.html#huong-dan">Hướng dẫn sử dụng</a>
+                    <a href="/about.html#faq">CÂU HỎI THƯỜNG GẶP</a>
+                    <a href="/about.html#gop-y">Liên hệ</a>
                 </nav>
             </div>
             <div class="site-footer__contact">
@@ -420,8 +420,7 @@
             <form class="site-auth__form site-login__form" novalidate>
                 <div class="site-auth__field">
                     <label class="site-auth__label" for="site-login__email">Địa chỉ Email</label>
-                    <input class="site-auth__input" id="site-login__email" name="email" type="text" autocomplete="username"
-                        autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required
+                    <input class="site-auth__input" id="site-login__email" name="email" type="text" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required
                         data-required-message="Bạn hãy nhập địa chỉ email." aria-describedby="site-login__email-error">
                     <p class="site-auth__error" id="site-login__email-error" hidden></p>
                 </div>

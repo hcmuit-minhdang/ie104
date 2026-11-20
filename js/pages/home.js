@@ -1,6 +1,6 @@
 const track = document.getElementById('track');
-const upBtn = document.getElementById('upBtn');
-const downBtn = document.getElementById('downBtn');
+const upBtn = document.getElementById('up-button');
+const downBtn = document.getElementById('down-button');
 
 let currentIndex = 0;
 const totalSlides = document.querySelectorAll('.slide').length;
@@ -34,9 +34,9 @@ upBtn.addEventListener('click', () => {
 
 /* ---------- Dữ liệu từ kho dữ liệu (NomNom.data) ---------- */
 (function () {
-  var popular = document.querySelector(".popular-recipes-container");
-  var community = document.querySelector(".new-community-recipe-container");
-  var catBox = document.querySelector(".category-container");
+  const popular = document.querySelector(".popular-recipes-container");
+  const community = document.querySelector(".new-community-recipe-container");
+  const catBox = document.querySelector(".category-container");
   if (!window.NomNom || !NomNom.data) return;
 
   function errorBlock(box, retry) {
@@ -47,7 +47,7 @@ upBtn.addEventListener('click', () => {
   function loadRecipes(box, params, cls, imgCls, n, after) {
     box.innerHTML = NomNom.skeletonHtml(n, cls);
     NomNom.data.get("/recipes", params).then(function (d) {
-      var items = d.items || [];
+      const items = d.items || [];
       box.innerHTML = items.length
         ? items.map(function (r) { return NomNom.cardHtml(r, cls, imgCls); }).join("")
         : '<p class="home-loading">Chưa có công thức nào.</p>';
@@ -69,32 +69,32 @@ upBtn.addEventListener('click', () => {
   /* Bảng vinh danh: dữ liệu từ NomNom.data.get("/leaderboard"). Trước khi tải xong các thẻ ẩn tạm (is-loading);
      thẻ nào chưa có dữ liệu thì ẩn, không có dữ liệu nào (hoặc lỗi) thì ẩn cả khối. */
   (function loadLeaderboard() {
-    var box = document.querySelector(".leaderboard-container");
-    var section = document.querySelector(".leaderboard-section");
+    const box = document.querySelector(".leaderboard-container");
+    const section = document.querySelector(".leaderboard-section");
     if (!box) return;
     function hideCard(card) { if (card) card.style.display = "none"; }
     NomNom.data.get("/leaderboard").then(function (d) {
-      function fill(card, user, descSel, text, href) {
+      function fill(card, user, descSel, text) {
         if (!card) return false;
         if (!user) { hideCard(card); return false; }
-        var name = card.querySelector(".user-name");
+        const name = card.querySelector(".user-name");
         if (name) name.textContent = user.username;
-        var img = card.querySelector(".user-image-leaderboard");
+        const img = card.querySelector(".user-image-leaderboard");
         if (img) { img.alt = user.username; if (user.avatar) img.src = user.avatar; }
-        var link = card.querySelector(descSel + " a");
-        if (link) { link.textContent = text; if (href) link.href = href; }
+        const link = card.querySelector(descSel + " a");
+        if (link) link.textContent = text; // không gắn liên kết: trang tài khoản chỉ hiện dữ liệu của người đang xem
         return true;
       }
-      var shown = 0;
+      let shown = 0;
       if (fill(document.querySelector(".most-recipes"), d.mostRecipes, ".most-recipes-description", d.mostRecipes && d.mostRecipes.count + " công thức")) shown++;
       if (fill(document.querySelector(".most-reviews"), d.mostReviews, ".most-reviews-description", d.mostReviews && d.mostReviews.count + " đánh giá")) shown++;
-      var mr = d.mostSaved, c3 = document.querySelector(".most-liked-recipe");
+      const mr = d.mostSaved, c3 = document.querySelector(".most-liked-recipe");
       if (mr && c3) {
-        var nm = c3.querySelector(".user-name");
+        const nm = c3.querySelector(".user-name");
         if (nm) nm.textContent = mr.author ? mr.author.username : "NomNom";
-        var im3 = c3.querySelector(".user-image-leaderboard");
+        const im3 = c3.querySelector(".user-image-leaderboard");
         if (im3) im3.alt = nm ? nm.textContent : "";
-        var l3 = c3.querySelector(".most-liked-recipe-description a");
+        const l3 = c3.querySelector(".most-liked-recipe-description a");
         if (l3) { l3.textContent = mr.name; l3.href = NomNom.recipeUrl(mr.id); }
         shown++;
       } else hideCard(c3);
@@ -106,14 +106,14 @@ upBtn.addEventListener('click', () => {
   function loadCategories() {
     if (!catBox) return;
     NomNom.data.get("/categories").then(function (d) {
-      var items = (d.items || []).slice(0, 7);
+      const items = (d.items || []).slice(0, 7);
       // Mỗi danh mục lấy ảnh của món được đánh giá cao nhất trong danh mục đó.
       return Promise.all(items.map(function (c) {
         return NomNom.data.get("/recipes", { category: c.id, limit: 1, sort: "rating" }).then(function (r) {
           return r.items && r.items[0] ? r.items[0].image : null;
         }, function () { return null; });
       })).then(function (imgs) {
-        var html = items.map(function (c, i) {
+        let html = items.map(function (c, i) {
           return '<a href="/pages/category.html?category=' + encodeURIComponent(c.id) + '" class="category-card">' +
             '<img loading="lazy" decoding="async" src="' + NomNom.esc(imgs[i] || "/images/food.png") + '" alt="' + NomNom.esc(c.name) + '" class="category-image" />' +
             '<span class="category-name">' + NomNom.esc(c.name) + '</span></a>';
@@ -136,11 +136,11 @@ document.querySelectorAll("a[data-auth-open]").forEach(link => {
 
 /* Khối kêu gọi dưới bảng vinh danh: đã đăng nhập thì bỏ dòng "Đã có tài khoản?" và đổi nút thành "Đăng tải công thức". */
 (function () {
-  var cta = document.querySelector(".cta-sign-up");
+  const cta = document.querySelector(".cta-sign-up");
   if (!cta) return;
-  var btn = cta.querySelector(".cta-sign-up-button");
-  var note = cta.querySelector(".support-log-in-text");
-  var origText = btn.textContent, origAction = btn.getAttribute("data-auth-open");
+  const btn = cta.querySelector(".cta-sign-up-button");
+  const note = cta.querySelector(".support-log-in-text");
+  const origText = btn.textContent, origAction = btn.getAttribute("data-auth-open");
   function sync(user) {
     if (user) {
       if (note) note.hidden = true;

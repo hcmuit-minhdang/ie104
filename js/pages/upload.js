@@ -18,8 +18,8 @@ const nameInput = document.getElementById("name-input");
 const categoryInput = document.getElementById("category-input");
 const priceInput = document.getElementById("price-input");
 const servingsInput = document.getElementById("servings-input");
-const prepTimeInput = document.getElementById("prepTime-input");
-const cookTimeInput = document.getElementById("cookTime-input");
+const prepTimeInput = document.getElementById("prep-time-input");
+const cookTimeInput = document.getElementById("cook-time-input");
 const descriptionInput = document.getElementById("description-input");
 const galleryInput = document.getElementById("gallery-images");
 const galleryPreviews = document.getElementById("gallery-previews");
@@ -40,7 +40,7 @@ const NUTRIENTS = ["calories", "carbs", "protein", "fat", "sodium", "fiber"];
 /* Trạng thái                                                          */
 /* ------------------------------------------------------------------ */
 
-let gallery = [];       // [{ file, url }]
+const gallery = [];       // [{ file, url }]
 let quickSteps = [];    // [string]
 let steps = [];         // [{ text, file, preview }]
 let picker = null;
@@ -95,11 +95,11 @@ function bindStepper(inputField) {
     const wrapper = inputField.closest(".small-input-wrapper");
     if (!wrapper) return;
     const min = Number(inputField.min) || 0;
-    wrapper.querySelector(".upBtn")?.addEventListener("click", () => {
+    wrapper.querySelector(".stepper-button--up")?.addEventListener("click", () => {
         inputField.value = Number(inputField.value) + 1;
         scheduleDraft();
     });
-    wrapper.querySelector(".downBtn")?.addEventListener("click", () => {
+    wrapper.querySelector(".stepper-button--down")?.addEventListener("click", () => {
         inputField.value = Math.max(min, Number(inputField.value) - 1);
         scheduleDraft();
     });
@@ -234,11 +234,11 @@ function renderSteps() {
             <textarea class="textarea-input" data-step-text="${index}" placeholder="Thêm bước ${index + 1}" aria-label="Hướng dẫn cụ thể bước ${index + 1}">${esc(step.text)}</textarea>
             ${step.preview ? `<div class="step-preview"><img src="${esc(step.preview)}" alt="Ảnh bước ${index + 1}"><button type="button" class="preview-remove" data-step-image-remove="${index}" aria-label="Xóa ảnh bước ${index + 1}">×</button></div>` : ""}
             <label for="step-image-${index}" class="image-upload step-image-upload">
-                <img src="/images/icons/imageFile.svg" alt="" class="image-upload-icon">
+                <img src="/images/icons/image-file.svg" alt="" class="image-upload-icon">
                 <span class="image-upload-text">${step.preview ? "Đổi hình ảnh" : "Nhấn vào đây để đăng tải hình ảnh"}</span>
             </label>
             <input type="file" id="step-image-${index}" data-step-image="${index}" accept="image/png,image/jpeg,image/webp">
-            <button type="button" class="remove-step-btn remove-DS-Btn" data-step-remove="${index}">XÓA</button>
+            <button type="button" class="remove-step-btn remove-step-btn--detailed" data-step-remove="${index}">XÓA</button>
         </li>`).join("");
 }
 

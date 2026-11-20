@@ -1,5 +1,5 @@
 /* Phân trang dùng chung (Danh mục món ăn, Công thức phù hợp theo nguyên liệu tủ lạnh) */
-.pagination-nav {
+.pagination {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -7,7 +7,7 @@
     margin-top: 12px;
 }
 
-.page-link {
+.pagination__link {
     min-width: 32px;
     height: 34px;
     padding: 0 8px;
@@ -24,28 +24,28 @@
     transition: all 0.3s ease;
 }
 
-.page-link:hover:not(.page-dots) {
+.pagination__link:hover:not(.pagination__link--dots) {
     background-color: #FFF9E5;
     border-color: #292929;
     transform: translate(-0.06em, -0.06em);
     box-shadow: 0.15em 0.15em 0 #292929;
 }
 
-.page-link.is-active {
+.pagination__link.is-active {
     background-color: #FBC41B;
     color: #000000;
     border: 2px solid #292929;
     box-shadow: 0.18em 0.18em 0 #292929;
 }
 
-.page-link:active:not(.page-dots) {
+.pagination__link:active:not(.pagination__link--dots) {
     transform: scale(0.95);
     box-shadow: none;
 }
 
-.page-dots {
+.pagination__link--dots {
     cursor: default;
 }
 @media (min-width: 1400px) {
-    .page-link { font-size: 25px; font-weight: 700; color: #000; }
+    .pagination__link { font-size: 25px; font-weight: 700; color: #000; }
 }

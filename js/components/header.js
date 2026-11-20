@@ -6,8 +6,8 @@
     if (!header || header.dataset.initialized) return;
     header.dataset.initialized = "true";
 
-    // Tính từ file JS để giữ đường dẫn đúng khi ghép header vào trang khác.
-        const routes = {
+    // Bảng đường dẫn của header (tuyệt đối từ gốc site); trang nào cần có thể ghi đè bằng window.NomNomHeaderConfig.routes.
+    const routes = {
         home: "/",
         search: "/pages/search.html",
         categories: "/pages/category.html",

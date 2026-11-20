@@ -5,7 +5,7 @@
    Cũng có tiện ích hiển thị: NomNom.esc, NomNom.money, NomNom.minutes, NomNom.stars, NomNom.qs. */
 (function () {
   "use strict";
-  var NomNom = (window.NomNom = window.NomNom || {});
+  const NomNom = (window.NomNom = window.NomNom || {});
 
   function ApiError(status, message, field) {
     this.name = "ApiError";
@@ -17,9 +17,9 @@
   NomNom.ApiError = ApiError;
 
   function qs(params) {
-    var out = [];
+    const out = [];
     Object.keys(params || {}).forEach(function (k) {
-      var v = params[k];
+      const v = params[k];
       if (v === undefined || v === null || v === "") return;
       out.push(encodeURIComponent(k) + "=" + encodeURIComponent(Array.isArray(v) ? v.join(",") : v));
     });
@@ -30,7 +30,7 @@
   /* Gọi vào "kho dữ liệu" (store.js), không có mạng/máy chủ. Lỗi (status >= 400) ném ApiError. */
   function request(method, path, body, params) {
     return window.NomNomStore.run(method, path + qs(params), body).then(function (res) {
-      var data = res.data;
+      const data = res.data;
       if (res.status >= 400) throw new ApiError(res.status, (data && data.error) || "Có lỗi xảy ra (" + res.status + ")", data && data.field);
       return data;
     });
@@ -57,7 +57,7 @@
   NomNom.minutes = function (n) {
     n = Number(n) || 0;
     if (n < 60) return n + " phút";
-    var h = Math.floor(n / 60), m = n % 60;
+    const h = Math.floor(n / 60), m = n % 60;
     return h + " giờ" + (m ? " " + m + " phút" : "");
   };
   NomNom.stars = function (n) {

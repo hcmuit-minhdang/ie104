@@ -93,7 +93,7 @@ a {
 
 .upload-form section,
 .step {
-    scroll-margin-top: 130px; /* chừa chỗ cho header dính (cao ~106px) */
+    scroll-margin-top: 130px; /* chừa chỗ cho header dính (72-106px tùy cỡ màn hình) cộng khoảng thở */
 }
 
 /* ---------- Dùng chung: sao, tiêu đề, nút ---------- */
@@ -476,15 +476,15 @@ input[type="file"] {
     border: 1px solid black;
 }
 
-.Btn:hover {
+.stepper-button:hover {
     background-color: #FBC41B;
 }
 
-.upBtn {
+.stepper-button--up {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23000000" stroke-width="3"><path d="M6 15l6-6 6 6"/></svg>');
 }
 
-.downBtn {
+.stepper-button--down {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23000000" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>');
 }
 
@@ -752,7 +752,7 @@ input[type="file"] {
     justify-content: flex-start;
 }
 
-.remove-DS-Btn {
+.remove-step-btn--detailed {
     font-size: 1em;
     width: 6em;
 }
@@ -1213,7 +1213,7 @@ input[type="file"] {
     .title h3, .title h2 { white-space: normal; overflow-wrap: anywhere; }
     h3, h4 { white-space: normal; overflow-wrap: anywhere; }
     .title .line { min-width: 20px; }
-    .ip, .ip * { max-width: 100%; }
+    .ingredient-picker, .ingredient-picker * { max-width: 100%; }
 }
 
 @media (max-width: 768px) {

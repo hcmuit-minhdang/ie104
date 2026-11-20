@@ -17,7 +17,7 @@
     background: rgba(0, 0, 0, 0.29);
 }
 
-.fridge-panel {
+.fridge-dialog__panel {
     position: relative;
     margin: 32px 0 0;
     padding: 70px 40px 40px;
@@ -27,7 +27,7 @@
 }
 
 /* Nhãn TỦ LẠNH lòi ra mép trái như Figma. */
-.fridge-title {
+.fridge-dialog__title {
     position: absolute;
     top: -2px;
     left: -56px;
@@ -45,7 +45,7 @@
         3px 3px 0 #000;
 }
 
-.fridge-close {
+.fridge-dialog__close {
     position: absolute;
     top: 12px;
     right: 14px;
@@ -58,12 +58,12 @@
     cursor: pointer;
 }
 
-.fridge-close:hover {
+.fridge-dialog__close:hover {
     background: #fbc41c;
 }
 
 /* Khung 3 cột chọn nguyên liệu, có vạch đen ngăn giữa các cột. */
-.fridge-groups {
+.fridge-dialog__groups {
     display: grid;
     grid-template-columns: 1fr 2px 1fr 2px 1fr;
     gap: 24px;
@@ -72,11 +72,11 @@
     border: 2px solid #000000;
 }
 
-.fridge-divider {
+.fridge-dialog__divider {
     background: #000000;
 }
 
-.fridge-col {
+.fridge-dialog__column {
     display: flex;
     flex-direction: column;
     gap: 7px;
@@ -84,11 +84,11 @@
 }
 
 /* Mỗi nhóm là một ô thả xuống (details/summary), danh sách nổi lên trên. */
-.fridge-select {
+.fridge-dialog__select {
     position: relative;
 }
 
-.fridge-select summary {
+.fridge-dialog__select summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -103,27 +103,27 @@
     list-style: none;
 }
 
-.fridge-select summary::-webkit-details-marker {
+.fridge-dialog__select summary::-webkit-details-marker {
     display: none;
 }
 
-.fridge-select summary::after {
+.fridge-dialog__select summary::after {
     content: "▼";
     font-size: 0.5em;
     color: #000000;
     transition: transform 0.15s ease;
 }
 
-.fridge-select[open] summary {
+.fridge-dialog__select[open] summary {
     background: #fbc41c;
 }
 
-.fridge-select[open] summary::after {
+.fridge-dialog__select[open] summary::after {
     transform: rotate(180deg);
 }
 
 /* Đã chọn ít nhất 1 ô trong nhóm: hiện số đã chọn. */
-.fridge-count {
+.fridge-dialog__count {
     margin-left: auto;
     padding: 0 8px;
     border-radius: 999px;
@@ -132,11 +132,11 @@
     font-size: 0.55em;
 }
 
-.fridge-count:empty {
+.fridge-dialog__count:empty {
     display: none;
 }
 
-.fridge-options {
+.fridge-dialog__options {
     position: absolute;
     z-index: 2;
     top: calc(100% - 2px);
@@ -151,7 +151,7 @@
     box-shadow: 4px 4px 0 #000000;
 }
 
-.fridge-options label {
+.fridge-dialog__options label {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -160,13 +160,13 @@
     cursor: pointer;
 }
 
-.fridge-options input {
+.fridge-dialog__options input {
     width: 18px;
     height: 18px;
     accent-color: #fbc41c;
 }
 
-.fridge-footer {
+.fridge-dialog__footer {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -174,14 +174,14 @@
     margin-top: 33px;
 }
 
-.fridge-error {
+.fridge-dialog__error {
     margin: 0;
     color: #c62828;
     font-weight: 600;
 }
 
 /* Nút TÌM KIẾM + ô vàng có kính lúp. */
-.fridge-submit {
+.fridge-dialog__submit {
     display: inline-flex;
     align-items: stretch;
     padding: 0;
@@ -193,19 +193,19 @@
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.fridge-submit:hover {
+.fridge-dialog__submit:hover {
     transform: translate(-2px, -2px);
     box-shadow: 8px 6px 0 #000000;
 }
 
-.fridge-submit-text {
+.fridge-dialog__submit-text {
     padding: 18px 28px;
     font-size: clamp(1.25rem, 2.6vw, 2.375rem);
     font-weight: 700;
     color: #000000;
 }
 
-.fridge-submit-icon {
+.fridge-dialog__submit-icon {
     display: grid;
     place-items: center;
     width: 84px;
@@ -213,7 +213,7 @@
     background: #fbc41c;
 }
 
-.fridge-submit-icon svg {
+.fridge-dialog__submit-icon svg {
     width: 37px;
     height: 37px;
 }
@@ -225,37 +225,37 @@
 
 /* Màn hình hẹp: xếp các cột chồng lên nhau, bỏ vạch ngăn. */
 @media (max-width: 760px) {
-    .fridge-panel {
+    .fridge-dialog__panel {
         padding: 64px 16px 24px;
     }
 
-    .fridge-title {
+    .fridge-dialog__title {
         left: -8px;
         padding: 8px 24px;
     }
 
-    .fridge-groups {
+    .fridge-dialog__groups {
         grid-template-columns: 1fr;
         gap: 7px;
         padding: 12px;
     }
 
-    .fridge-divider {
+    .fridge-dialog__divider {
         display: none;
     }
 
-    .fridge-options {
+    .fridge-dialog__options {
         position: static;
         box-shadow: none;
         border-top: 0;
     }
 
-    .fridge-footer {
+    .fridge-dialog__footer {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .fridge-submit {
+    .fridge-dialog__submit {
         justify-content: space-between;
     }
 }

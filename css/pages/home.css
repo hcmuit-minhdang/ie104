@@ -121,17 +121,17 @@ button {
   transition: all 0.3s ease;
 }
 
-.controls #upBtn:hover, .controls #downBtn:hover {
+.controls #up-button:hover, .controls #down-button:hover {
     background-color:rgba(0, 0, 0, 0.40);
     opacity: 1;
     filter:brightness(1.2);
 }
 
-.controls #upBtn:hover {
+.controls #up-button:hover {
     transform: translateY(-4%);
 }
 
-.controls #downBtn:hover {
+.controls #down-button:hover {
     transform: translateY(4%);
 }
 
@@ -649,6 +649,17 @@ aside {
 
 .user-name:hover {
     color: white;
+}
+
+/* Tên người dùng và số lượng chỉ để hiển thị (chưa có trang hồ sơ công khai): không có href thì không giống liên kết */
+.user-name:not([href]),
+.most-recipes-description a:not([href]),
+.most-reviews-description a:not([href]) {
+    cursor: default;
+}
+.most-recipes-description a:not([href]):hover,
+.most-reviews-description a:not([href]):hover {
+    color: black;
 }
 
 .most-recipes-description a:hover, .most-reviews-description a:hover, .most-liked-recipe-description a:hover {
@@ -1576,14 +1587,14 @@ a.recipe-card {
 }
 .popular-recipes-container .recipe-name { text-transform: uppercase; }
 .is-skeleton { pointer-events: none; }
-.is-skeleton .skeleton-img, .is-skeleton .skeleton-line {
+.is-skeleton .skeleton__img, .is-skeleton .skeleton__line {
     background: linear-gradient(90deg, #eee 25%, #f7f3e4 50%, #eee 75%);
     background-size: 200% 100%;
     animation: nn-shimmer 1.2s infinite linear;
 }
-.is-skeleton .skeleton-img { width: 100%; aspect-ratio: 1 / 1; }
-.is-skeleton .skeleton-line { display: block; height: 14px; margin-top: 6px; }
-.is-skeleton .skeleton-line.short { width: 55%; }
+.is-skeleton .skeleton__img { width: 100%; aspect-ratio: 1 / 1; }
+.is-skeleton .skeleton__line { display: block; height: 14px; margin-top: 6px; }
+.is-skeleton .skeleton__line.skeleton__line--short { width: 55%; }
 @keyframes nn-shimmer { to { background-position: -200% 0; } }
 
 /* Hai cột (công thức thịnh hành | bảng vinh danh) luôn cao bằng nhau ở mọi cỡ màn hình:

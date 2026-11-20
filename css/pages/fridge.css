@@ -191,28 +191,6 @@ body::before {
   height: 14px;
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center; 
-  gap: 18px; 
-  margin-top: 60px;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.pagination a {
-  color: black;
-  text-decoration: none; 
-}
-
-.pagination .page-active {
-  padding: 2px 10px;
-  background-color: #fbc41b;
-  border: 2px solid black;
-  box-shadow: 3px 3px 0 black;
-}
-
 /* ===== Bổ sung khi ghép vào site chung ===== */
 .result-summary {
   margin: 0 0 20px;
@@ -257,7 +235,7 @@ body::before {
 }
 
 /* Phân trang dưới danh sách kết quả */
-.food-section .pagination-nav {
+.food-section .pagination {
   flex-wrap: wrap;
   margin-top: 40px;
 }

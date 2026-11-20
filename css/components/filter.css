@@ -7,7 +7,7 @@
     flex-direction: column;
 }
 
-.filter-title {
+.filter-sidebar__title {
     margin: 0 0 16px;
     font-size: 1.45rem;
     font-weight: 900;
@@ -15,18 +15,18 @@
     text-transform: uppercase;
 }
 
-.filter-group-list {
+.filter-sidebar__groups {
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
-.filter-accordion {
+.filter-group {
     display: flex;
     flex-direction: column;
 }
 
-.filter-trigger-btn {
+.filter-group__trigger {
     position: relative;
     width: 100%;
     padding: 0.75em 2.2em;
@@ -45,7 +45,7 @@
     transition: all 0.3s ease;
 }
 
-.filter-trigger-btn::after {
+.filter-group__trigger::after {
     content: "▼";
     position: absolute;
     right: 12px;
@@ -54,31 +54,31 @@
     transition: transform 0.3s ease;
 }
 
-.filter-trigger-btn:hover {
+.filter-group__trigger:hover {
     background-color: #FBC41B;
     transform: translate(-0.06em, -0.06em);
     box-shadow: 0.2em 0.2em 0 #292929;
 }
 
-.filter-trigger-btn:active {
+.filter-group__trigger:active {
     transform: scale(0.98);
     box-shadow: none;
 }
 
-.filter-accordion.is-open .filter-trigger-btn {
+.filter-group.is-open .filter-group__trigger {
     background-color: #FBC41B;
     box-shadow: 0.18em 0.18em 0 #292929;
 }
 
-.filter-accordion:has(input:checked) .filter-trigger-btn {
+.filter-group:has(input:checked) .filter-group__trigger {
     background-color: #FBC41B;
 }
 
-.filter-accordion.is-open .filter-trigger-btn::after {
+.filter-group.is-open .filter-group__trigger::after {
     transform: rotate(180deg);
 }
 
-.filter-panel {
+.filter-group__panel {
     display: none;
     flex-direction: column;
     gap: 10px;
@@ -89,11 +89,11 @@
     box-shadow: 0.18em 0.18em 0 #292929;
 }
 
-.filter-accordion.is-open .filter-panel {
+.filter-group.is-open .filter-group__panel {
     display: flex;
 }
 
-.filter-panel label {
+.filter-group__panel label {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -102,7 +102,7 @@
     cursor: pointer;
 }
 
-.filter-panel input[type="checkbox"] {
+.filter-group__panel input[type="checkbox"] {
     flex: 0 0 20px;
     width: 20px;
     height: 20px;
@@ -115,24 +115,24 @@
     transition: all 0.2s ease;
 }
 
-.filter-panel input[type="checkbox"]:hover {
+.filter-group__panel input[type="checkbox"]:hover {
     border-color: #FBC41B;
 }
 
-.filter-panel input[type="checkbox"]:checked {
+.filter-group__panel input[type="checkbox"]:checked {
     background-color: #FBC41B;
     box-shadow: inset 0 0 0 3px #ffffff;
 }
 
 /* Dòng gợi ý dưới tiêu đề BỘ LỌC */
-.filter-hint {
+.filter-sidebar__hint {
     margin: -6px 0 16px;
     font-size: 0.9rem;
     color: #555555;
 }
 
 /* Nút gửi bộ lọc: chọn xong mới tìm một lần, tránh gửi request sau mỗi lần tick */
-.filter-submit {
+.filter-sidebar__submit {
     display: block;
     width: 100%;
     margin-top: 22px;
@@ -148,16 +148,16 @@
     box-shadow: 4px 4px 0 #000000;
     cursor: pointer;
 }
-.filter-submit:hover {
+.filter-sidebar__submit:hover {
     background-color: #ffd54a;
 }
-.filter-submit:active {
+.filter-sidebar__submit:active {
     transform: translate(2px, 2px);
     box-shadow: 2px 2px 0 #000000;
 }
 
 /* Liên kết/nút "Xóa bộ lọc" và "Bỏ chọn tất cả" */
-.filter-sidebar .filter-reset {
+.filter-sidebar .filter-sidebar__reset {
     display: block;
     width: fit-content;
     margin: 16px auto 0;
@@ -171,7 +171,7 @@
     text-decoration: none;
     cursor: pointer;
 }
-.filter-sidebar .filter-reset:hover {
+.filter-sidebar .filter-sidebar__reset:hover {
     text-decoration: none;
 }
 
@@ -192,7 +192,7 @@
 .filter-other[hidden] {
     display: none;
 }
-.filter-other-input {
+.filter-other__input {
     width: 100%;
     padding: 8px 10px;
     font-size: 0.85rem;
@@ -200,12 +200,12 @@
     background-color: #ffffff;
     border: 2px solid #1a1a1a;
 }
-.filter-other-input:focus {
+.filter-other__input:focus {
     outline: none;
     border-color: #FBC41B;
     box-shadow: 0.15em 0.15em 0 #1a1a1a;
 }
-.filter-other-list {
+.filter-other__list {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
@@ -214,7 +214,7 @@
     list-style: none;
 }
 /* Thẻ nguyên liệu đã thêm: bấm để xóa */
-.filter-other-list button {
+.filter-other__list button {
     padding: 3px 8px;
     font-size: 0.8rem;
     font-weight: 700;
@@ -223,15 +223,15 @@
     border: 2px solid #1a1a1a;
     cursor: pointer;
 }
-.filter-other-list button::after {
+.filter-other__list button::after {
     content: " ×";
 }
-.filter-other-list button:hover {
+.filter-other__list button:hover {
     background-color: #ffd54a;
 }
 
 /* Danh sách gợi ý gọn: tối đa khoảng 6 dòng, nằm ngay dưới ô nhập, có thanh cuộn khi dài */
-.filter-other-suggest {
+.filter-other__suggest {
     position: absolute;
     top: 38px;
     left: 0;
@@ -246,30 +246,30 @@
     border: 2px solid #1a1a1a;
     box-shadow: 0.15em 0.15em 0 #1a1a1a;
 }
-.filter-other-suggest[hidden] {
+.filter-other__suggest[hidden] {
     display: none;
 }
-.filter-other-suggest li {
+.filter-other__suggest li {
     padding: 6px 10px;
     font-size: 0.85rem;
     font-weight: 600;
     color: #1a1a1a;
     cursor: pointer;
 }
-.filter-other-suggest li:hover,
-.filter-other-suggest li.is-active {
+.filter-other__suggest li:hover,
+.filter-other__suggest li.is-active {
     background-color: #FBC41B;
 }
 
 /* Màn hình rộng: bộ lọc to hơn như Figma (nút ~274x73, chữ 25px, viền 3px #484848). */
 @media (min-width: 1400px) {
-    .filter-title {
+    .filter-sidebar__title {
         font-size: 2.39rem;
     }
-    .filter-group-list {
+    .filter-sidebar__groups {
         gap: 25px;
     }
-    .filter-trigger-btn {
+    .filter-group__trigger {
         border: 3px solid #484848;
         font-size: 1.5625rem;
         padding: 0.75em 1.4em;
@@ -279,13 +279,13 @@
     :root { --filter-col: 274px; }
 }
 @media (min-width: 1400px) {
-    .filter-title { font-weight: 700; color: #272727; }
-    .filter-trigger-btn { font-weight: 700; }
-    .filter-panel label { font-size: 18px; }
+    .filter-sidebar__title { font-weight: 700; color: #272727; }
+    .filter-group__trigger { font-weight: 700; }
+    .filter-group__panel label { font-size: 18px; }
 }
 @media (min-width: 1400px) {
-    .filter-panel label { font-weight: 700; }
+    .filter-group__panel label { font-weight: 700; }
 }
 @media (min-width: 1400px) {
-    .filter-panel { padding-left: 35px; }
+    .filter-group__panel { padding-left: 35px; }
 }

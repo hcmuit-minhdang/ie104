@@ -52,7 +52,7 @@
                         <details>
 
                             <summary>Công thức <img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
                             </summary>
 
                             <ul>
@@ -67,7 +67,7 @@
                         <details>
 
                             <summary>Về chúng tôi <img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt="Arrow List">
+                                    src="/images/icons/keyboard-arrow-up.svg" alt="Arrow List">
                             </summary>
 
                             <ul>
@@ -86,7 +86,7 @@
                     <div class="site-header__nav-item" data-header-member hidden>
                         <details>
                             <summary>Góc của tôi<img class="site-header__arrow"
-                                    src="/images/icons/keyboard_arrow_up.svg" alt=""></summary>
+                                    src="/images/icons/keyboard-arrow-up.svg" alt=""></summary>
                             <ul>
                                 <li><a href="/pages/account/overview.html" data-header-route="overview">Tổng quan</a>
                                 </li>
@@ -111,8 +111,8 @@
                     <details class="site-header__search">
                         <summary aria-controls="site-header__search-bar" aria-label="Mở tìm kiếm">
                             <img class="site-header__search-icon site-header__search-open-icon"
-                                src="/images/icons/Search_Com.svg" alt="Mở thanh tìm kiếm">
-                            <img class="site-header__search-close-icon" src="/images/icons/X.svg"
+                                src="/images/icons/search-com.svg" alt="Mở thanh tìm kiếm">
+                            <img class="site-header__search-close-icon" src="/images/icons/close.svg"
                                 alt="Đóng thanh tìm kiếm">
                             <span class="site-header__search-label">Tìm công thức</span>
                         </summary>
@@ -123,7 +123,7 @@
                                 <input type="search" name="q" placeholder="Tìm kiếm ..." required
                                     aria-label="Từ khóa tìm kiếm">
                                 <button class="site-header__search-submit" type="submit" aria-label="Tìm kiếm">
-                                    <img src="/images/icons/Search_input.svg" alt="">
+                                    <img src="/images/icons/search-input.svg" alt="">
                                 </button>
                             </form>
                         </div>
@@ -148,8 +148,8 @@
                 </div>
 
                 <div class="controls">
-                    <button id="upBtn"><img src="/images/icons/up-arrow-white.svg" alt=""></button>
-                    <button id="downBtn"><img src="/images/icons/down-arrow-white.svg" alt=""></button>
+                    <button id="up-button"><img src="/images/icons/up-arrow-white.svg" alt=""></button>
+                    <button id="down-button"><img src="/images/icons/down-arrow-white.svg" alt=""></button>
                 </div>
             </div>
         </section>
@@ -189,14 +189,14 @@
                                 <img src="/images/avatar.jpg" alt="User 1" class="user-image-leaderboard" />
 
                                 <div class="word-container">
-                                    <a href="/pages/account/overview.html" class="user-name"></a>
+                                    <a class="user-name"></a>
                                     <div class="lower-card">
                                         <div class="image-container">
                                             <img src="/images/cookbook-white.png" alt="Cookbook-bg"
                                                 class="cookbook-icon-bg" />
                                             <img src="/images/cookbook.png" alt="Cookbook" class="cookbook-icon" />
                                         </div>
-                                        <span class="most-recipes-description">#1 Đóng góp nhiều công thức nhất (<a href="/pages/account/uploaded.html"></a>)</span>
+                                        <span class="most-recipes-description">#1 Đóng góp nhiều công thức nhất (<a></a>)</span>
                                     </div>
                                 </div>
                             </div>
@@ -204,10 +204,10 @@
                                 <img src="/images/avatar.jpg" alt="User 2" class="user-image-leaderboard" />
 
                                 <div class="word-container">
-                                    <a href="/pages/account/overview.html" class="user-name"></a>
+                                    <a class="user-name"></a>
                                     <div class="lower-card">
                                         <img src="/images/star-white.png" alt="Star" class="star-icon" />
-                                        <span class="most-reviews-description">#1 Đóng góp nhiều đánh giá nhất (<a href="/pages/account/reviewed.html"></a>)</span>
+                                        <span class="most-reviews-description">#1 Đóng góp nhiều đánh giá nhất (<a></a>)</span>
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +215,7 @@
                                 <img src="/images/avatar.jpg" alt="User 3" class="user-image-leaderboard" />
 
                                 <div class="word-container">
-                                    <a href="/pages/account/overview.html" class="user-name"></a>
+                                    <a class="user-name"></a>
                                     <div class="lower-card">
                                         <img src="/images/heart-yellowbg.png" alt="Heart" class="heart-icon" />
                                         <span class="most-liked-recipe-description">#1 Công thức được yêu thích nhất (<a href="/pages/category.html" data-top-recipe></a>)</span>
@@ -303,9 +303,9 @@
                 </h2>
                 <nav class="site-footer__links">
                     <a href="/about.html">Về NomNom</a>
-                    <a href="/about.html">Hướng dẫn sử dụng</a>
-                    <a href="/about.html">CÂU HỎI THƯỜNG GẶP</a>
-                    <a href="/about.html">Liên hệ</a>
+                    <a href="/about.html#huong-dan">Hướng dẫn sử dụng</a>
+                    <a href="/about.html#faq">CÂU HỎI THƯỜNG GẶP</a>
+                    <a href="/about.html#gop-y">Liên hệ</a>
                 </nav>
             </div>
             <div class="site-footer__contact">
@@ -332,15 +332,15 @@
     </footer>
     <!-- OVERLAY TỦ LẠNH (Figma: FILTER 1) – mở bằng nút "BỘ LỌC NGUYÊN LIỆU" -->
     <dialog class="fridge-dialog" id="fridge-dialog" aria-labelledby="fridge-title">
-        <form class="fridge-panel" id="fridge-form" action="/pages/fridge-results.html" method="get">
-            <h2 class="fridge-title" id="fridge-title">TỦ LẠNH</h2>
-            <button class="fridge-close" id="fridge-close" type="button" aria-label="Đóng bộ lọc">×</button>
+        <form class="fridge-dialog__panel" id="fridge-form" action="/pages/fridge-results.html" method="get">
+            <h2 class="fridge-dialog__title" id="fridge-title">TỦ LẠNH</h2>
+            <button class="fridge-dialog__close" id="fridge-close" type="button" aria-label="Đóng bộ lọc">×</button>
 
-            <div class="fridge-groups">
-                <div class="fridge-col">
-                    <details class="fridge-select">
-                        <summary>ĐẠM <span class="fridge-count" aria-label="số ô đã chọn"></span></summary>
-                        <div class="fridge-options">
+            <div class="fridge-dialog__groups">
+                <div class="fridge-dialog__column">
+                    <details class="fridge-dialog__select">
+                        <summary>ĐẠM <span class="fridge-dialog__count" aria-label="số ô đã chọn"></span></summary>
+                        <div class="fridge-dialog__options">
                             <label><input type="checkbox" name="dam" value="thit-bo"> Thịt bò</label>
                             <label><input type="checkbox" name="dam" value="thit-heo"> Thịt heo</label>
                             <label><input type="checkbox" name="dam" value="thit-ga"> Thịt gà</label>
@@ -349,9 +349,9 @@
                             <label><input type="checkbox" name="dam" value="khac"> Khác</label>
                         </div>
                     </details>
-                    <details class="fridge-select">
-                        <summary>TINH BỘT <span class="fridge-count" aria-label="số ô đã chọn"></span></summary>
-                        <div class="fridge-options">
+                    <details class="fridge-dialog__select">
+                        <summary>TINH BỘT <span class="fridge-dialog__count" aria-label="số ô đã chọn"></span></summary>
+                        <div class="fridge-dialog__options">
                             <label><input type="checkbox" name="tinh-bot" value="gao"> Gạo</label>
                             <label><input type="checkbox" name="tinh-bot" value="bun"> Bún</label>
                             <label><input type="checkbox" name="tinh-bot" value="pho"> Phở</label>
@@ -360,9 +360,9 @@
                             <label><input type="checkbox" name="tinh-bot" value="khac"> Khác</label>
                         </div>
                     </details>
-                    <details class="fridge-select">
-                        <summary>RAU CỦ <span class="fridge-count" aria-label="số ô đã chọn"></span></summary>
-                        <div class="fridge-options">
+                    <details class="fridge-dialog__select">
+                        <summary>RAU CỦ <span class="fridge-dialog__count" aria-label="số ô đã chọn"></span></summary>
+                        <div class="fridge-dialog__options">
                             <label><input type="checkbox" name="rau-cu" value="ca-chua"> Cà chua</label>
                             <label><input type="checkbox" name="rau-cu" value="nam-huong"> Nấm hương</label>
                             <label><input type="checkbox" name="rau-cu" value="xa-lach"> Xà lách</label>
@@ -373,11 +373,11 @@
                         </div>
                     </details>
                 </div>
-                <span class="fridge-divider" aria-hidden="true"></span>
-                <div class="fridge-col">
-                    <details class="fridge-select">
-                        <summary>TRÁI CÂY <span class="fridge-count" aria-label="số ô đã chọn"></span></summary>
-                        <div class="fridge-options">
+                <span class="fridge-dialog__divider" aria-hidden="true"></span>
+                <div class="fridge-dialog__column">
+                    <details class="fridge-dialog__select">
+                        <summary>TRÁI CÂY <span class="fridge-dialog__count" aria-label="số ô đã chọn"></span></summary>
+                        <div class="fridge-dialog__options">
                             <label><input type="checkbox" name="trai-cay" value="xoai-xanh"> Xoài xanh</label>
                             <label><input type="checkbox" name="trai-cay" value="xoai"> Xoài chín</label>
                             <label><input type="checkbox" name="trai-cay" value="chuoi"> Chuối</label>
@@ -386,18 +386,18 @@
                             <label><input type="checkbox" name="trai-cay" value="khac"> Khác</label>
                         </div>
                     </details>
-                    <details class="fridge-select">
-                        <summary>CHẾ ĐỘ ĂN <span class="fridge-count" aria-label="số ô đã chọn"></span></summary>
-                        <div class="fridge-options">
+                    <details class="fridge-dialog__select">
+                        <summary>CHẾ ĐỘ ĂN <span class="fridge-dialog__count" aria-label="số ô đã chọn"></span></summary>
+                        <div class="fridge-dialog__options">
                             <!-- 3 nhóm dưới là bộ lọc nhãn (cùng nhãn với trang Danh mục), không phải nguyên liệu -->
                             <label><input type="checkbox" name="che-do-an" value="Thanh đạm" data-tag-filter> Thanh đạm</label>
                             <label><input type="checkbox" name="che-do-an" value="Eat Clean" data-tag-filter> Eat Clean</label>
                             <label><input type="checkbox" name="che-do-an" value="Ăn chay" data-tag-filter> Ăn chay</label>
                         </div>
                     </details>
-                    <details class="fridge-select">
-                        <summary>VÙNG MIỀN <span class="fridge-count" aria-label="số ô đã chọn"></span></summary>
-                        <div class="fridge-options">
+                    <details class="fridge-dialog__select">
+                        <summary>VÙNG MIỀN <span class="fridge-dialog__count" aria-label="số ô đã chọn"></span></summary>
+                        <div class="fridge-dialog__options">
                             <label><input type="checkbox" name="vung-mien" value="Miền Bắc" data-tag-filter> Miền Bắc</label>
                             <label><input type="checkbox" name="vung-mien" value="Miền Trung" data-tag-filter> Miền Trung</label>
                             <label><input type="checkbox" name="vung-mien" value="Miền Nam" data-tag-filter> Miền Nam</label>
@@ -405,11 +405,11 @@
                         </div>
                     </details>
                 </div>
-                <span class="fridge-divider" aria-hidden="true"></span>
-                <div class="fridge-col">
-                    <details class="fridge-select">
-                        <summary>NGÂN SÁCH <span class="fridge-count" aria-label="số ô đã chọn"></span></summary>
-                        <div class="fridge-options">
+                <span class="fridge-dialog__divider" aria-hidden="true"></span>
+                <div class="fridge-dialog__column">
+                    <details class="fridge-dialog__select">
+                        <summary>NGÂN SÁCH <span class="fridge-dialog__count" aria-label="số ô đã chọn"></span></summary>
+                        <div class="fridge-dialog__options">
                             <label><input type="checkbox" name="ngan-sach" value="Dưới 50k" data-tag-filter> Dưới 50.000đ</label>
                             <label><input type="checkbox" name="ngan-sach" value="50k - 100k" data-tag-filter> 50.000đ - 100.000đ</label>
                             <label><input type="checkbox" name="ngan-sach" value="Trên 100k" data-tag-filter> Trên 100.000đ</label>
@@ -418,11 +418,11 @@
                 </div>
             </div>
 
-            <div class="fridge-footer">
-                <p class="fridge-error" id="fridge-error" role="alert" hidden>Hãy chọn ít nhất 1 nguyên liệu hoặc tiêu chí.</p>
-                <button class="fridge-submit" type="submit">
-                    <span class="fridge-submit-text">TÌM KIẾM</span>
-                    <span class="fridge-submit-icon" aria-hidden="true">
+            <div class="fridge-dialog__footer">
+                <p class="fridge-dialog__error" id="fridge-error" role="alert" hidden>Hãy chọn ít nhất 1 nguyên liệu hoặc tiêu chí.</p>
+                <button class="fridge-dialog__submit" type="submit">
+                    <span class="fridge-dialog__submit-text">TÌM KIẾM</span>
+                    <span class="fridge-dialog__submit-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#1e1e1e" stroke-width="2.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="7"/><path d="M16 16l5 5"/></svg>
                     </span>
                 </button>
@@ -444,8 +444,7 @@
             <form class="site-auth__form site-login__form" novalidate>
                 <div class="site-auth__field">
                     <label class="site-auth__label" for="site-login__email">Địa chỉ Email</label>
-                    <input class="site-auth__input" id="site-login__email" name="email" type="text" autocomplete="username"
-                        autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required
+                    <input class="site-auth__input" id="site-login__email" name="email" type="text" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" required
                         data-required-message="Bạn hãy nhập địa chỉ email." aria-describedby="site-login__email-error">
                     <p class="site-auth__error" id="site-login__email-error" hidden></p>
                 </div>

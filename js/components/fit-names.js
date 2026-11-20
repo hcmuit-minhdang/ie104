@@ -2,18 +2,18 @@
    Tự chạy lại mỗi khi trang thêm thẻ món mới (danh sách được nạp từ kho dữ liệu) hoặc khi đổi kích thước cửa sổ. */
 (function () {
   "use strict";
-  var SELECTOR = ".recipe-name, .food-name, #recipe-title, .card-title-tag:not(.similar-title-tag)";
-  var MIN_SIZE = 11;
+  const SELECTOR = ".recipe-name, .food-name, #recipe-title, .card-title-tag:not(.similar-title-tag)";
+  const MIN_SIZE = 11;
 
-  var RESET = ["font-size", "white-space", "overflow", "text-overflow", "display", "line-height", "-webkit-line-clamp", "-webkit-box-orient"];
+  const RESET = ["font-size", "white-space", "overflow", "text-overflow", "display", "line-height", "-webkit-line-clamp", "-webkit-box-orient"];
 
   function fit(el) {
     RESET.forEach(function (p) { el.style.removeProperty(p); });
-    var orig = parseFloat(getComputedStyle(el).fontSize);
-    var size = orig;
-    var guard = 0;
+    const orig = parseFloat(getComputedStyle(el).fontSize);
+    let size = orig;
+    let guard = 0;
     // 1) Thu nhỏ chữ cho vừa MỘT dòng, nhưng không nhỏ quá 70% cỡ gốc (tối thiểu 11px) để tên không bị bé hơn chữ thân bài
-    var floor1 = Math.max(MIN_SIZE, orig * 0.7);
+    const floor1 = Math.max(MIN_SIZE, orig * 0.7);
     while (el.scrollWidth > el.clientWidth && size - 0.5 >= floor1 && guard++ < 60) {
       size -= 0.5;
       el.style.setProperty("font-size", size + "px");
@@ -40,7 +40,7 @@
     document.querySelectorAll(SELECTOR).forEach(fit);
   }
 
-  var timer = 0;
+  let timer = 0;
   function schedule() {
     window.clearTimeout(timer);
     timer = window.setTimeout(fitAll, 60);
